@@ -1547,105 +1547,99 @@
     const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
 
     async function modalVerify() {
-      document.getElementById('modalVerifyBtn').textContent = '⏳ Preparing...';
+      document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto preparing release...';
+      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
       document.getElementById('modalStatus').style.color = '#6366f1';
+      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
 
       try {
-        // 1. Get user account
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const userAddress = accounts[0];
+        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
-        // 2. Get current Safe state
         const provider = new window.ethers.JsonRpcProvider(RPC_URL);
-        const safeReadABI = [
+        const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
           'function getThreshold() view returns (uint256)',
-          'function getTransactionHash(address to, uint256 value, bytes data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, uint256 nonce) view returns (bytes32)'
-        ];
-        const safe = new window.ethers.Contract(SAFE_ADDRESS, safeReadABI, provider);
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
+        ], provider);
 
-        const [nonce, threshold] = await Promise.all([safe.nonce(), safe.getThreshold()]);
-        addLogEntry('🤖 Agent fetched Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+        const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+        addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
 
-        // 3. Build the release transaction
         const to = BUSINESS_ADDRESS;
         const value = window.ethers.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
-        const operation = 0; // CALL
-        const safeTxGas = 0;
-        const baseGas = 0;
-        const gasPrice = 0;
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
         const gasToken = window.ethers.ZeroAddress;
         const refundReceiver = window.ethers.ZeroAddress;
 
-        // 4. Get the Safe transaction hash (what MetaMask will show the user)
-        const txHash = await safe.getTransactionHash(to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce);
-
-        addLogEntry('🤖 Generated tx hash: ' + txHash.slice(0, 20) + '...', '#60a5fa');
-        addLogEntry('📋 Release: ' + RELEASE_AMOUNT_ETH + ' ETH → ' + to.slice(0, 10) + '... (nonce=' + nonce + ')', '#60a5fa');
-
-        // 5. User signs in MetaMask (personal_sign shows the hash with Ethereum prefix)
-        document.getElementById('modalStatus').textContent = 'Sign the release in MetaMask...';
-        addLogEntry('📝 Awaiting your signature in MetaMask...', '#fbbf24');
-
-        const userSigHex = await window.ethereum.request({
-          method: 'personal_sign',
-          params: [txHash, userAddress]
+        // Compute EIP-712 Safe transaction hash
+        const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
+        const domainSeparator = window.ethers.TypedDataEncoder.hashDomain({
+          chainId: 84532,
+          verifyingContract: SAFE_ADDRESS
         });
+        const encodedData = window.ethers.keccak256(
+          window.ethers.AbiCoder.defaultAbiCoder().encode(
+            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
+            [SAFE_TX_TYPEHASH, to, value, window.ethers.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+          )
+        );
+        const txHash = window.ethers.keccak256(
+          window.ethers.concat(['0x1901', domainSeparator, encodedData])
+        );
+        addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
-        if (!userSigHex || userSigHex === '0x') throw new Error('Signature rejected or cancelled');
-        addLogEntry('✅ Your signature received: ' + userSigHex.slice(0, 14) + '...', '#22c55e');
+        // Agent signs the EIP-712 hash
+        // ethers v6 SigningKey.sign returns { r, s, yParity: 1 }
+        // For Safe API: r(32) + s(32) + v(1) where v=27→0x1b, v=28→0x1c
+        const msgBytes = window.ethers.getBytes(txHash);
+        const sig = window.ethers.SigningKey.sign(msgBytes);
+        const v_hex = sig.yParity ? '1c' : '1b'; // yParity=1 → v=28 (0x1c), else v=27 (0x1b)
+        const sigHex = sig.r + sig.s.slice(2) + v_hex;
 
-        // 6. Satoshi's pre-computed signature (ready)
-        addLogEntry('🤖 Satoshi Nakaboto co-signing...', '#60a5fa');
+        // Propose to Safe Transaction Service API
+        const proposeBody = {
+          to, value: value.toString(), data, operation, safeTxGas, baseGas,
+          gasPrice: String(gasPrice), gasToken, refundReceiver,
+          nonce: parseInt(nonce.toString()),
+          contractTransactionHash: txHash,
+          sender: AGENT_ADDR,
+          signature: sigHex,
+          origin: 'CubaLibre Agent'
+        };
 
-        // 7. Combine signatures: [userSig(65 bytes)][agentSig(65 bytes)]
-        const combined = window.ethers.concat([
-          window.ethers.getBytes(userSigHex),
-          window.ethers.getBytes(AGENT_SIG)
-        ]);
-        const combinedHex = window.ethers.hexlify(combined);
-
-        // 8. Execute!
-        document.getElementById('modalStatus').textContent = '⏳ Executing 2-of-2 Safe transaction...';
-        addLogEntry('🔐 Combining signatures: [your sig][Satoshi sig] = 2-of-2 ✅', '#22c55e');
-
-        const execABI = ['function execTransaction(address to, uint256 value, bytes data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, bytes signatures) returns (bool)'];
-        const execSafe = new window.ethers.Contract(SAFE_ADDRESS, execABI, provider);
-
-        const tx = await execSafe.execTransaction(
-          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, combinedHex,
-          { gasLimit: 200000, maxFeePerGas: 0, maxPriorityFeePerGas: 0 }
+        const apiResp = await fetch(
+          'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        document.getElementById('modalStatus').textContent = '⏳ Waiting for confirmation...';
-        const receipt = await tx.wait();
-
-        if (receipt.status === 1) {
-          document.getElementById('modalVerifyBtn').textContent = '✅ Verified & Released!';
-          document.getElementById('modalVerifyBtn').style.background = '#22c55e';
-          document.getElementById('modalStatus').textContent = '✅ Released on-chain! TX: ' + tx.hash.slice(0, 12) + '... block ' + receipt.blockNumber;
+        if (apiResp.status === 201) {
+          document.getElementById('modalStatus').textContent = '✅ Proposed! Open Safe app to sign & execute...';
           document.getElementById('modalStatus').style.color = '#22c55e';
+          addLogEntry('✅ Proposed to Safe! 1-of-2 on-chain', '#22c55e');
+          addLogEntry('🔗 Go to app.safe.global → Connect → Transactions → Execute', '#fbbf24');
+          document.getElementById('modalVerifyBtn').textContent = '✅ Proposed — Execute in Safe App';
+          document.getElementById('modalVerifyBtn').style.background = '#6366f1';
           modalPhase = 4;
-          addLogEntry('✅✅ SAFE TX EXECUTED! 2-of-2 threshold met', '#22c55e');
-          addLogEntry('💸 Released: ' + RELEASE_AMOUNT_ETH + ' ETH → ' + to.slice(0, 10) + '...', '#22c55e');
-          addLogEntry('🔗 TX: ' + tx.hash, '#22c55e');
         } else {
-          throw new Error('Transaction reverted');
+          const errData = await apiResp.json();
+          throw new Error('Safe API ' + apiResp.status + ': ' + JSON.stringify(errData).slice(0, 120));
         }
 
       } catch(e) {
         console.error('Verify error:', e);
         document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
         document.getElementById('modalVerifyBtn').disabled = false;
-        const msg = e.code === 4001 ? 'Signature cancelled' : (e.message || String(e));
+        const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
         document.getElementById('modalStatus').style.color = '#ef4444';
-        addLogEntry('❌ Release failed: ' + msg.slice(0, 80), '#ef4444');
+        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#ef4444');
       }
     }
+
 
     function openModal() {
       const modal = document.getElementById('elpaladar-modal');
