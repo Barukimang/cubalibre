@@ -1232,6 +1232,28 @@
           </div>
         </div>
 
+        <!-- Your Investment Panel -->
+        <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#0a1f5c);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:14px;font-weight:700;">💼 Your Investment</span>
+            <span id="investorAddress" style="font-size:12px;opacity:0.7;font-family:monospace;"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorBalance">—</div>
+              <div style="font-size:11px;opacity:0.7;">Safe Balance (ETH)</div>
+            </div>
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorTotal">—</div>
+              <div style="font-size:11px;opacity:0.7;">Your Investment ($)</div>
+            </div>
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorOwnership">—</div>
+              <div style="font-size:11px;opacity:0.7;">Ownership %</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:8px;">
@@ -1340,18 +1362,18 @@
 
         <!-- Invest Amount -->
         <div style="margin-bottom:16px;">
-          <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;">Your investment amount (USDC)</label>
+          <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;" id="investAmountLabel">Your investment amount (USDC)</label>
           <div style="display:flex;align-items:center;gap:0;border:2px solid rgba(0,36,125,0.2);border-radius:12px;overflow:hidden;background:var(--white);">
             <span style="padding:12px 16px;background:var(--off-white);font-weight:700;color:var(--blue);border-right:2px solid rgba(0,36,125,0.2);">$</span>
             <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
               style="flex:1;border:none;outline:none;padding:12px 16px;font-size:20px;font-weight:800;color:var(--blue);background:transparent;width:100%;"
-              oninput="document.getElementById('investBtn').textContent = 'Invest — $' + (this.value || '0') + ' USDC'">
+              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USDC'">
           </div>
           <div style="display:flex;gap:8px;margin-top:8px;">
             <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
             <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
             <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
-            <button onclick="document.getElementById('investAmount').value=478;document.getElementById('investBtn').textContent='Invest — $478 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
           </div>
         </div>
 
@@ -1392,6 +1414,52 @@
         document.getElementById('modalBalance').textContent = '⚠️ RPC error';
       }
     }
+
+
+    function loadInvestmentData() {
+      const stored = localStorage.getItem('cubalibre_investment');
+      const panel = document.getElementById('yourInvestmentPanel');
+      const balanceEl = document.getElementById('investorBalance');
+      const totalEl = document.getElementById('investorTotal');
+      const ownershipEl = document.getElementById('investorOwnership');
+      const addressEl = document.getElementById('investorAddress');
+      const labelEl = document.getElementById('investAmountLabel');
+
+      if (!stored) {
+        panel.style.display = 'none';
+        return;
+      }
+
+      const data = JSON.parse(stored);
+      const safeBalance = parseFloat(document.getElementById('modalBalance').textContent) || 0;
+
+      panel.style.display = 'block';
+      addressEl.textContent = data.address ? data.address.slice(0, 8) + '...' : '—';
+      totalEl.textContent = '$' + (data.total || 0);
+      balanceEl.textContent = safeBalance.toFixed(4) + ' ETH';
+
+      // Estimate ETH value at ~$2500/ETH
+      const investedEth = (data.total || 0) / 2500;
+      ownershipEl.textContent = safeBalance > 0
+        ? Math.min(100, Math.round((investedEth / safeBalance) * 100)) + '%'
+        : '0%';
+
+      // Update button label
+      labelEl.textContent = 'Add to your investment (USDC)';
+      document.getElementById('investBtn').textContent = 'Add — $10';
+      document.getElementById('investAmount').value = 10;
+    }
+
+    function saveInvestment(address, totalUsd) {
+      const existing = localStorage.getItem('cubalibre_investment');
+      let data = existing ? JSON.parse(existing) : { address, total: 0 };
+      data.address = address;
+      data.total = (data.total || 0) + totalUsd;
+      localStorage.setItem('cubalibre_investment', JSON.stringify(data));
+      loadInvestmentData();
+    }
+
+
 
     const BASE_SEPOLIA = {
       chainId: '0x14a34', // Base Sepolia chainId
@@ -1494,6 +1562,8 @@
 
         if (receipt && receipt.status === '0x1') {
           const blockNum = parseInt(receipt.blockNumber, 16);
+          // Save investment to localStorage
+          saveInvestment(accounts[0], parseInt(amount));
           document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USDC!';
           document.getElementById('investBtn').style.background = '#22c55e';
           document.getElementById('investBtn').disabled = true;
@@ -1501,6 +1571,15 @@
           document.getElementById('modalStatus').style.color = '#22c55e';
           addLogEntry('💰 Investment committed: $' + amount + ' USDC → Safe escrow', '#22c55e');
           addLogEntry('🔐 2-of-2 Safe multisig active (TX: ' + txHash.slice(0,16) + '...)', '#60a5fa');
+          // Update UI for next investment
+          document.getElementById('investAmountLabel').textContent = 'Add to your investment (USDC)';
+          document.getElementById('investAmount').value = 10;
+          document.getElementById('investBtn').textContent = 'Add — $10 more';
+          document.getElementById('investBtn').style.background = 'var(--blue)';
+          document.getElementById('investBtn').disabled = false;
+          // Refresh Safe data to update balance
+          loadModalSafeData();
+          loadInvestmentData();
         } else {
           throw new Error('Transaction reverted');
         }
@@ -1646,6 +1725,7 @@
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
       loadModalSafeData();
+      loadInvestmentData();
       // Reset state
       modalPhase = 2;
       document.getElementById('modalFundBtn').textContent = '💰 Simulate Fund Safe';
