@@ -1651,11 +1651,19 @@
       currentLang = lang;
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (T[lang][key]) el.textContent = T[lang][key];
+        if (lang === 'es' && T['es'][key]) {
+          el.textContent = T['es'][key];
+        } else if (lang === 'en') {
+          el.textContent = el.getAttribute('data-original') || el.textContent;
+        }
       });
       document.querySelectorAll('[data-i18n-html]').forEach(el => {
         const key = el.getAttribute('data-i18n-html');
-        if (T[lang][key]) el.innerHTML = T[lang][key];
+        if (lang === 'es' && T['es'][key]) {
+          el.innerHTML = T['es'][key];
+        } else if (lang === 'en') {
+          el.innerHTML = el.getAttribute('data-original') || el.innerHTML;
+        }
       });
       const btn = document.getElementById('langToggle');
       if (btn) btn.textContent = lang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
@@ -2007,6 +2015,13 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
+      // Store original text on load for EN fallback
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.setAttribute('data-original', el.textContent);
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        el.setAttribute('data-original', el.innerHTML);
+      });
       document.querySelectorAll('.opp-card[onclick]').forEach(function(card) {
         card.addEventListener('click', function() {
           var fn = card.getAttribute('onclick');
