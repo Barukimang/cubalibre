@@ -678,7 +678,7 @@
       height: 100%;
       background: linear-gradient(90deg, var(--blue), var(--amber));
       border-radius: 3px;
-      width: 40%;
+      width: 20.8%;
     }
 
     .opp-raised span {
@@ -1041,11 +1041,6 @@
     </div>
   </section>
 
-  <!-- DEBUG: Test button -->
-  <div style="background:red;padding:20px;text-align:center;z-index:9999;position:relative;">
-    <button onclick="alert('JS works! Click detected on: ' + event.target.tagName)" style="background:white;color:red;padding:16px 32px;font-size:20px;border:none;border-radius:12px;cursor:pointer;">TEST: Click me to verify JS works</button>
-  </div>
-
   <!-- Live Opportunities -->
   <section class="section" id="opportunities">
     <div class="section-inner">
@@ -1054,7 +1049,7 @@
       <p class="section-subtitle">Every opportunity is verified, milestone-structured, and backed by on-chain escrow. No speculation, no promises — just capital for real work.</p>
 
       <div class="opps-grid">
-        <div class="opp-card clickable-card" style="cursor:pointer;">
+        <div class="opp-card clickable-card" style="cursor:pointer;" onclick="openModal()">
           <div class="opp-img" style="background:#000;">
             <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge">● Raising</span>
@@ -1070,7 +1065,7 @@
               </div>
               <div class="opp-raised">
                 <div class="bar"><div class="bar-fill"></div></div>
-                <span>$200 raised</span>
+                <span>$104 raised</span>
               </div>
             </div>
           </div>
@@ -1251,10 +1246,10 @@
         <img src="https://www.google.com/s2/favicons?domain=base.org&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
         <div><div style="font-weight:700;font-size:14px;color:var(--white);">Base</div><div style="font-size:11px;color:var(--text-light);">L2 Network</div></div>
       </a>
-      <!-- MetaMask -->
-      <a href="https://metamask.io/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
-        <img src="https://www.google.com/s2/favicons?domain=metamask.io&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
-        <div><div style="font-weight:700;font-size:14px;color:var(--white);">MetaMask</div><div style="font-size:11px;color:var(--text-light);">Wallet</div></div>
+      <!-- Venice -->
+      <a href="https://venice.ai/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=venice.ai&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Venice</div><div style="font-size:11px;color:var(--text-light);">AI Model</div></div>
       </a>
     </div>
   </section>
@@ -1271,7 +1266,7 @@
     <div class="footer-logo">CubaLibre</div>
     <p>Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
     Built for The Synthesis Hackathon, March 2026.</p>
-    <p style="margin-top:12px;opacity:0.4">Safe: 0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448 • Base Sepolia</p>
+    <p style="margin-top:12px;opacity:0.4">Safe: 0x8948F10E9f3389b428891Df35d68CB031a83d731 • Base Sepolia</p>
   </footer>
 
   <script>
@@ -1309,28 +1304,28 @@
       </div>
 
       <!-- Modal Body -->
-      <div style="padding:32px;">
+      <div style="padding:32px;font-family:'DM Sans',sans-serif;">
         <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
-        <p style="color:var(--text-light);font-size:14px;margin-bottom:16px;">📍 Calle Obispo #123, Old Havana, Cuba</p>
+        <p style="color:#ccc;font-size:14px;margin-bottom:16px;">📍 Calle Obispo #123, Old Havana, Cuba</p>
 
-        <p style="font-size:15px;color:var(--text-light);line-height:1.7;margin-bottom:24px;">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
+        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
 
         <!-- Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">4.8★</div>
-            <div style="font-size:12px;color:var(--text-light);">Rating</div>
+            <div style="font-size:12px;color:#aaa;">Rating</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">6</div>
-            <div style="font-size:12px;color:var(--text-light);">Current Staff</div>
+            <div style="font-size:12px;color:#aaa;">Current Staff</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">3</div>
-            <div style="font-size:12px;color:var(--text-light);">Milestones</div>
+            <div style="font-size:12px;color:#aaa;">Milestones</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
-            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$22</div>
+            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$104</div>
             <div style="font-size:12px;color:var(--text-light);">Raised</div>
           </div>
         </div>
@@ -1338,8 +1333,8 @@
         <!-- Your Investment Panel -->
         <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:14px;font-weight:700;">💼 Your Investment</span>
-            <span id="investorAddress" style="font-size:12px;opacity:0.7;font-family:monospace;"></span>
+            <span style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;">💼 Your Investment</span>
+            <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
             <div>
@@ -1359,146 +1354,186 @@
 
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
-          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:8px;">
-            <span>$22 raised of $500 goal</span><span>$478 remaining</span>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:8px;">
+            <span>$104 raised of $500 goal</span><span>$396 remaining</span>
           </div>
           <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
-            <div style="height:100%;width:40%;background:linear-gradient(90deg,var(--blue),var(--amber));border-radius:5px;"></div>
+            <div style="height:100%;width:20.8%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:5px;"></div>
           </div>
         </div>
 
         <!-- Milestones -->
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🎯 Investment Milestones</h3>
-        <div style="border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;margin-bottom:28px;">
-          <div style="display:flex;gap:16px;padding:16px 20px;background:rgba(34,197,94,0.1);border-bottom:1px solid rgba(34,197,94,0.2);">
-            <div style="width:32px;height:32px;border-radius:50%;background:#DCFCE7;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎯 Investment Milestones</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <!-- M1: Completed -->
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:700;font-size:14px;">Purchase kitchen equipment</div>
-              <div style="font-size:12px;color:var(--text-light);">Completed Mar 15 • $200 allocated</div>
+              <div style="font-weight:600;font-size:14px;color:var(--white);">Purchase kitchen equipment</div>
+              <div style="font-size:12px;color:#888;">Completed Mar 15 • $200 allocated</div>
             </div>
-            <div style="font-weight:800;color:#22c55e;font-size:14px;">$200 ✅</div>
+            <div style="font-weight:700;color:#3b82f6;font-size:14px;">$200</div>
           </div>
-          <div style="display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
-            <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--amber-dark);">2</div>
+          <!-- M2: In Progress -->
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;background:#0f0f1f;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:700;font-size:14px;">Hire 2 additional staff</div>
-              <div style="font-size:12px;color:var(--text-light);">In progress • Interviews Mar 22</div>
+              <div style="font-weight:600;font-size:14px;color:var(--white);">Hire 2 additional staff</div>
+              <div style="font-size:12px;color:#888;">In progress • Interviews Mar 22</div>
             </div>
-            <div style="font-weight:800;color:var(--blue);font-size:14px;">$150</div>
+            <div style="font-weight:700;color:#f59e0b;font-size:14px;">$150</div>
           </div>
-          <div style="display:flex;gap:16px;padding:16px 20px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text-light);">3</div>
+          <!-- M3: Pending -->
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#444;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:700;font-size:14px;">Launch expanded menu</div>
-              <div style="font-size:12px;color:var(--text-light);">Pending • Target: Apr 1</div>
+              <div style="font-weight:600;font-size:14px;color:#888;">Launch expanded menu</div>
+              <div style="font-size:12px;color:#555;">Pending • Target: Apr 1</div>
             </div>
-            <div style="font-weight:800;color:var(--blue);font-size:14px;">$150</div>
+            <div style="font-weight:700;color:#555;font-size:14px;">$150</div>
           </div>
         </div>
 
         <!-- Investor Story -->
-        <div style="background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:24px;color:white;margin-bottom:28px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <span style="font-size:28px;">🇨🇺</span>
-            <div>
-              <div style="font-weight:700;font-size:15px;">From a diaspora investor</div>
-              <div style="font-size:13px;opacity:0.7;">Cuban-American, Miami, FL</div>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">👤 Investor Story</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#1a1a3a;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🇨🇺</div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:600;color:#fff;">From a diaspora investor</div>
+              <div style="font-size:12px;color:#555;">Cuban-American, Miami, FL</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:16px;font-weight:800;color:#3b82f6;">$500</div>
+              <div style="font-size:11px;color:#555;">committed</div>
             </div>
           </div>
-          <p style="font-size:14px;opacity:0.9;line-height:1.6;margin:0;">"My grandmother would have loved this place. I've been wanting to support Cuban businesses but never had a safe way to do it. This is exactly what we needed."</p>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:24px;font-weight:900;">$500 USDC</span>
-            <span style="font-size:13px;opacity:0.7;">committed via Safe escrow</span>
+          <div style="padding:14px 20px;">
+            <p style="font-size:13px;color:#aaa;line-height:1.6;margin:0;">"My grandmother would have loved this place. I've been wanting to support Cuban businesses but never had a safe way to do it. This is exactly what we needed."</p>
           </div>
         </div>
 
         <!-- Live Safe Data -->
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🔐 Safe Escrow — Live On-Chain</h3>
-        <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;border:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="color:var(--text-light);">Safe Address</span>
-            <span style="font-family:monospace;color:var(--blue);font-weight:600;" id="modalSafeAddr">0xDEe8...loading</span>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🔐 Safe Escrow — Live On-Chain</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:12px;color:#888;">Safe Address</div>
+              <div style="font-size:14px;font-weight:600;"><a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-family:monospace;color:#3b82f6;text-decoration:none;">0x8948…d731</a></div>
+            </div>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="color:var(--text-light);">Escrow Balance</span>
-            <span style="font-family:monospace;font-weight:700;" id="modalBalance">⏳ Loading...</span>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:12px;color:#888;">Escrow Balance</div>
+              <div style="font-size:14px;font-weight:700;color:#3b82f6;" id="modalBalance">⏳ Loading...</div>
+            </div>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
-            <span style="color:var(--text-light);">Threshold</span>
-            <span style="font-family:monospace;font-weight:700;" id="modalThreshold">⏳ Loading...</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;">
-            <span style="color:var(--text-light);">Nonce</span>
-            <span style="font-family:monospace;font-weight:700;" id="modalNonce">⏳ Loading...</span>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
+            <div style="flex:1;">
+              <div style="font-size:12px;color:#888;">Signing Threshold</div>
+              <div style="font-size:14px;font-weight:700;color:#fff;" id="modalThreshold">⏳ Loading...</div>
+            </div>
           </div>
         </div>
 
         <!-- Activity Log -->
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">📜 Activity Log</h3>
-        <div id="modalLog" style="background:var(--off-white);border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;">
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
-            <span style="color:#22c55e;">✓ Investment created</span>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">📜 Activity Log</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;color:#ccc;">Investment created</div>
+              <div style="font-size:11px;color:#555;">Mar 15</div>
+            </div>
+            <div style="font-size:12px;color:#3b82f6;font-weight:600;">$500</div>
           </div>
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
-            <span style="color:#22c55e;">✓ $500 funded to Safe escrow</span>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;color:#ccc;">M1 verified — $200 released</div>
+              <div style="font-size:11px;color:#555;">Mar 15</div>
+            </div>
+            <div style="font-size:12px;color:#3b82f6;font-weight:600;">$200</div>
           </div>
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
-            <span style="color:#22c55e;">✓ M1 verified — $200 released</span>
-          </div>
-          <div style="display:flex;gap:10px;padding:6px 0;">
-            <span style="color:var(--text-light);white-space:nowrap;">Mar 21</span>
-            <span style="color:#60a5fa;">ℹ️ M2 started — hiring in progress</span>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;color:#ccc;">M2 in progress — hiring staff</div>
+              <div style="font-size:11px;color:#555;">Mar 21</div>
+            </div>
+            <div style="font-size:12px;color:#f59e0b;font-weight:600;">$150</div>
           </div>
         </div>
-
-        <!-- Demo Controls -->
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🎮 Demo Controls</h3>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
-          <button class="btn-primary" id="modalFundBtn" onclick="modalFund()" style="background:var(--blue);">💰 Simulate Fund Safe</button>
-          <button class="btn-primary" id="modalM2Btn" onclick="modalCompleteM2()" style="background:#f97316;" disabled>✅ Complete M2</button>
-          <button class="btn-primary" id="modalVerifyBtn" onclick="modalVerify()" style="background:#6366f1;" disabled>🤖 Agent Verify & Release</button>
-        </div>
-        <div id="modalStatus" style="font-size:13px;color:var(--text-light);padding:10px 14px;background:var(--off-white);border-radius:8px;margin-bottom:24px;"></div>
+        <div id="modalLog" style="display:none;"></div>
 
         <!-- Invest Amount -->
-        <div style="margin-bottom:16px;">
-          <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;" id="investAmountLabel">Your investment amount (USDC)</label>
-          <div style="display:flex;align-items:center;gap:0;border:2px solid rgba(0,36,125,0.2);border-radius:12px;overflow:hidden;background:var(--white);">
-            <span style="padding:12px 16px;background:var(--bg-card);font-weight:700;color:var(--text-light);border-right:2px solid rgba(0,36,125,0.2);">$</span>
-            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
-              style="flex:1;border:none;outline:none;padding:12px 16px;font-size:20px;font-weight:800;color:var(--blue);background:transparent;width:100%;"
-              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USDC'">
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;">💰 Your investment amount (USD)</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:20px;font-weight:700;color:#ccc;font-family:'DM Sans',sans-serif;">$</span>
+            <input type="number" id="investAmount" value="396" min="1" max="396" step="1"
+              style="flex:1;border:none;outline:none;font-size:32px;font-weight:800;color:#fff;background:transparent;width:100%;font-family:'DM Sans',sans-serif;"
+              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USD'">
           </div>
-          <div style="display:flex;gap:8px;margin-top:8px;">
-            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
-            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$100</button>
+            <button onclick="document.getElementById('investAmount').value=396;document.getElementById('investBtn').textContent='Invest — $396 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Max</button>
           </div>
         </div>
 
-        <!-- CTA -->
-        <button class="btn-primary" id="investBtn" onclick="modalInvest()" style="width:100%;background:var(--blue);font-size:17px;padding:16px;justify-content:center;">
-          Invest — $478 USDC
+
+                <!-- CTA -->
+        <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;font-family:'DM Sans',sans-serif;">
+          Invest — $396 USD
         </button>
-        <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:10px;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:var(--blue);font-weight:600;">Get free test ETH →</a></p>
+        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;margin-bottom:32px;font-family:'DM Sans',sans-serif;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
+
+                <!-- Demo Controls -->
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎮 Demo Controls</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Simulate Fund Safe</div>
+              <div style="font-size:11px;color:#555;">Send test ETH to Safe</div>
+            </div>
+            <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">💰 Run</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Complete M2</div>
+              <div style="font-size:11px;color:#555;">Mark milestone 2 done</div>
+            </div>
+            <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">✅ Done</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Agent Verify & Release</div>
+              <div style="font-size:11px;color:#555;">AI co-signs Safe tx</div>
+            </div>
+            <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">🤖 Verify</button>
+          </div>
+        </div>
+        <div id="modalStatus" style="font-size:13px;color:#ccc;padding:12px 16px;background:#0d0d1f;border:1px solid #1a1a3a;border-radius:8px;margin-bottom:24px;"></div>
+
+
+
+
+        
       </div>
     </div>
   </div>
 
-  <script>
+
+          <script>
     // Event delegation for opp-card clicks
-    document.addEventListener('DOMContentLoaded', function() {
-      document.addEventListener('click', function(e) {
-        var card = e.target.closest('.clickable-card');
-        if (card) {
-          e.preventDefault();
-          openModal();
-        }
-      });
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.clickable-card');
+      if (card) {
+        e.preventDefault();
+        openModal();
+      }
     });
 
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
@@ -1508,7 +1543,7 @@
     }
 
     async function loadModalSafeData() {
-      const SAFE = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+      const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
       const RPC = 'https://sepolia.base.org';
       const abi = ['function getThreshold() view returns (uint256)', 'function nonce() view returns (uint256)'];
       try {
@@ -1516,14 +1551,11 @@
         const safe = new ethers.Contract(SAFE, abi, provider);
         const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
         const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
-        document.getElementById('modalSafeAddr').textContent = shortAddr(SAFE);
         document.getElementById('modalBalance').textContent = eth + ' ETH';
         document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
-        document.getElementById('modalNonce').textContent = nonce.toString();
         document.getElementById('modalSafeAddr').style.color = 'var(--blue)';
         document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
         document.getElementById('modalThreshold').style.color = 'var(--text)';
-        document.getElementById('modalNonce').style.color = 'var(--text)';
       } catch(e) {
         document.getElementById('modalBalance').textContent = '⚠️ RPC error';
       }
@@ -1559,7 +1591,7 @@
         : '0%';
 
       // Update button label
-      labelEl.textContent = 'Add to your investment (USDC)';
+      labelEl.textContent = 'Add to your investment (USD)';
       document.getElementById('investBtn').textContent = 'Add — $10';
       document.getElementById('investAmount').value = 10;
     }
@@ -1620,14 +1652,14 @@
         return;
       }
 
-      const SAFE = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+      const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
       const amount = parseInt(document.getElementById('investAmount').value) || 0;
       if (amount <= 0) {
         document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
         document.getElementById('modalStatus').style.color = 'var(--red)';
         return;
       }
-      const ethValue = amount / 2800;
+      const ethValue = amount / 2079;
       const ethHex = '0x' + Math.floor(ethValue * 1e18).toString(16);
 
       document.getElementById('investBtn').textContent = '⏳ Connecting...';
@@ -1645,7 +1677,7 @@
         try {
           await switchToBaseSepolia();
         } catch(swErr) {
-          document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
+          document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USD';
           document.getElementById('investBtn').disabled = false;
           document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
           document.getElementById('modalStatus').style.color = 'var(--red)';
@@ -1657,7 +1689,7 @@
         document.getElementById('modalStatus').textContent = 'Confirm in MetaMask...';
         const txHash = await window.ethereum.request({
           method: 'eth_sendTransaction',
-          params: [{ from: from, to: SAFE, value: ethHex, gas: '0x5208' }]
+          params: [{ from: from, to: SAFE, value: ethHex }]
         });
 
         document.getElementById('modalStatus').textContent = '⏳ Confirming on-chain...';
@@ -1678,15 +1710,15 @@
           const blockNum = parseInt(receipt.blockNumber, 16);
           // Save investment to localStorage
           saveInvestment(accounts[0], parseInt(amount));
-          document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USDC!';
-          document.getElementById('investBtn').style.background = '#22c55e';
+          document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USD!';
+          document.getElementById('investBtn').style.background = '#3b82f6';
           document.getElementById('investBtn').disabled = true;
           document.getElementById('modalStatus').textContent = '✅ Committed! TX: ' + txHash.slice(0, 12) + '... (block ' + blockNum + ')';
-          document.getElementById('modalStatus').style.color = '#22c55e';
-          addLogEntry('💰 Investment committed: $' + amount + ' USDC → Safe escrow', '#22c55e');
+          document.getElementById('modalStatus').style.color = '#3b82f6';
+          addLogEntry('💰 Investment committed: $' + amount + ' USD → Safe escrow', '#3b82f6');
           addLogEntry('🔐 2-of-2 Safe multisig active (TX: ' + txHash.slice(0,16) + '...)', '#60a5fa');
           // Update UI for next investment
-          document.getElementById('investAmountLabel').textContent = 'Add to your investment (USDC)';
+          document.getElementById('investAmountLabel').textContent = 'Add to your investment (USD)';
           document.getElementById('investAmount').value = 10;
           document.getElementById('investBtn').textContent = 'Add — $10 more';
           document.getElementById('investBtn').style.background = 'var(--blue)';
@@ -1699,7 +1731,7 @@
         }
 
       } catch(e) {
-        document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
+        document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USD';
         document.getElementById('investBtn').disabled = false;
         const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg;
@@ -1711,10 +1743,10 @@
       document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
       document.getElementById('modalFundBtn').disabled = true;
       document.getElementById('modalM2Btn').disabled = false;
-      document.getElementById('modalStatus').textContent = '✅ Safe funded! $500 USDC in escrow — 2-of-2 multisig active.';
+      document.getElementById('modalStatus').textContent = '✅ Safe funded! $500 USD in escrow — 2-of-2 multisig active.';
       document.getElementById('modalStatus').style.color = 'var(--blue)';
       modalPhase = 2;
-      addLogEntry('✅ Safe funded: $500 USDC (simulated)', '#22c55e');
+      addLogEntry('✅ Safe funded: $500 USD (simulated)', '#3b82f6');
       addLogEntry('🔐 2-of-2 Safe multisig: Investor + Satoshi Nakaboto', '#60a5fa');
     }
 
@@ -1733,7 +1765,7 @@
     }
 
     // ─── Config ──────────────────────────────────────────────────────────
-    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+    const SAFE_ADDRESS = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
     const RPC_URL = 'https://sepolia.base.org';
     const BUSINESS_ADDRESS = '0x00c8160b76E960247bE5ab5A50782C4bb2D45E54'; // El Paladar restaurant owner
     const AGENT_ADDR = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'; // Agent signer address
@@ -1811,8 +1843,8 @@
 
         if (apiResp.status === 201) {
           document.getElementById('modalStatus').textContent = '✅ Proposed! Open Safe app to sign & execute...';
-          document.getElementById('modalStatus').style.color = '#22c55e';
-          addLogEntry('✅ Proposed to Safe! 1-of-2 on-chain', '#22c55e');
+          document.getElementById('modalStatus').style.color = '#3b82f6';
+          addLogEntry('✅ Proposed to Safe! 1-of-2 on-chain', '#3b82f6');
           addLogEntry('🔗 Go to app.safe.global → Connect → Transactions → Execute', '#fbbf24');
           document.getElementById('modalVerifyBtn').textContent = '✅ Proposed — Execute in Safe App';
           document.getElementById('modalVerifyBtn').style.background = '#6366f1';
@@ -1860,7 +1892,7 @@
       document.getElementById('modalM2Btn').disabled = false;
       document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('investBtn').textContent = 'Invest in El Paladar — $478 USDC';
+      document.getElementById('investBtn').textContent = 'Invest in El Paladar — $396 USD';
       document.getElementById('investBtn').disabled = false;
       document.getElementById('modalStatus').textContent = '';
     }
