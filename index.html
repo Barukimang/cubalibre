@@ -253,7 +253,18 @@
     }
 
 
-    .hero-problem-label,
+    .hero-news-tag {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 8px;
+      background: var(--red);
+      color: var(--white);
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(207, 20, 43, 0.3);
+    }
+
     .hero-solution-label {
       display: inline-block;
       font-size: 11px;
@@ -262,19 +273,10 @@
       letter-spacing: 2px;
       padding: 3px 10px;
       border-radius: 20px;
-      margin-bottom: 16px;
-    }
-
-    .hero-problem-label {
-      background: rgba(207, 20, 43, 0.1);
-      color: var(--red);
-      border: 1px solid rgba(207, 20, 43, 0.2);
-    }
-
-    .hero-solution-label {
       background: rgba(0, 36, 125, 0.1);
       color: var(--blue);
       border: 1px solid rgba(0, 36, 125, 0.2);
+      margin-bottom: 16px;
     }
 
     .hero-solution-divider {
@@ -973,15 +975,15 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="hero-problem-label">The Problem</div>
-        <h1>Cuban businesses<br>can't get funded.<br>Diaspora can't<br><span class="blue">safely invest.</span></h1>
-        <p>Banks don't work cross-border. Platforms take 10-20% and offer zero transparency. Manual milestone verification is a black box. Neither side has any protection.</p>
+        <div class="hero-news-tag">📰 Cuba is opening up.</div>
+        <h1>But how do you<br>actually invest<br>in the island?</h1>
+        <p>Banks don't work. Platforms take 20%. Wire transfers are blocked. There's no infrastructure for diaspora to support Cuban businesses — until now.</p>
 
         <div class="hero-solution-divider"></div>
 
-        <div class="hero-solution-label">The Solution</div>
-        <h1 class="hero-solution-headline">AI-verified milestones.<br><span class="red">Safe multisig escrow.</span><br>Zero middlemen.</h1>
-        <p>CubaLibre connects diaspora investors with Cuban businesses — through an AI agent that verifies work, a Safe that holds funds, and smart contracts that release them. Trustless. Transparent. Built for Cuba.</p>
+        <div class="hero-solution-label">CubaLibre</div>
+        <h1 class="hero-solution-headline">Diaspora investment.<br><span class="red">Without the middlemen.</span></h1>
+        <p>AI-verified milestones. Safe multisig escrow. Direct capital flows. Your money goes exactly where it's supposed to — and nowhere else.</p>
 
         <div class="hero-ctas">
           <a href="#opportunities" class="btn-primary">Browse Opportunities 🌴</a>
