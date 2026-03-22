@@ -6,7 +6,7 @@ CubaLibre enables trustless, milestone-based investment from international inves
 
 ## 🔗 Live Demo
 
-**Frontend**: [https://attract-neil-slim-rise.trycloudflare.com](https://attract-neil-slim-rise.trycloudflare.com) (or open `index.html` directly)
+**Frontend**: [https://scholar-laden-purchasing-router.trycloudflare.com](https://scholar-laden-purchasing-router.trycloudflare.com) (or open `index.html` directly)
 
 **Safe Escrow**: [https://app.safe.global/home?safe=basesep:0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448](https://app.safe.global/home?safe=basesep:0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448)
 

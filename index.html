@@ -2,571 +2,1201 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CubaLibre — Diaspora Investment</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { background: #0a0a0a; color: #fff; font-family: system-ui, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
-    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-    h1 { font-size: 36px; margin: 0; color: #22c55e; }
-    .tagline { color: #888; margin-bottom: 32px; font-size: 15px; }
-    .badge { background: #fbbf24; color: #000; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-    .tag { background: #1a1a1a; color: #888; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+    :root {
+      --blue: #00247D;
+      --blue-light: #1a5dc4;
+      --red: #CF142B;
+      --red-light: #e8233a;
+      --white: #FFFFFF;
+      --off-white: #F8F8F6;
+      --cream: #FFFEF5;
+      --bg: #FAFAFA;
+      --text: #1a1a1a;
+      --text-light: #555;
+      --amber: #D4A017;
+      --amber-dark: #B8890F;
+    }
 
-    /* Cards */
-    .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-    .card h2 { margin: 0 0 4px 0; font-size: 16px; color: #fff; }
-    .card .sub { color: #666; font-size: 13px; margin: 0; }
-    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .s-active { background: #22c55e22; color: #4ade80; }
-    .s-pending { background: #fbbf2422; color: #fbbf24; }
-    .s-done { background: #3b82f622; color: #60a5fa; }
-    .s-waiting { background: #333; color: #888; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Business Profile */
-    .business-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
-    .biz-avatar { width: 72px; height: 72px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #dc2626); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
-    .biz-info h3 { margin: 0 0 4px 0; font-size: 22px; }
-    .biz-info .location { color: #888; font-size: 14px; margin: 0 0 8px 0; }
-    .biz-info .desc { color: #aaa; font-size: 14px; margin: 0; line-height: 1.5; }
-    .biz-stats { display: flex; gap: 24px; margin-top: 16px; }
-    .biz-stat .val { font-size: 20px; font-weight: 700; color: #fff; }
-    .biz-stat .lbl { font-size: 12px; color: #666; }
-    .funded-bar { height: 8px; background: #222; border-radius: 4px; overflow: hidden; margin-top: 20px; }
-    .funded-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 4px; transition: width 0.5s; }
+    html { scroll-behavior: smooth; }
 
-    /* Milestones */
-    .milestone { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #1e1e1e; }
-    .milestone:last-child { border-bottom: none; padding-bottom: 0; }
-    .ms-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-    .ms-done { background: #22c55e22; }
-    .ms-active { background: #fbbf2422; }
-    .ms-todo { background: #222; }
-    .ms-body { flex: 1; }
-    .ms-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-    .ms-meta { font-size: 13px; color: #666; }
-    .ms-amount { font-size: 15px; font-weight: 700; color: #4ade80; white-space: nowrap; }
-    .ms-agent { font-size: 11px; color: #60a5fa; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
-    .ms-agent.done { color: #4ade80; }
-    .ms-agent .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
 
-    /* Agent Card */
-    .agent-box { display: flex; gap: 16px; align-items: center; background: #1a1a1a; border-radius: 12px; padding: 20px; }
-    .agent-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-    .agent-info h4 { margin: 0 0 2px 0; font-size: 15px; }
-    .agent-info p { margin: 0; font-size: 13px; color: #888; }
-    .agent-status { margin-left: auto; text-align: right; }
-    .agent-status .online { color: #4ade80; font-size: 13px; font-weight: 600; }
-    .agent-status .role { color: #666; font-size: 12px; }
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,36,125,0.08);
+      transition: all 0.3s;
+    }
 
-    /* Tx Flow */
-    .flow-steps { display: flex; flex-direction: column; gap: 0; }
-    .flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; position: relative; }
-    .flow-step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 44px; width: 2px; height: calc(100% - 28px); background: #222; }
-    .flow-step.done::after { background: #22c55e; }
-    .flow-dot { width: 32px; height: 32px; border-radius: 50%; background: #222; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; z-index: 1; }
-    .flow-step.done .flow-dot { background: #22c55e; border-color: #22c55e; }
-    .flow-step.active .flow-dot { background: #fbbf24; border-color: #fbbf24; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .flow-content { padding-top: 4px; }
-    .flow-content .ftitle { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .flow-content .fsub { font-size: 13px; color: #666; }
-    .flow-step.done .fsub { color: #4ade80; }
-    .flow-step.active .fsub { color: #fbbf24; }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--blue);
+      text-decoration: none;
+    }
 
-    /* Buttons */
-    .btn { background: #22c55e; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; }
-    .btn:hover { background: #16a34a; }
-    .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-    .btn-ghost { background: transparent; color: #888; border: 1px solid #333; }
-    .btn-ghost:hover { background: #1a1a1a; color: #fff; }
+    .nav-logo .drink-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--amber) 0%, #8B6914 100%);
+      border-radius: 8px 8px 20px 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(212,160,23,0.4);
+    }
 
-    /* Grid layout */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+    .drink-icon::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      right: 3px;
+      height: 45%;
+      background: rgba(255,255,255,0.7);
+      border-radius: 6px 6px 50% 50%;
+    }
 
-    /* MetaMask banner */
-    .wallet-banner { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-    .wallet-banner .icon { font-size: 28px; }
-    .wallet-banner .wb-text { flex: 1; }
-    .wallet-banner h3 { margin: 0 0 4px 0; font-size: 15px; }
-    .wallet-banner p { margin: 0; font-size: 13px; color: #888; }
-    .wallet-banner .connected-as { color: #4ade80; font-size: 13px; margin-top: 4px; }
+    .drink-icon::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      left: 3px;
+      right: 3px;
+      height: 45%;
+      background: #2a0a0a;
+      border-radius: 4px 4px 16px 16px;
+    }
 
-    /* Safe box */
-    .safe-box { background: #1a1a1a; border-radius: 10px; padding: 16px; margin-top: 16px; }
-    .safe-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
-    .safe-row .label { color: #666; }
-    .safe-row .mono { font-family: monospace; color: #aaa; }
-    .safe-row .green { color: #4ade80; }
-    .safe-row .yellow { color: #fbbf24; }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      list-style: none;
+    }
 
-    /* Investor card */
-    .investor-box { background: linear-gradient(135deg, #1a3a2a, #0f2318); border: 1px solid #22c55e33; border-radius: 12px; padding: 20px; }
-    .investor-box h3 { margin: 0 0 4px 0; font-size: 15px; color: #4ade80; }
-    .investor-box .inv-sub { color: #888; font-size: 13px; margin: 0 0 12px 0; }
-    .inv-amount { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-    .inv-label { font-size: 12px; color: #666; }
-    .inv-diaspora { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #22c55e22; }
-    .inv-diaspora .flag { font-size: 20px; }
-    .inv-diaspora span { font-size: 13px; color: #888; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
 
-    /* Demo notice */
-    .demo-notice { background: #fbbf2411; border: 1px solid #fbbf2433; border-radius: 10px; padding: 16px; margin-bottom: 24px; text-align: center; }
-    .demo-notice p { margin: 0; font-size: 13px; color: #fbbf24; }
-    .demo-notice strong { font-weight: 700; }
+    .nav-links a:hover { color: var(--blue); }
 
-    /* Logs */
-    .log-entry { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #1a1a1a; color: #888; }
-    .log-entry:last-child { border-bottom: none; }
-    .log-entry .ts { color: #555; margin-right: 8px; }
-    .log-entry.ok { color: #4ade80; }
-    .log-entry.info { color: #60a5fa; }
-    .log-entry.warn { color: #fbbf24; }
+    .nav-cta {
+      background: var(--blue) !important;
+      color: var(--white) !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+    }
 
-    .mt16 { margin-top: 16px; }
-    .mt24 { margin-top: 24px; }
-    .mb8 { margin-bottom: 8px; }
-    .text-green { color: #4ade80; }
-    .text-yellow { color: #fbbf24; }
-    .text-blue { color: #60a5fa; }
-    .text-muted { color: #666; }
-    .flex { display: flex; }
-    .gap8 { gap: 8px; }
-    .gap12 { gap: 12px; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .flex-1 { flex: 1; }
+    .nav-cta:hover { background: var(--blue-light) !important; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 40px 80px;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 60%;
+      height: 120%;
+      background: linear-gradient(135deg, var(--blue) 0%, #0a1f5c 100%);
+      border-radius: 0 0 0 40%;
+      z-index: 0;
+      opacity: 0.04;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red) 0%, var(--white) 25%, var(--blue) 50%, var(--white) 75%, var(--red) 100%);
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(40px, 5vw, 68px);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .hero-text h1 .blue { color: var(--blue); }
+    .hero-text h1 .red { color: var(--red); }
+
+    .hero-text p {
+      font-size: 18px;
+      color: var(--text-light);
+      max-width: 480px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,36,125,0.3); }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--blue);
+      border: 2px solid var(--blue);
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover { background: var(--blue); color: var(--white); }
+
+    .btn-red {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-red:hover { background: var(--red-light); transform: translateY(-1px); }
+
+    .hero-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cuba Libre drink illustration */
+    .drink-hero {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .drink-glass {
+      width: 200px;
+      height: 280px;
+      margin: 0 auto;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.9) 0%,
+        rgba(240,240,235,0.8) 100%
+      );
+      border-radius: 12px 12px 60px 60px;
+      border: 3px solid rgba(0,36,125,0.15);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), inset 0 0 30px rgba(255,255,255,0.5);
+    }
+
+    /* Rum layer */
+    .rum-layer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 35%;
+      background: linear-gradient(180deg, #D4A017 0%, #8B6914 100%);
+      border-radius: 0 0 57px 57px;
+    }
+
+    /* Coke layer */
+    .coke-layer {
+      position: absolute;
+      bottom: 35%;
+      left: 0;
+      right: 0;
+      height: 45%;
+      background: linear-gradient(180deg, #1a0808 0%, #2a0a0a 100%);
+    }
+
+    /* Lime slice */
+    .lime-slice {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .lime-circle {
+      width: 36px;
+      height: 36px;
+      background: radial-gradient(circle at 40% 40%, #a8d86e, #5a9e28);
+      border-radius: 50%;
+      border: 2px solid #4a8a1e;
+      position: relative;
+    }
+
+    .lime-circle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+    }
+
+    /* Straw */
+    .straw {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(15deg);
+      width: 14px;
+      height: 120px;
+      background: repeating-linear-gradient(
+        180deg,
+        var(--red) 0px,
+        var(--red) 8px,
+        var(--white) 8px,
+        var(--white) 16px
+      );
+      border-radius: 7px;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+
+    .drink-label {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--blue);
+      letter-spacing: -0.5px;
+    }
+
+    .drink-label span {
+      color: var(--red);
+    }
+
+    .drink-sublabel {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* Floating stat cards */
+    .float-cards {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .float-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 12px 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      border: 1px solid rgba(0,36,125,0.06);
+    }
+
+    .float-card .fc-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .float-card .fc-val.red { color: var(--red); }
+
+    .float-card .fc-lbl {
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* ── Cuban Flag Stripes ── */
+    .flag-stripes {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stripe {
+      height: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── Section styles ── */
+    .section {
+      padding: 100px 40px;
+    }
+
+    .section-dark {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .section-cream {
+      background: var(--off-white);
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--red);
+      margin-bottom: 12px;
+      padding: 4px 12px;
+      border: 1.5px solid var(--red);
+      border-radius: 20px;
+    }
+
+    .section-label.light {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .section-title.light { color: var(--white); }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-light);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    .section-subtitle.light {
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── How It Works ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .step {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px 28px;
+      position: relative;
+      border: 1px solid rgba(0,36,125,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .step:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,36,125,0.1);
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+
+    .step:nth-child(1) .step-num { background: #00247D22; color: var(--blue); }
+    .step:nth-child(2) .step-num { background: #CF142B22; color: var(--red); }
+    .step:nth-child(3) .step-num { background: #D4A01722; color: var(--amber-dark); }
+
+    .step h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    /* ── Opportunities ── */
+    .opps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 28px;
+      margin-top: 48px;
+    }
+
+    .opp-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(0,36,125,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .opp-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,36,125,0.1);
+    }
+
+    .opp-img {
+      height: 180px;
+      background: linear-gradient(135deg, #00247D 0%, #CF142B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .opp-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.3) 100%);
+    }
+
+    .opp-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--white);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      z-index: 1;
+    }
+
+    .opp-body {
+      padding: 24px;
+    }
+
+    .opp-body h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .opp-location {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    .opp-desc {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .opp-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,36,125,0.08);
+    }
+
+    .opp-amount {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--blue);
+    }
+
+    .opp-amount small {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      display: block;
+    }
+
+    .opp-raised {
+      text-align: right;
+    }
+
+    .opp-raised .bar {
+      height: 6px;
+      width: 120px;
+      background: rgba(0,36,125,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .opp-raised .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--amber));
+      border-radius: 3px;
+      width: 40%;
+    }
+
+    .opp-raised span {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* ── Agent Section ── */
+    .agent-section {
+      background: var(--off-white);
+    }
+
+    .agent-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 48px;
+      border: 1px solid rgba(0,36,125,0.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+    }
+
+    .agent-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--blue) 0%, #0a1f5c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      box-shadow: 0 8px 24px rgba(0,36,125,0.2);
+      flex-shrink: 0;
+    }
+
+    .agent-info h3 {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .agent-role {
+      font-size: 14px;
+      color: var(--amber-dark);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .agent-info p {
+      font-size: 15px;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .agent-powers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .agent-power {
+      background: var(--off-white);
+      border: 1px solid rgba(0,36,125,0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    /* ── For Investors / Businesses ── */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .split-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 40px;
+      transition: background 0.3s;
+    }
+
+    .split-card:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .split-card .sc-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .split-card h3 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .split-card p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .split-card ul {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .split-card ul li {
+      padding: 6px 0;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .split-card ul li::before {
+      content: '✓';
+      color: var(--amber);
+      font-weight: 700;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--red) 0%, #8B0A1A 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 100px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '🌴';
+      position: absolute;
+      font-size: 300px;
+      opacity: 0.05;
+      top: -50px;
+      right: -50px;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 900;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-section p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.8);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-section .btn-white {
+      background: var(--white);
+      color: var(--red);
+      border: none;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .cta-section .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.6);
+      padding: 40px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    footer .footer-logo {
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    footer .flag-stripes {
+      flex-direction: row;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .stripe-blue { width: 40px; height: 6px; background: var(--blue); }
+    .stripe-white { width: 40px; height: 6px; background: var(--white); }
+    .stripe-red { width: 40px; height: 6px; background: var(--red); }
+
+    /* ── Live Demo Embed ── */
+    .demo-embed {
+      background: var(--text);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 48px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .demo-embed-header {
+      background: #111;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .demo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .demo-dot.red { background: #FF5F56; }
+    .demo-dot.yellow { background: #FFBD2E; }
+    .demo-dot.green { background: #27C93F; }
+
+    .demo-embed-header span {
+      margin-left: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      font-family: monospace;
+    }
+
+    .demo-embed iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+      display: block;
+    }
+
+    /* ── Scroll animations ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero-text p { margin: 0 auto 36px; }
+      .hero-ctas { justify-content: center; }
+      .steps { grid-template-columns: 1fr; }
+      .split-grid { grid-template-columns: 1fr; }
+      .agent-card { grid-template-columns: 1fr; text-align: center; }
+      .agent-avatar { margin: 0 auto; }
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .section { padding: 60px 20px; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <header>
-      <h1>CubaLibre</h1>
-      <span class="badge">Base Sepolia</span>
-      <span class="tag">Safe Escrow</span>
-      <span class="tag">AI Agent</span>
-    </header>
-    <p class="tagline">Trustless diaspora investment into Cuban businesses — powered by AI agents and Safe multisig escrow.</p>
 
-    <!-- Demo Notice -->
-    <div class="demo-notice">
-      <p><strong>Hackathon Demo</strong> — El Paladar restaurant, Havana. Diaspora investor from Miami commits $500 via Safe escrow.</p>
-    </div>
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="drink-icon"></div>
+      CubaLibre
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#opportunities">Invest</a></li>
+      <li><a href="#raise">Raise Capital</a></li>
+      <li><a href="#agent">AI Agent</a></li>
+      <li><a href="#demo" class="nav-cta">Live Demo</a></li>
+    </ul>
+  </nav>
 
-    <!-- Wallet Banner -->
-    <div class="wallet-banner" id="walletBanner">
-      <div class="icon">🦊</div>
-      <div class="wb-text">
-        <h3 id="walletTitle">Connect your wallet to interact</h3>
-        <p id="walletSub">MetaMask or any injected wallet supported</p>
-        <p class="connected-as" id="connectedAs" style="display:none"></p>
-      </div>
-      <button class="btn" id="connectBtn" onclick="connectWallet()">Connect</button>
-    </div>
-
-    <!-- Business Profile -->
-    <div class="card">
-      <div class="card-header">
-        <div>
-          <h2>🏪 El Paladar — Cuban Restaurant</h2>
-          <p class="sub">Havana Vieja, Cuba • Food & Hospitality • Established 2018</p>
-        </div>
-        <span class="status-badge s-active">● Raising</span>
-      </div>
-      <div class="business-header">
-        <div class="biz-avatar">🍽️</div>
-        <div class="biz-info">
-          <h3>El Paladar de María</h3>
-          <p class="location">📍 Calle Obispo #123, Old Havana</p>
-          <p class="desc">Beloved family restaurant serving traditional Cuban cuisine. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Support Cuban<br>entrepreneurs.<br><span class="blue">From</span> <span class="red">anywhere.</span></h1>
+        <p>CubaLibre connects diaspora investors with Cuban businesses — through AI-verified milestones, Safe multisig escrow, and zero middlemen. Your capital, their growth, everyone's trust.</p>
+        <div class="hero-ctas">
+          <a href="#opportunities" class="btn-primary">Browse Opportunities 🌴</a>
+          <a href="#raise" class="btn-secondary">Raise Capital</a>
         </div>
       </div>
-      <div class="biz-stats">
-        <div class="biz-stat"><div class="val">4.8★</div><div class="lbl">Rating</div></div>
-        <div class="biz-stat"><div class="val">6</div><div class="lbl">Current Staff</div></div>
-        <div class="biz-stat"><div class="val">$500</div><div class="lbl">Investment Goal</div></div>
-        <div class="biz-stat"><div class="val">$0</div><div class="lbl">Raised so far</div></div>
-      </div>
-      <div class="funded-bar"><div class="funded-fill" id="fundedBar" style="width: 0%"></div></div>
-      <p class="text-muted mt16" style="font-size:13px">Safe escrow: <span class="mono">0xDEe8...8448</span> — investor stays in control at all times</p>
-    </div>
-
-    <!-- Two Column Layout -->
-    <div class="grid-2">
-      <!-- Left: Investment Flow -->
-      <div>
-        <div class="card">
-          <div class="card-header">
-            <div><h2>📋 Investment Flow</h2><p class="sub">Milestone-based release via AI agent</p></div>
+      <div class="hero-visual">
+        <div class="drink-hero">
+          <div class="drink-glass">
+            <div class="rum-layer"></div>
+            <div class="coke-layer"></div>
+            <div class="straw"></div>
+            <div class="lime-slice"><div class="lime-circle"></div></div>
           </div>
-          <div class="flow-steps">
-            <div class="flow-step done" id="flow1">
-              <div class="flow-dot">✓</div>
-              <div class="flow-content">
-                <div class="ftitle">Investment Created</div>
-                <div class="fsub">Investor reviews deal &amp; commits $500 to Safe escrow</div>
+          <div class="drink-label">Cuba <span>Libre</span></div>
+          <div class="drink-sublabel">Rum • Coke • Lime • Freedom</div>
+        </div>
+        <div class="float-cards">
+          <div class="float-card">
+            <div class="fc-val">$500</div>
+            <div class="fc-lbl">El Paladar raising</div>
+          </div>
+          <div class="float-card">
+            <div class="fc-val red">3</div>
+            <div class="fc-lbl">Milestones</div>
+          </div>
+          <div class="float-card">
+            <div class="fc-val">2-of-2</div>
+            <div class="fc-lbl">Safe multisig</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section section-cream" id="how-it-works">
+    <div class="section-inner">
+      <span class="section-label">How It Works</span>
+      <h2 class="section-title">Investment without<br>the middlemen.</h2>
+      <p class="section-subtitle">Traditional platforms take cuts, offer no transparency, and give you zero protection. CubaLibre is different — your money stays in a Safe you control until an AI agent verifies each milestone.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Browse Opportunities</h3>
+          <p>Discover Cuban businesses seeking capital — restaurants, shops, artisans. Each opportunity has clear milestones and a transparent funding goal.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Commit to Safe Escrow</h3>
+          <p>Your funds go into a 2-of-2 Safe multisig — you never fully lose control. The AI agent (Satoshi Nakaboto) is the co-signer. No platform can touch your money.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>AI Verifies & Releases</h3>
+          <p>Business completes milestones, submits evidence. Satoshi verifies, then co-signs the Safe transaction to release funds. You stay informed at every step.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Opportunities -->
+  <section class="section" id="opportunities">
+    <div class="section-inner">
+      <span class="section-label">Live Opportunities</span>
+      <h2 class="section-title">Open for investment.</h2>
+      <p class="section-subtitle">Every opportunity is verified, milestone-structured, and backed by on-chain escrow. No speculation, no promises — just capital for real work.</p>
+
+      <div class="opps-grid">
+        <div class="opp-card">
+          <div class="opp-img">
+            🍽️
+            <span class="opp-badge">● Raising</span>
+          </div>
+          <div class="opp-body">
+            <h3>El Paladar de María</h3>
+            <p class="opp-location">📍 Old Havana, Cuba</p>
+            <p class="opp-desc">Beloved family restaurant serving traditional Cuban cuisine. Featured in Lonely Planet 2024. Expanding seating and hiring 2 additional staff for the growing tourist season.</p>
+            <div class="opp-meta">
+              <div class="opp-amount">
+                $500
+                <small>investment goal</small>
+              </div>
+              <div class="opp-raised">
+                <div class="bar"><div class="bar-fill"></div></div>
+                <span>$200 raised</span>
               </div>
             </div>
-            <div class="flow-step done" id="flow2">
-              <div class="flow-dot">✓</div>
-              <div class="flow-content">
-                <div class="ftitle">Safe Funded</div>
-                <div class="fsub">$500 in stablecoins held in Safe multisig</div>
+          </div>
+        </div>
+
+        <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
+          <div class="opp-img" style="background: linear-gradient(135deg, #555 0%, #333 100%);">
+            🔜
+            <span class="opp-badge" style="background:#eee;color:#555">Coming Soon</span>
+          </div>
+          <div class="opp-body">
+            <h3>La Bodeguita</h3>
+            <p class="opp-location">📍 Centro Habana, Cuba</p>
+            <p class="opp-desc">Historic music venue seeking funds for equipment upgrades and artist residencies. Building Cuba's next generation of musicians.</p>
+            <div class="opp-meta">
+              <div class="opp-amount">
+                $1,200
+                <small>investment goal</small>
               </div>
-            </div>
-            <div class="flow-step active" id="flow3">
-              <div class="flow-dot">3</div>
-              <div class="flow-content">
-                <div class="ftitle">Milestones In Progress</div>
-                <div class="fsub">Business completes work, agent verifies → funds released</div>
-              </div>
-            </div>
-            <div class="flow-step" id="flow4">
-              <div class="flow-dot">4</div>
-              <div class="flow-content">
-                <div class="ftitle">Investment Complete</div>
-                <div class="fsub">All milestones verified, final disbursement</div>
+              <div class="opp-raised">
+                <span>Under review</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Investor Box -->
-        <div class="investor-box">
-          <h3>💚 Diaspora Investor</h3>
-          <p class="inv-sub">Cuban-American, Miami, FL</p>
-          <div class="inv-amount">$500 USDC</div>
-          <div class="inv-label">committed to Safe escrow</div>
-          <div class="inv-diaspora">
-            <span class="flag">🇨🇺</span>
-            <span>Supporting Cuban entrepreneurs from Miami — "Mi abuela would've loved this place"</span>
+        <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
+          <div class="opp-img" style="background: linear-gradient(135deg, #8B6914 0%, #5a4010 100%);">
+            🎨
+            <span class="opp-badge" style="background:#eee;color:#555">Coming Soon</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Right: Milestones + Agent -->
-      <div>
-        <div class="card">
-          <div class="card-header">
-            <div><h2>🎯 Milestones</h2><p class="sub">3 milestones • $200 / $150 / $150</p></div>
-            <span class="status-badge s-pending">1 of 3 released</span>
-          </div>
-
-          <!-- Milestone 1 -->
-          <div class="milestone">
-            <div class="ms-icon ms-done">✓</div>
-            <div class="ms-body">
-              <div class="ms-title">Purchase kitchen equipment</div>
-              <div class="ms-meta">Mar 15 • Paid to: Havana Restaurant Supply Co.</div>
-              <div class="ms-agent done"><span class="dot"></span>🤖 Agent verified: ✅ Evidence reviewed, 2/2 Safe signatures collected</div>
+          <div class="opp-body">
+            <h3>Artesanía Cubana</h3>
+            <p class="opp-location">📍 Trinidad, Cuba</p>
+            <p class="opp-desc">Collective of 12 local artisans producing traditional Cuban crafts. Expanding to reach international buyers through e-commerce.</p>
+            <div class="opp-meta">
+              <div class="opp-amount">
+                $800
+                <small>investment goal</small>
+              </div>
+              <div class="opp-raised">
+                <span>Under review</span>
+              </div>
             </div>
-            <div class="ms-amount">$200 ✅</div>
-          </div>
-
-          <!-- Milestone 2 -->
-          <div class="milestone">
-            <div class="ms-icon ms-active">2</div>
-            <div class="ms-body">
-              <div class="ms-title">Hire 2 additional staff</div>
-              <div class="ms-meta">In progress • Interviews scheduled for Mar 22</div>
-              <div class="ms-agent"><span class="dot"></span>🤖 Agent: Awaiting completion notice from business</div>
-            </div>
-            <div class="ms-amount">$150</div>
-          </div>
-
-          <!-- Milestone 3 -->
-          <div class="milestone">
-            <div class="ms-icon ms-todo">3</div>
-            <div class="ms-body">
-              <div class="ms-title">Launch expanded menu</div>
-              <div class="ms-meta">Pending • Target: Apr 1</div>
-              <div class="ms-agent"><span class="dot"></span>🤖 Agent: Waiting for milestones 1-2</div>
-            </div>
-            <div class="ms-amount">$150</div>
-          </div>
-        </div>
-
-        <!-- Agent Card -->
-        <div class="card">
-          <div class="card-header">
-            <div><h2>🤖 AI Agent</h2><p class="sub">Satoshi Nakaboto — CubaLibre Coordinator</p></div>
-          </div>
-          <div class="agent-box">
-            <div class="agent-avatar">🐒</div>
-            <div class="agent-info">
-              <h4>Satoshi Nakaboto</h4>
-              <p>Monitors milestone evidence, verifies completion, triggers Safe tx releases</p>
-            </div>
-            <div class="agent-status">
-              <div class="online">● Active</div>
-              <div class="role">Co-signer (2-of-2 Safe)</div>
-            </div>
-          </div>
-
-          <!-- Demo Controls -->
-          <div class="mt16">
-            <h4 class="mb8" style="font-size:13px; color:#666; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:1px">Demo Controls</h4>
-            <div class="flex gap8" style="flex-wrap:wrap">
-              <button class="btn" id="btnFund" onclick="demoFund()">💰 Fund Safe ($500)</button>
-              <button class="btn" style="background:#f97316" id="btnMilestone2" onclick="demoCompleteMilestone2()">✅ Complete M2</button>
-              <button class="btn" style="background:#6366f1" id="btnVerify" onclick="demoVerify()" disabled>🤖 Agent Verify</button>
-              <button class="btn-ghost" id="btnReset" onclick="resetDemo()">Reset</button>
-            </div>
-            <div id="demoStatus" class="mt16" style="font-size:13px; color:#666"></div>
+          </div
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Activity Log -->
-    <div class="card mt24">
-      <div class="card-header">
-        <div><h2>📜 Activity Log</h2><p class="sub">On-chain events &amp; agent actions</p></div>
-      </div>
-      <div id="activityLog">
-        <div class="log-entry"><span class="ts">Mar 15 09:00</span><span class="ok">✓ Investment created on CubaLibre protocol</span></div>
-        <div class="log-entry"><span class="ts">Mar 15 09:05</span><span class="ok">✓ Investor committed $500 USDC → Safe escrow (0xDEe8...8448)</span></div>
-        <div class="log-entry"><span class="ts">Mar 15 09:10</span><span class="ok">✓ Milestone 1 submitted by El Paladar — Agent reviewing evidence...</span></div>
-        <div class="log-entry"><span class="ts">Mar 15 09:12</span><span class="ok">✓ Agent verified M1 evidence — Safe tx executed: $200 released to business</span></div>
-        <div class="log-entry"><span class="ts">Mar 21 13:00</span><span class="info">ℹ️ Business started M2: hiring process initiated</span></div>
+  <!-- AI Agent -->
+  <section class="section agent-section" id="agent">
+    <div class="section-inner">
+      <span class="section-label">The Trust Layer</span>
+      <h2 class="section-title">An AI agent you can<br>actually trust.</h2>
+      <p class="section-subtitle">Satoshi Nakaboto is the AI coordinator for CubaLibre. He doesn't sleep, doesn't take bribes, and can't be threatened. He verifies evidence, co-signs transactions, and keeps both sides honest.</p>
+
+      <div class="agent-card">
+        <div class="agent-avatar">🐒</div>
+        <div class="agent-info">
+          <h3>Satoshi Nakaboto</h3>
+          <div class="agent-role">🤖 CubaLibre AI Agent • OpenClaw</div>
+          <p>Satoshi monitors every milestone. When a business submits completion evidence, he reviews it, verifies its legitimacy, and — if everything checks out — co-signs the Safe transaction that releases the next tranche of funds. No manual approval. No platform middleman. Just code and trust.</p>
+          <div class="agent-powers">
+            <span class="agent-power">✓ Milestone verification</span>
+            <span class="agent-power">✓ Safe co-signer (2-of-2)</span>
+            <span class="agent-power">✓ Transparent audit trail</span>
+            <span class="agent-power">✓ No custody of funds</span>
+            <span class="agent-power">✓ Real-time status updates</span>
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Safe Technical Details -->
-        <div class="card">
-          <div class="card-header">
-            <div><h2>🔐 Safe Escrow — Live On-Chain</h2><p class="sub">Reading directly from Base Sepolia</p></div>
-            <button class="btn" style="font-size:12px;padding:8px 16px" onclick="loadLiveSafeData()">🔄 Refresh</button>
-          </div>
-          <!-- Live Safe data loaded by JS -->
-        <div class="safe-box">
-          <div class="safe-row"><span class="label">Safe Address</span><span class="mono green" id="liveSafeAddr">0xDEe8...loading</span></div>
-          <div class="safe-row"><span class="label">Network</span><span class="mono">Base Sepolia (chainId: 84532)</span></div>
-          <div class="safe-row"><span class="label">Threshold</span><span class="mono yellow" id="liveThreshold">⏳ Loading...</span></div>
-          <div class="safe-row"><span class="label">Owners</span><span class="mono" id="liveOwners">⏳ Loading...</span></div>
-          <div class="safe-row"><span class="label">Escrow Balance</span><span class="mono yellow" id="liveBalance">⏳ Loading...</span></div>
-          <div class="safe-row"><span class="label">Nonce</span><span class="mono" id="liveNonce">⏳ Loading...</span></div>
-          <div class="safe-row"><span class="label">Last Exec TX</span><span class="mono" id="liveLastTx">0x4852a467... (M1: 0.00001 ETH → business)</span></div>
+  <!-- For Investors & Businesses -->
+  <section class="section section-dark" id="raise">
+    <div class="section-inner">
+      <span class="section-label light">Two Sides</span>
+      <h2 class="section-title light">For those with capital.<br>And those who need it.</h2>
+
+      <div class="split-grid">
+        <div class="split-card">
+          <div class="sc-icon">🌴</div>
+          <h3>Diaspora Investors</h3>
+          <p>Your family's country needs investment. Banks won't help. Existing platforms are opaque and expensive. CubaLibre gives you direct access, full transparency, and your money protected by a Safe you control.</p>
+          <ul>
+            <li>Browse verified Cuban businesses</li>
+            <li>Commit funds to a Safe you control</li>
+            <li>Track every milestone in real time</li>
+            <li>Build on-chain reputation as an investor</li>
+            <li>Your funds released only with your co-signature</li>
+          </ul>
+          <a href="#opportunities" class="btn-primary" style="background:var(--white);color:var(--blue)">Start Investing</a>
         </div>
+        <div class="split-card">
+          <div class="sc-icon">🏠</div>
+          <h3>Cuban Businesses</h3>
+          <p>No access to banks. No credit history the world recognizes. CubaLibre opens the door to diaspora capital — with clear terms, no hidden fees, and an AI that evaluates your business honestly.</p>
+          <ul>
+            <li>Create a profile with verifiable identity</li>
+            <li>Structure your funding as milestones</li>
+            <li>Receive capital without middlemen</li>
+            <li>Build international reputation on-chain</li>
+            <li>Only pay when milestones are verified</li>
+          </ul>
+          <a href="#apply" class="btn-red" style="background:var(--amber);color:var(--white)">Apply to Raise Capital</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Demo Embed -->
+  <section class="section section-cream" id="demo">
+    <div class="section-inner">
+      <span class="section-label">Live Demo</span>
+      <h2 class="section-title">See it in action.</h2>
+      <p class="section-subtitle">This is a live demo running on Base Sepolia. The Safe below holds real funds. Try the full investment flow.</p>
+
+      <div class="demo-embed">
+        <div class="demo-embed-header">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <span>cubalibre.app — El Paladar Investment Demo</span>
+        </div>
+        <iframe src="?embed=1" id="demoFrame"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Your diaspora built this island once.<br>Time to build it again.</h2>
+    <p>CubaLibre is open. Bitcoin brought freedom to finance. CubaLibre brings it to Cuba.</p>
+    <a href="#opportunities" class="btn-white">Start Investing Now 🌴</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="flag-stripes">
+      <div class="stripe-blue"></div>
+      <div class="stripe-white"></div>
+      <div class="stripe-red"></div>
+      <div class="stripe-white"></div>
+      <div class="stripe-blue"></div>
+    </div>
+    <div class="footer-logo">CubaLibre</div>
+    <p>Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
+    Built for The Synthesis Hackathon, March 2026.</p>
+    <p style="margin-top:12px;opacity:0.4">Safe: 0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448 • Base Sepolia</p>
+  </footer>
 
   <script>
-    // ─── State ───────────────────────────────────────────────────────────────
-    let state = {
-      phase: 2,       // 1=created, 2=funded, 3=milestone2, 4=milestone3, 5=done
-      connected: false,
-      signer: null,
-      safeBalance: 300,
-      txHashes: ['0x4852a4673c3364f8bfc87d43ef88f7d6b756b500b446bdc030e774fdf39057be']
-    };
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
 
-    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
-    const CHAIN_ID = '0x' + (84532).toString(16);
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // ─── Wallet ──────────────────────────────────────────────────────────────
-    async function connectWallet() {
-      if (typeof window.ethereum === 'undefined') {
-        alert('MetaMask not found! Install it from metamask.io');
-        return;
-      }
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send('eth_requestAccounts', []);
-        if (accounts.length === 0) throw new Error('No accounts');
-        state.signer = await provider.getSigner();
-        state.connected = true;
-
-        const addr = accounts[0];
-        document.getElementById('walletTitle').textContent = 'Wallet Connected';
-        document.getElementById('walletSub').textContent = '';
-        const ca = document.getElementById('connectedAs');
-        ca.textContent = addr;
-        ca.style.display = 'block';
-        document.getElementById('connectBtn').textContent = '✅ Connected';
-        document.getElementById('connectBtn').disabled = true;
-        document.getElementById('demoStatus').textContent = 'Wallet: ' + addr.slice(0, 6) + '...' + addr.slice(-4);
-      } catch (e) {
-        alert('Connection failed: ' + e.message);
-      }
+    // Demo embed: if embedded, load the full demo page
+    if (window.location.search.includes('embed=1')) {
+      // Replace self with actual demo page content
+      fetch(window.location.pathname)
+        .then(r => r.text())
+        .then(html => {
+          // Load full demo in iframe
+          document.getElementById('demoFrame').src = 'https://attract-neil-slim-rise.trycloudflare.com';
+        })
+        .catch(() => {});
     }
+  </script>
 
-    // ─── Demo Actions ─────────────────────────────────────────────────────────
-    function addLog(msg, type='') {
-      const log = document.getElementById('activityLog');
-      const now = new Date();
-      const ts = now.toTimeString().slice(0,5);
-      const div = document.createElement('div');
-      div.className = 'log-entry ' + type;
-      div.innerHTML = `<span class="ts">${ts}</span><span>${msg}</span>`;
-      log.appendChild(div);
-      div.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function updateUI() {
-      const bar = document.getElementById('fundedBar');
-      const bal = document.getElementById('safeBalance');
-
-      if (state.phase >= 2) {
-        bar.style.width = '40%';
-        bal.textContent = '$300 remaining';
-      }
-      if (state.phase >= 3) {
-        bar.style.width = '70%';
-        bal.textContent = '$150 remaining';
-      }
-      if (state.phase >= 4) {
-        bar.style.width = '100%';
-        bal.textContent = '$0 — Fully released';
-        document.getElementById('execCount').textContent = '3 confirmed on-chain';
-      }
-
-      // Flow steps
-      if (state.phase >= 2) {
-        document.getElementById('flow3').classList.remove('active');
-        document.getElementById('flow3').classList.add('done');
-        document.getElementById('flow3').querySelector('.flow-dot').textContent = '✓';
-      }
-    }
-
-    async function demoFund() {
-      const status = document.getElementById('demoStatus');
-      status.textContent = '⏳ Simulating Safe funding...';
-      status.style.color = '#fbbf24';
-
-      await new Promise(r => setTimeout(r, 1200));
-      state.phase = 2;
-      state.safeBalance = 300;
-      addLog('💰 Investor funded Safe escrow: $500 USDC', 'ok');
-      addLog('🔐 Funds held in 2-of-2 Safe multisig — investor retains control', 'info');
-      status.textContent = '✅ Safe funded! $500 in escrow.';
-      status.style.color = '#4ade80';
-      document.getElementById('btnFund').disabled = true;
-      updateUI();
-    }
-
-    async function demoCompleteMilestone2() {
-      const status = document.getElementById('demoStatus');
-      status.textContent = '⏳ Business submitting completion evidence...';
-      status.style.color = '#fbbf24';
-
-      await new Promise(r => setTimeout(r, 1200));
-      addLog('📋 Business submitted M2 evidence: 2 hire contracts + payroll records', 'warn');
-      addLog('🤖 Agent received completion notice — reviewing evidence...', 'info');
-      status.textContent = '✅ M2 marked complete — awaiting agent verification';
-      status.style.color = '#fbbf24';
-      document.getElementById('btnMilestone2').disabled = true;
-      document.getElementById('btnVerify').disabled = false;
-
-      // Update milestone 2 UI
-      const ms2 = document.querySelectorAll('.milestone')[1];
-      ms2.querySelector('.ms-icon').className = 'ms-icon ms-active';
-      ms2.querySelector('.ms-title').textContent += ' ✓ Submitted';
-      ms2.querySelector('.ms-meta').textContent = 'Mar 21 • Evidence: contracts + payroll';
-      ms2.querySelector('.ms-agent').className = 'ms-agent';
-      ms2.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent: Evidence received — ready to verify';
-    }
-
-    async function demoVerify() {
-      const status = document.getElementById('demoStatus');
-      status.textContent = '🤖 Agent verifying on-chain...';
-      status.style.color = '#60a5fa';
-
-      await new Promise(r => setTimeout(r, 2000));
-      state.phase = 3;
-      const txHash = '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-      state.txHashes.push(txHash);
-      state.safeBalance = 150;
-
-      addLog(`✅ Agent verified M2 — executing Safe tx (2-of-2)...`, 'ok');
-      addLog(`🔗 <span style="color:#60a5fa">TX: ${txHash.slice(0,10)}...</span> — $150 released to El Paladar`, 'ok');
-
-      status.textContent = '✅ M2 verified & released! $150 sent to business via Safe';
-      status.style.color = '#4ade80';
-      document.getElementById('btnVerify').disabled = true;
-
-      // Update milestone 2 UI
-      const ms2 = document.querySelectorAll('.milestone')[1];
-      ms2.querySelector('.ms-icon').className = 'ms-icon ms-done';
-      ms2.querySelector('.ms-icon').textContent = '✓';
-      ms2.querySelector('.ms-amount').textContent = '$150 ✅';
-      ms2.querySelector('.ms-amount').className = 'ms-amount';
-      ms2.querySelector('.ms-meta').textContent = 'Mar 21 • Released: 0x4852...57be';
-      ms2.querySelector('.ms-agent').className = 'ms-agent done';
-      ms2.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent verified: ✅ On-chain confirmed';
-
-      // Update milestone 3
-      const ms3 = document.querySelectorAll('.milestone')[2];
-      ms3.querySelector('.ms-icon').className = 'ms-icon ms-active';
-      ms3.querySelector('.ms-icon').textContent = '3';
-      ms3.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent: Next milestone pending business';
-
-      document.querySelector('.card:nth-child(2) .status-badge').textContent = '2 of 3 released';
-      document.querySelector('.card:nth-child(2) .status-badge').className = 'status-badge s-done';
-
-      updateUI();
-    }
-
-    function resetDemo() {
-      state.phase = 1;
-      state.safeBalance = 500;
-      state.txHashes = [];
-      location.reload();
-    }
-
-    // ─── Init ─────────────────────────────────────────────────────────────────
-    updateUI();
-  
-
-    // ─── Live Safe Data ─────────────────────────────────────────────────────
-    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
-    const RPC_URL = 'https://sepolia.base.org';
-
-    const safeABI = [
-      'function getThreshold() view returns (uint256)',
-      'function getOwners() view returns (address[])',
-      'function nonce() view returns (uint256)'
-    ];
-
-    function short(addr) {
-      return addr.slice(0,6) + '...' + addr.slice(-4);
-    }
-
-    async function loadLiveSafeData() {
-      try {
-        const provider = new ethers.JsonRpcProvider(RPC_URL);
-        const safe = new ethers.Contract(SAFE_ADDRESS, safeABI, provider);
-        const [threshold, owners, nonce, balance] = await Promise.all([
-          safe.getThreshold(),
-          safe.getOwners(),
-          safe.nonce(),
-          provider.getBalance(SAFE_ADDRESS)
-        ]);
-        const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
-
-        document.getElementById('liveSafeAddr').textContent = short(SAFE_ADDRESS);
-        document.getElementById('liveThreshold').textContent = threshold.toString() + '-of-' + owners.length;
-        document.getElementById('liveOwners').innerHTML = owners.map(o =>
-          o === '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'
-            ? '<span style="color:#60a5fa">' + short(o) + ' (Agent)</span>'
-            : '<span>' + short(o) + ' (Investor)</span>'
-        ).join(' + ');
-        document.getElementById('liveBalance').textContent = eth + ' ETH';
-        document.getElementById('liveNonce').textContent = nonce.toString();
-      } catch(e) {
-        console.error('Failed to load Safe data:', e);
-        document.getElementById('liveBalance').textContent = '⚠️ RPC error';
-      }
-    }
-
-    // Load on page init
-    window.addEventListener('load', function() {
-      loadLiveSafeData();
-    });
-
-</script>
 </body>
 </html>
