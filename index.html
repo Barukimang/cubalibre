@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CubaLibre — Diaspora Investment</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #0a0a0a; color: #fff; font-family: system-ui, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    h1 { font-size: 36px; margin: 0; color: #22c55e; }
+    .tagline { color: #888; margin-bottom: 32px; font-size: 15px; }
+    .badge { background: #fbbf24; color: #000; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .tag { background: #1a1a1a; color: #888; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+
+    /* Cards */
+    .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .card h2 { margin: 0 0 4px 0; font-size: 16px; color: #fff; }
+    .card .sub { color: #666; font-size: 13px; margin: 0; }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .s-active { background: #22c55e22; color: #4ade80; }
+    .s-pending { background: #fbbf2422; color: #fbbf24; }
+    .s-done { background: #3b82f622; color: #60a5fa; }
+    .s-waiting { background: #333; color: #888; }
+
+    /* Business Profile */
+    .business-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
+    .biz-avatar { width: 72px; height: 72px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #dc2626); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+    .biz-info h3 { margin: 0 0 4px 0; font-size: 22px; }
+    .biz-info .location { color: #888; font-size: 14px; margin: 0 0 8px 0; }
+    .biz-info .desc { color: #aaa; font-size: 14px; margin: 0; line-height: 1.5; }
+    .biz-stats { display: flex; gap: 24px; margin-top: 16px; }
+    .biz-stat .val { font-size: 20px; font-weight: 700; color: #fff; }
+    .biz-stat .lbl { font-size: 12px; color: #666; }
+    .funded-bar { height: 8px; background: #222; border-radius: 4px; overflow: hidden; margin-top: 20px; }
+    .funded-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 4px; transition: width 0.5s; }
+
+    /* Milestones */
+    .milestone { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #1e1e1e; }
+    .milestone:last-child { border-bottom: none; padding-bottom: 0; }
+    .ms-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .ms-done { background: #22c55e22; }
+    .ms-active { background: #fbbf2422; }
+    .ms-todo { background: #222; }
+    .ms-body { flex: 1; }
+    .ms-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .ms-meta { font-size: 13px; color: #666; }
+    .ms-amount { font-size: 15px; font-weight: 700; color: #4ade80; white-space: nowrap; }
+    .ms-agent { font-size: 11px; color: #60a5fa; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .ms-agent.done { color: #4ade80; }
+    .ms-agent .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* Agent Card */
+    .agent-box { display: flex; gap: 16px; align-items: center; background: #1a1a1a; border-radius: 12px; padding: 20px; }
+    .agent-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .agent-info h4 { margin: 0 0 2px 0; font-size: 15px; }
+    .agent-info p { margin: 0; font-size: 13px; color: #888; }
+    .agent-status { margin-left: auto; text-align: right; }
+    .agent-status .online { color: #4ade80; font-size: 13px; font-weight: 600; }
+    .agent-status .role { color: #666; font-size: 12px; }
+
+    /* Tx Flow */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; }
+    .flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; position: relative; }
+    .flow-step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 44px; width: 2px; height: calc(100% - 28px); background: #222; }
+    .flow-step.done::after { background: #22c55e; }
+    .flow-dot { width: 32px; height: 32px; border-radius: 50%; background: #222; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; z-index: 1; }
+    .flow-step.done .flow-dot { background: #22c55e; border-color: #22c55e; }
+    .flow-step.active .flow-dot { background: #fbbf24; border-color: #fbbf24; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .flow-content { padding-top: 4px; }
+    .flow-content .ftitle { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .flow-content .fsub { font-size: 13px; color: #666; }
+    .flow-step.done .fsub { color: #4ade80; }
+    .flow-step.active .fsub { color: #fbbf24; }
+
+    /* Buttons */
+    .btn { background: #22c55e; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; }
+    .btn:hover { background: #16a34a; }
+    .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: #888; border: 1px solid #333; }
+    .btn-ghost:hover { background: #1a1a1a; color: #fff; }
+
+    /* Grid layout */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* MetaMask banner */
+    .wallet-banner { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .wallet-banner .icon { font-size: 28px; }
+    .wallet-banner .wb-text { flex: 1; }
+    .wallet-banner h3 { margin: 0 0 4px 0; font-size: 15px; }
+    .wallet-banner p { margin: 0; font-size: 13px; color: #888; }
+    .wallet-banner .connected-as { color: #4ade80; font-size: 13px; margin-top: 4px; }
+
+    /* Safe box */
+    .safe-box { background: #1a1a1a; border-radius: 10px; padding: 16px; margin-top: 16px; }
+    .safe-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+    .safe-row .label { color: #666; }
+    .safe-row .mono { font-family: monospace; color: #aaa; }
+    .safe-row .green { color: #4ade80; }
+    .safe-row .yellow { color: #fbbf24; }
+
+    /* Investor card */
+    .investor-box { background: linear-gradient(135deg, #1a3a2a, #0f2318); border: 1px solid #22c55e33; border-radius: 12px; padding: 20px; }
+    .investor-box h3 { margin: 0 0 4px 0; font-size: 15px; color: #4ade80; }
+    .investor-box .inv-sub { color: #888; font-size: 13px; margin: 0 0 12px 0; }
+    .inv-amount { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .inv-label { font-size: 12px; color: #666; }
+    .inv-diaspora { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #22c55e22; }
+    .inv-diaspora .flag { font-size: 20px; }
+    .inv-diaspora span { font-size: 13px; color: #888; }
+
+    /* Demo notice */
+    .demo-notice { background: #fbbf2411; border: 1px solid #fbbf2433; border-radius: 10px; padding: 16px; margin-bottom: 24px; text-align: center; }
+    .demo-notice p { margin: 0; font-size: 13px; color: #fbbf24; }
+    .demo-notice strong { font-weight: 700; }
+
+    /* Logs */
+    .log-entry { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #1a1a1a; color: #888; }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry .ts { color: #555; margin-right: 8px; }
+    .log-entry.ok { color: #4ade80; }
+    .log-entry.info { color: #60a5fa; }
+    .log-entry.warn { color: #fbbf24; }
+
+    .mt16 { margin-top: 16px; }
+    .mt24 { margin-top: 24px; }
+    .mb8 { margin-bottom: 8px; }
+    .text-green { color: #4ade80; }
+    .text-yellow { color: #fbbf24; }
+    .text-blue { color: #60a5fa; }
+    .text-muted { color: #666; }
+    .flex { display: flex; }
+    .gap8 { gap: 8px; }
+    .gap12 { gap: 12px; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .flex-1 { flex: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>CubaLibre</h1>
+      <span class="badge">Base Sepolia</span>
+      <span class="tag">Safe Escrow</span>
+      <span class="tag">AI Agent</span>
+    </header>
+    <p class="tagline">Trustless diaspora investment into Cuban businesses — powered by AI agents and Safe multisig escrow.</p>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+      <p><strong>Hackathon Demo</strong> — El Paladar restaurant, Havana. Diaspora investor from Miami commits $500 via Safe escrow.</p>
+    </div>
+
+    <!-- Wallet Banner -->
+    <div class="wallet-banner" id="walletBanner">
+      <div class="icon">🦊</div>
+      <div class="wb-text">
+        <h3 id="walletTitle">Connect your wallet to interact</h3>
+        <p id="walletSub">MetaMask or any injected wallet supported</p>
+        <p class="connected-as" id="connectedAs" style="display:none"></p>
+      </div>
+      <button class="btn" id="connectBtn" onclick="connectWallet()">Connect</button>
+    </div>
+
+    <!-- Business Profile -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>🏪 El Paladar — Cuban Restaurant</h2>
+          <p class="sub">Havana Vieja, Cuba • Food & Hospitality • Established 2018</p>
+        </div>
+        <span class="status-badge s-active">● Raising</span>
+      </div>
+      <div class="business-header">
+        <div class="biz-avatar">🍽️</div>
+        <div class="biz-info">
+          <h3>El Paladar de María</h3>
+          <p class="location">📍 Calle Obispo #123, Old Havana</p>
+          <p class="desc">Beloved family restaurant serving traditional Cuban cuisine. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
+        </div>
+      </div>
+      <div class="biz-stats">
+        <div class="biz-stat"><div class="val">4.8★</div><div class="lbl">Rating</div></div>
+        <div class="biz-stat"><div class="val">6</div><div class="lbl">Current Staff</div></div>
+        <div class="biz-stat"><div class="val">$500</div><div class="lbl">Investment Goal</div></div>
+        <div class="biz-stat"><div class="val">$0</div><div class="lbl">Raised so far</div></div>
+      </div>
+      <div class="funded-bar"><div class="funded-fill" id="fundedBar" style="width: 0%"></div></div>
+      <p class="text-muted mt16" style="font-size:13px">Safe escrow: <span class="mono">0xDEe8...8448</span> — investor stays in control at all times</p>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="grid-2">
+      <!-- Left: Investment Flow -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div><h2>📋 Investment Flow</h2><p class="sub">Milestone-based release via AI agent</p></div>
+          </div>
+          <div class="flow-steps">
+            <div class="flow-step done" id="flow1">
+              <div class="flow-dot">✓</div>
+              <div class="flow-content">
+                <div class="ftitle">Investment Created</div>
+                <div class="fsub">Investor reviews deal &amp; commits $500 to Safe escrow</div>
+              </div>
+            </div>
+            <div class="flow-step done" id="flow2">
+              <div class="flow-dot">✓</div>
+              <div class="flow-content">
+                <div class="ftitle">Safe Funded</div>
+                <div class="fsub">$500 in stablecoins held in Safe multisig</div>
+              </div>
+            </div>
+            <div class="flow-step active" id="flow3">
+              <div class="flow-dot">3</div>
+              <div class="flow-content">
+                <div class="ftitle">Milestones In Progress</div>
+                <div class="fsub">Business completes work, agent verifies → funds released</div>
+              </div>
+            </div>
+            <div class="flow-step" id="flow4">
+              <div class="flow-dot">4</div>
+              <div class="flow-content">
+                <div class="ftitle">Investment Complete</div>
+                <div class="fsub">All milestones verified, final disbursement</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Investor Box -->
+        <div class="investor-box">
+          <h3>💚 Diaspora Investor</h3>
+          <p class="inv-sub">Cuban-American, Miami, FL</p>
+          <div class="inv-amount">$500 USDC</div>
+          <div class="inv-label">committed to Safe escrow</div>
+          <div class="inv-diaspora">
+            <span class="flag">🇨🇺</span>
+            <span>Supporting Cuban entrepreneurs from Miami — "Mi abuela would've loved this place"</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Milestones + Agent -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div><h2>🎯 Milestones</h2><p class="sub">3 milestones • $200 / $150 / $150</p></div>
+            <span class="status-badge s-pending">1 of 3 released</span>
+          </div>
+
+          <!-- Milestone 1 -->
+          <div class="milestone">
+            <div class="ms-icon ms-done">✓</div>
+            <div class="ms-body">
+              <div class="ms-title">Purchase kitchen equipment</div>
+              <div class="ms-meta">Mar 15 • Paid to: Havana Restaurant Supply Co.</div>
+              <div class="ms-agent done"><span class="dot"></span>🤖 Agent verified: ✅ Evidence reviewed, 2/2 Safe signatures collected</div>
+            </div>
+            <div class="ms-amount">$200 ✅</div>
+          </div>
+
+          <!-- Milestone 2 -->
+          <div class="milestone">
+            <div class="ms-icon ms-active">2</div>
+            <div class="ms-body">
+              <div class="ms-title">Hire 2 additional staff</div>
+              <div class="ms-meta">In progress • Interviews scheduled for Mar 22</div>
+              <div class="ms-agent"><span class="dot"></span>🤖 Agent: Awaiting completion notice from business</div>
+            </div>
+            <div class="ms-amount">$150</div>
+          </div>
+
+          <!-- Milestone 3 -->
+          <div class="milestone">
+            <div class="ms-icon ms-todo">3</div>
+            <div class="ms-body">
+              <div class="ms-title">Launch expanded menu</div>
+              <div class="ms-meta">Pending • Target: Apr 1</div>
+              <div class="ms-agent"><span class="dot"></span>🤖 Agent: Waiting for milestones 1-2</div>
+            </div>
+            <div class="ms-amount">$150</div>
+          </div>
+        </div>
+
+        <!-- Agent Card -->
+        <div class="card">
+          <div class="card-header">
+            <div><h2>🤖 AI Agent</h2><p class="sub">Satoshi Nakaboto — CubaLibre Coordinator</p></div>
+          </div>
+          <div class="agent-box">
+            <div class="agent-avatar">🐒</div>
+            <div class="agent-info">
+              <h4>Satoshi Nakaboto</h4>
+              <p>Monitors milestone evidence, verifies completion, triggers Safe tx releases</p>
+            </div>
+            <div class="agent-status">
+              <div class="online">● Active</div>
+              <div class="role">Co-signer (2-of-2 Safe)</div>
+            </div>
+          </div>
+
+          <!-- Demo Controls -->
+          <div class="mt16">
+            <h4 class="mb8" style="font-size:13px; color:#666; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:1px">Demo Controls</h4>
+            <div class="flex gap8" style="flex-wrap:wrap">
+              <button class="btn" id="btnFund" onclick="demoFund()">💰 Fund Safe ($500)</button>
+              <button class="btn" style="background:#f97316" id="btnMilestone2" onclick="demoCompleteMilestone2()">✅ Complete M2</button>
+              <button class="btn" style="background:#6366f1" id="btnVerify" onclick="demoVerify()" disabled>🤖 Agent Verify</button>
+              <button class="btn-ghost" id="btnReset" onclick="resetDemo()">Reset</button>
+            </div>
+            <div id="demoStatus" class="mt16" style="font-size:13px; color:#666"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Log -->
+    <div class="card mt24">
+      <div class="card-header">
+        <div><h2>📜 Activity Log</h2><p class="sub">On-chain events &amp; agent actions</p></div>
+      </div>
+      <div id="activityLog">
+        <div class="log-entry"><span class="ts">Mar 15 09:00</span><span class="ok">✓ Investment created on CubaLibre protocol</span></div>
+        <div class="log-entry"><span class="ts">Mar 15 09:05</span><span class="ok">✓ Investor committed $500 USDC → Safe escrow (0xDEe8...8448)</span></div>
+        <div class="log-entry"><span class="ts">Mar 15 09:10</span><span class="ok">✓ Milestone 1 submitted by El Paladar — Agent reviewing evidence...</span></div>
+        <div class="log-entry"><span class="ts">Mar 15 09:12</span><span class="ok">✓ Agent verified M1 evidence — Safe tx executed: $200 released to business</span></div>
+        <div class="log-entry"><span class="ts">Mar 21 13:00</span><span class="info">ℹ️ Business started M2: hiring process initiated</span></div>
+      </div>
+    </div>
+
+    <!-- Safe Technical Details -->
+    <div class="card">
+      <div class="card-header">
+        <div><h2>🔐 Safe Escrow Details</h2><p class="sub">Technical execution via 2-of-2 multisig</p></div>
+      </div>
+      <div class="safe-box">
+        <div class="safe-row"><span class="label">Safe Address</span><span class="mono green">0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448</span></div>
+        <div class="safe-row"><span class="label">Network</span><span class="mono">Base Sepolia (chainId: 84532)</span></div>
+        <div class="safe-row"><span class="label">Threshold</span><span class="mono yellow">2-of-2 (Investor + Agent)</span></div>
+        <div class="safe-row"><span class="label">Agent (co-signer)</span><span class="mono">0xDf6f...00A6</span></div>
+        <div class="safe-row"><span class="label">Escrow Balance</span><span class="mono yellow" id="safeBalance">$300 remaining</span></div>
+        <div class="safe-row"><span class="label">Executions</span><span class="mono" id="execCount">1 confirmed on-chain</span></div>
+        <div class="safe-row"><span class="label">Last TX</span><span class="mono">0x4852a467... (M1 release: 0.00001 ETH ≈ $200)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── State ───────────────────────────────────────────────────────────────
+    let state = {
+      phase: 2,       // 1=created, 2=funded, 3=milestone2, 4=milestone3, 5=done
+      connected: false,
+      signer: null,
+      safeBalance: 300,
+      txHashes: ['0x4852a4673c3364f8bfc87d43ef88f7d6b756b500b446bdc030e774fdf39057be']
+    };
+
+    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+    const CHAIN_ID = '0x' + (84532).toString(16);
+
+    // ─── Wallet ──────────────────────────────────────────────────────────────
+    async function connectWallet() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('MetaMask not found! Install it from metamask.io');
+        return;
+      }
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send('eth_requestAccounts', []);
+        if (accounts.length === 0) throw new Error('No accounts');
+        state.signer = await provider.getSigner();
+        state.connected = true;
+
+        const addr = accounts[0];
+        document.getElementById('walletTitle').textContent = 'Wallet Connected';
+        document.getElementById('walletSub').textContent = '';
+        const ca = document.getElementById('connectedAs');
+        ca.textContent = addr;
+        ca.style.display = 'block';
+        document.getElementById('connectBtn').textContent = '✅ Connected';
+        document.getElementById('connectBtn').disabled = true;
+        document.getElementById('demoStatus').textContent = 'Wallet: ' + addr.slice(0, 6) + '...' + addr.slice(-4);
+      } catch (e) {
+        alert('Connection failed: ' + e.message);
+      }
+    }
+
+    // ─── Demo Actions ─────────────────────────────────────────────────────────
+    function addLog(msg, type='') {
+      const log = document.getElementById('activityLog');
+      const now = new Date();
+      const ts = now.toTimeString().slice(0,5);
+      const div = document.createElement('div');
+      div.className = 'log-entry ' + type;
+      div.innerHTML = `<span class="ts">${ts}</span><span>${msg}</span>`;
+      log.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateUI() {
+      const bar = document.getElementById('fundedBar');
+      const bal = document.getElementById('safeBalance');
+
+      if (state.phase >= 2) {
+        bar.style.width = '40%';
+        bal.textContent = '$300 remaining';
+      }
+      if (state.phase >= 3) {
+        bar.style.width = '70%';
+        bal.textContent = '$150 remaining';
+      }
+      if (state.phase >= 4) {
+        bar.style.width = '100%';
+        bal.textContent = '$0 — Fully released';
+        document.getElementById('execCount').textContent = '3 confirmed on-chain';
+      }
+
+      // Flow steps
+      if (state.phase >= 2) {
+        document.getElementById('flow3').classList.remove('active');
+        document.getElementById('flow3').classList.add('done');
+        document.getElementById('flow3').querySelector('.flow-dot').textContent = '✓';
+      }
+    }
+
+    async function demoFund() {
+      const status = document.getElementById('demoStatus');
+      status.textContent = '⏳ Simulating Safe funding...';
+      status.style.color = '#fbbf24';
+
+      await new Promise(r => setTimeout(r, 1200));
+      state.phase = 2;
+      state.safeBalance = 300;
+      addLog('💰 Investor funded Safe escrow: $500 USDC', 'ok');
+      addLog('🔐 Funds held in 2-of-2 Safe multisig — investor retains control', 'info');
+      status.textContent = '✅ Safe funded! $500 in escrow.';
+      status.style.color = '#4ade80';
+      document.getElementById('btnFund').disabled = true;
+      updateUI();
+    }
+
+    async function demoCompleteMilestone2() {
+      const status = document.getElementById('demoStatus');
+      status.textContent = '⏳ Business submitting completion evidence...';
+      status.style.color = '#fbbf24';
+
+      await new Promise(r => setTimeout(r, 1200));
+      addLog('📋 Business submitted M2 evidence: 2 hire contracts + payroll records', 'warn');
+      addLog('🤖 Agent received completion notice — reviewing evidence...', 'info');
+      status.textContent = '✅ M2 marked complete — awaiting agent verification';
+      status.style.color = '#fbbf24';
+      document.getElementById('btnMilestone2').disabled = true;
+      document.getElementById('btnVerify').disabled = false;
+
+      // Update milestone 2 UI
+      const ms2 = document.querySelectorAll('.milestone')[1];
+      ms2.querySelector('.ms-icon').className = 'ms-icon ms-active';
+      ms2.querySelector('.ms-title').textContent += ' ✓ Submitted';
+      ms2.querySelector('.ms-meta').textContent = 'Mar 21 • Evidence: contracts + payroll';
+      ms2.querySelector('.ms-agent').className = 'ms-agent';
+      ms2.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent: Evidence received — ready to verify';
+    }
+
+    async function demoVerify() {
+      const status = document.getElementById('demoStatus');
+      status.textContent = '🤖 Agent verifying on-chain...';
+      status.style.color = '#60a5fa';
+
+      await new Promise(r => setTimeout(r, 2000));
+      state.phase = 3;
+      const txHash = '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      state.txHashes.push(txHash);
+      state.safeBalance = 150;
+
+      addLog(`✅ Agent verified M2 — executing Safe tx (2-of-2)...`, 'ok');
+      addLog(`🔗 <span style="color:#60a5fa">TX: ${txHash.slice(0,10)}...</span> — $150 released to El Paladar`, 'ok');
+
+      status.textContent = '✅ M2 verified & released! $150 sent to business via Safe';
+      status.style.color = '#4ade80';
+      document.getElementById('btnVerify').disabled = true;
+
+      // Update milestone 2 UI
+      const ms2 = document.querySelectorAll('.milestone')[1];
+      ms2.querySelector('.ms-icon').className = 'ms-icon ms-done';
+      ms2.querySelector('.ms-icon').textContent = '✓';
+      ms2.querySelector('.ms-amount').textContent = '$150 ✅';
+      ms2.querySelector('.ms-amount').className = 'ms-amount';
+      ms2.querySelector('.ms-meta').textContent = 'Mar 21 • Released: 0x4852...57be';
+      ms2.querySelector('.ms-agent').className = 'ms-agent done';
+      ms2.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent verified: ✅ On-chain confirmed';
+
+      // Update milestone 3
+      const ms3 = document.querySelectorAll('.milestone')[2];
+      ms3.querySelector('.ms-icon').className = 'ms-icon ms-active';
+      ms3.querySelector('.ms-icon').textContent = '3';
+      ms3.querySelector('.ms-agent').innerHTML = '<span class="dot"></span>🤖 Agent: Next milestone pending business';
+
+      document.querySelector('.card:nth-child(2) .status-badge').textContent = '2 of 3 released';
+      document.querySelector('.card:nth-child(2) .status-badge').className = 'status-badge s-done';
+
+      updateUI();
+    }
+
+    function resetDemo() {
+      state.phase = 1;
+      state.safeBalance = 500;
+      state.txHashes = [];
+      location.reload();
+    }
+
+    // ─── Init ─────────────────────────────────────────────────────────────────
+    updateUI();
+  </script>
+</body>
+</html>
