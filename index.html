@@ -931,23 +931,24 @@
       <span style="color:var(--blue);">Cuba</span> <span style="color:var(--red);">Libre</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#how-it-works" data-i18n="how-it-works">How It Works</a></li>
       <li><a href="#opportunities">Invest</a></li>
       <li><a href="#raise">Raise Capital</a></li>
       <li><a href="#agent">AI Agent</a></li>
       <li><a href="#demo" class="nav-cta">Live Demo</a></li>
     </ul>
+    <button id="langToggle" onclick="toggleLang()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;margin-left:12px;font-family:'DM Sans',sans-serif;">🌐 ES</button>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <h1>Support Cuban<br>entrepreneurs.<br><span class="blue">From</span> <span class="red">anywhere.</span></h1>
-        <p>CubaLibre connects diaspora investors with Cuban businesses — through AI-agent-verified milestones, Safe multisig escrow, and zero middlemen. Your capital, their growth, everyone's trust.</p>
+        <h1 data-i18n-html="hero-headline">Support Cuban<br>entrepreneurs.<br><span class="blue">From</span> <span class="red">anywhere.</span></h1>
+        <p data-i18n-html="hero-tagline">CubaLibre connects diaspora investors with Cuban businesses — through AI-agent-verified milestones, Safe multisig escrow, and zero middlemen. Your capital, their growth, everyone's trust.</p>
         <div class="hero-ctas">
-          <a href="#opportunities" class="btn-primary">Browse Opportunities 🌴</a>
-          <a href="#raise" class="btn-secondary">Raise Capital</a>
+          <a href="#opportunities" class="btn-primary" data-i18n="browse-ops">Browse Opportunities 🌴</a>
+          <a href="#raise" class="btn-secondary" data-i18n="raise-cap">Raise Capital</a>
         </div>
       </div>
       <div class="hero-visual" style="text-align:center;">
@@ -963,7 +964,7 @@
           </div>
           <div class="float-card">
             <div class="fc-val red">3</div>
-            <div class="fc-lbl">Milestones</div>
+            <div class="fc-lbl" data-i18n="milestones-lbl">Milestones</div>
           </div>
           <div class="float-card">
             <div class="fc-val">2-of-2</div>
@@ -979,23 +980,23 @@
     <div class="section-inner">
       <span class="section-label">How It Works</span>
       <h2 class="section-title">Investment without<br>the middlemen.</h2>
-      <p class="section-subtitle">Traditional platforms take cuts, offer no transparency, and give you zero protection. CubaLibre is different — your money stays in a Safe you control until an AI agent verifies each milestone.</p>
+      <p class="section-subtitle" data-i18n="hiw-subtitle">Traditional platforms take cuts, offer no transparency, and give you zero protection. CubaLibre is different — your money stays in a Safe you control until an AI agent verifies each milestone.</p>
 
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Browse Opportunities</h3>
-          <p>Discover Cuban businesses seeking capital — restaurants, shops, artisans. Each opportunity has clear milestones and a transparent funding goal.</p>
+          <h3 data-i18n="step1-title">Browse Opportunities</h3>
+          <p data-i18n="step1-desc">Discover Cuban businesses seeking capital — restaurants, shops, artisans. Each opportunity has clear milestones and a transparent funding goal.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <h3>Commit to Safe Escrow</h3>
-          <p>Your funds go into a 2-of-2 Safe multisig — you never fully lose control. The AI agent (Satoshi Nakaboto) is the co-signer. No platform can touch your money.</p>
+          <h3 data-i18n="step2-title">Commit to Safe Escrow</h3>
+          <p data-i18n="step2-desc">Your funds go into a 2-of-2 Safe multisig — you never fully lose control. The AI agent (Satoshi Nakaboto) is the co-signer. No platform can touch your money.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <h3>AI Verifies & Releases</h3>
-          <p>Business completes milestones, submits evidence. Satoshi verifies, then co-signs the Safe transaction to release funds. You stay informed at every step.</p>
+          <h3 data-i18n="step3-title">AI Verifies & Releases</h3>
+          <p data-i18n="step3-desc">Business completes milestones, submits evidence. Satoshi verifies, then co-signs the Safe transaction to release funds. You stay informed at every step.</p>
         </div>
       </div>
     </div>
@@ -1012,12 +1013,12 @@
         <div class="opp-card clickable-card" style="cursor:pointer;" onclick="openModal()">
           <div class="opp-img" style="background:#000;">
             <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
-            <span class="opp-badge">● Raising</span>
+            <span class="opp-badge" data-i18n="raising">● Raising</span>
           </div>
           <div class="opp-body">
-            <h3>El Paladar de María</h3>
+            <h3 data-i18n="paladar-title">El Paladar de María</h3>
             <p class="opp-location">📍 Old Havana, Cuba</p>
-            <p class="opp-desc">Beloved family restaurant serving traditional Cuban cuisine. Featured in Lonely Planet 2024. Expanding seating and hiring 2 additional staff for the growing tourist season.</p>
+            <p class="opp-desc" data-i18n="paladar-desc">Beloved family restaurant serving traditional Cuban cuisine. Featured in Lonely Planet 2024. Expanding seating and hiring 2 additional staff for the growing tourist season.</p>
             <div class="opp-meta">
               <div class="opp-amount">
                 $500
@@ -1034,10 +1035,10 @@
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
           <div class="opp-img" style="background:#000;">
             <img src="opp-bodeguita.jpg" alt="Havana building" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
-            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
+            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999" data-i18n="coming-soon">Coming Soon</span>
           </div>
           <div class="opp-body">
-            <h3>La Bodeguita</h3>
+            <h3 data-i18n="bodeguita-title">La Bodeguita</h3>
             <p class="opp-location">📍 Centro Habana, Cuba</p>
             <p class="opp-desc">Historic music venue seeking funds for equipment upgrades and artist residencies. Building Cuba's next generation of musicians.</p>
             <div class="opp-meta">
@@ -1055,12 +1056,12 @@
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
           <div class="opp-img" style="background:#000;">
             <img src="opp-artesania.jpg" alt="Cuban art" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
-            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
+            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999" data-i18n="coming-soon">Coming Soon</span>
           </div>
           <div class="opp-body">
-            <h3>Artesanía Cubana</h3>
+            <h3 data-i18n="artesania-title">Artesanía Cubana</h3>
             <p class="opp-location">📍 Trinidad, Cuba</p>
-            <p class="opp-desc">Collective of 12 local artisans producing traditional Cuban crafts. Expanding to reach international buyers through e-commerce.</p>
+            <p class="opp-desc" data-i18n="bodeguita-desc">Collective of 12 local artisans producing traditional Cuban crafts. Expanding to reach international buyers through e-commerce.</p>
             <div class="opp-meta">
               <div class="opp-amount">
                 $800
@@ -1082,14 +1083,14 @@
     <div class="section-inner">
       <span class="section-label">The Trust Layer</span>
       <h2 class="section-title">An AI agent you can<br>actually trust.</h2>
-      <p class="section-subtitle">Satoshi Nakaboto is the AI coordinator for CubaLibre. He doesn't sleep, doesn't take bribes, and can't be threatened. He verifies evidence, co-signs transactions, and keeps both sides honest.</p>
+      <p class="section-subtitle" data-i18n="agent-desc">Satoshi Nakakoto is the AI coordinator for CubaLibre. He doesn't sleep, doesn't take bribes, and can't be threatened. He verifies evidence, co-signs transactions, and keeps both sides honest.</p>
 
       <div class="agent-card">
         <div class="agent-avatar"><img src="avatar-sat-n.png" alt="Satoshi Nakaboto" style="width:100%;height:100%;border-radius:24px;object-fit:cover;"></div>
         <div class="agent-info">
           <h3>Satoshi Nakaboto</h3>
-          <div class="agent-role">🤖 CubaLibre AI Agent • OpenClaw</div>
-          <p>Satoshi monitors every milestone. When a business submits completion evidence, he reviews it, verifies its legitimacy, and — if everything checks out — co-signs the Safe transaction that releases the next tranche of funds. No manual approval. No platform middleman. Just code and trust.</p>
+          <div class="agent-role" data-i18n="agent-role">🤖 CubaLibre AI Agent • OpenClaw</div>
+          <p data-i18n="agent-detail">Satoshi monitors every milestone. When a business submits completion evidence, he reviews it, verifies its legitimacy, and — if everything checks out — co-signs the Safe transaction that releases the next tranche of funds. No manual approval. No platform middleman. Just code and trust.</p>
           <div class="agent-powers">
             <span class="agent-power">✓ Milestone verification</span>
             <span class="agent-power">✓ Safe co-signer (2-of-2)</span>
@@ -1111,29 +1112,29 @@
       <div class="split-grid">
         <div class="split-card">
           <div class="sc-icon">🌴</div>
-          <h3>Diaspora Investors</h3>
-          <p>Your family's country needs investment. Banks won't help. Existing platforms are opaque and expensive. CubaLibre gives you direct access, full transparency, and your money protected by a Safe you control.</p>
+          <h3 data-i18n="inv-title">Diaspora Investors</h3>
+          <p data-i18n="inv-desc">Your family's country needs investment. Banks won't help. Existing platforms are opaque and expensive. CubaLibre gives you direct access, full transparency, and your money protected by a Safe you control.</p>
           <ul>
-            <li>Browse verified Cuban businesses</li>
-            <li>Commit funds to a Safe you control</li>
-            <li>Track every milestone in real time</li>
-            <li>Build on-chain reputation as an investor</li>
-            <li>Your funds released only with your co-signature</li>
+            <li data-i18n="inv1">Browse verified Cuban businesses</li>
+            <li data-i18n="inv2b">Commit funds to a Safe you control</li>
+            <li data-i18n="inv4b">Track every milestone in real time</li>
+            <li data-i18n="inv5">Build on-chain reputation as an investor</li>
+            <li data-i18n="inv3">Your funds released only with your co-signature</li>
           </ul>
-          <a href="#opportunities" class="btn-primary" style="background:var(--white);color:var(--blue)">Start Investing</a>
+          <a href="#opportunities" class="btn-primary" style="background:var(--white);color:var(--blue)" data-i18n="start-invest">Start Investing</a>
         </div>
         <div class="split-card">
           <div class="sc-icon">🏠</div>
-          <h3>Cuban Businesses</h3>
-          <p>No access to banks. No credit history the world recognizes. CubaLibre opens the door to diaspora capital — with clear terms, no hidden fees, and an AI that evaluates your business honestly.</p>
+          <h3 data-i18n="biz-title">Cuban Businesses</h3>
+          <p data-i18n="biz-desc">No access to banks. No credit history the world recognizes. CubaLibre opens the door to diaspora capital — with clear terms, no hidden fees, and an AI that evaluates your business honestly.</p>
           <ul>
-            <li>Create a profile with verifiable identity</li>
-            <li>Structure your funding as milestones</li>
-            <li>Receive capital without middlemen</li>
-            <li>Build international reputation on-chain</li>
-            <li>Only pay when milestones are verified</li>
+            <li data-i18n="biz1b">Create a profile with verifiable identity</li>
+            <li data-i18n="biz1">Structure your funding as milestones</li>
+            <li data-i18n="biz3b">Receive capital without middlemen</li>
+            <li data-i18n="biz5">Build international reputation on-chain</li>
+            <li data-i18n="biz3">Only pay when milestones are verified</li>
           </ul>
-          <a href="#apply" class="btn-red" style="background:var(--amber);color:var(--white)">Apply to Raise Capital</a>
+          <a href="#apply" class="btn-red" style="background:var(--amber);color:var(--white)" data-i18n="apply-btn">Apply to Raise Capital</a>
         </div>
       </div>
     </div>
@@ -1168,7 +1169,7 @@
 
   <!-- Partners -->
   <section style="background:var(--bg-card);padding:60px 40px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-    <h2 style="font-size:28px;font-weight:800;color:var(--white);text-align:center;margin-bottom:12px;">Partners & Integrations</h2>
+    <h2 style="font-size:28px;font-weight:800;color:var(--white);text-align:center;margin-bottom:12px;" data-i18n="partners-title">Partners & Integrations</h2>
     <p style="text-align:center;color:var(--text-light);font-size:14px;margin-bottom:40px;">Built with the best tools in the space</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:900px;margin:0 auto;">
       <!-- Synthesis -->
@@ -1224,7 +1225,7 @@
       <div class="stripe-blue"></div>
     </div>
     <div class="footer-logo">CubaLibre</div>
-    <p>Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
+    <p data-i18n="footer-text">Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
     Built for The Synthesis Hackathon, March 2026.</p>
     <p style="margin-top:12px;opacity:0.4">Safe: 0x8948F10E9f3389b428891Df35d68CB031a83d731 • Base Sepolia</p>
   </footer>
@@ -1315,7 +1316,7 @@
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:8px;">
-            <span>$104 raised of $500 goal</span><span>$396 remaining</span>
+            <span data-i18n="raised-of">$104 raised of $500 goal</span><span data-i18n="remaining">$396 remaining</span>
           </div>
           <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
             <div style="height:100%;width:20.8%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:5px;"></div>
@@ -1323,7 +1324,7 @@
         </div>
 
         <!-- Milestones -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎯 Investment Milestones</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-milestones">🎯 Investment Milestones</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
           <!-- M1: Completed -->
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
@@ -1355,7 +1356,7 @@
         </div>
 
         <!-- Investor Story -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">👤 Investor Story</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="investor-story">👤 Investor Story</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="width:36px;height:36px;border-radius:50%;background:#1a1a3a;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🇨🇺</div>
@@ -1374,35 +1375,35 @@
         </div>
 
         <!-- Live Safe Data -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🔐 Safe Escrow — Live On-Chain</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-safe">🔐 Safe Escrow — Live On-Chain</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
-              <div style="font-size:12px;color:#888;">Safe Address</div>
+              <div style="font-size:12px;color:#888;" data-i18n="safe-address">Safe Address</div>
               <div style="font-size:14px;font-weight:600;"><a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-family:monospace;color:#3b82f6;text-decoration:none;">0x8948…d731</a></div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
-              <div style="font-size:12px;color:#888;">Escrow Balance</div>
+              <div style="font-size:12px;color:#888;" data-i18n="escrow-balance">Escrow Balance</div>
               <div style="font-size:14px;font-weight:700;color:#3b82f6;" id="modalBalance">⏳ Loading...</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
             <div style="flex:1;">
-              <div style="font-size:12px;color:#888;">Signing Threshold</div>
+              <div style="font-size:12px;color:#888;" data-i18n="signing-threshold">Signing Threshold</div>
               <div style="font-size:14px;font-weight:700;color:#fff;" id="modalThreshold">⏳ Loading...</div>
             </div>
           </div>
         </div>
 
         <!-- Activity Log -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">📜 Activity Log</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-activity">📜 Activity Log</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-size:13px;color:#ccc;">Investment created</div>
+              <div style="font-size:13px;color:#ccc;" data-i18n="activity-created">Investment created</div>
               <div style="font-size:11px;color:#555;">Mar 15</div>
             </div>
             <div style="font-size:12px;color:#3b82f6;font-weight:600;">$500</div>
@@ -1410,7 +1411,7 @@
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-size:13px;color:#ccc;">M1 verified — $200 released</div>
+              <div style="font-size:13px;color:#ccc;" data-i18n="activity-m1">M1 verified — $200 released</div>
               <div style="font-size:11px;color:#555;">Mar 15</div>
             </div>
             <div style="font-size:12px;color:#3b82f6;font-weight:600;">$200</div>
@@ -1427,7 +1428,7 @@
         <div id="modalLog" style="display:none;"></div>
 
         <!-- Invest Amount -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;">💰 Your investment amount (USD)</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;" data-i18n="modal-invest-amt">💰 Your investment amount (USD)</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
             <span style="font-size:20px;font-weight:700;color:#ccc;font-family:'DM Sans',sans-serif;">$</span>
@@ -1448,29 +1449,29 @@
         <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;font-family:'DM Sans',sans-serif;">
           Invest — $396 USD
         </button>
-        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;margin-bottom:32px;font-family:'DM Sans',sans-serif;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
+        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;margin-bottom:32px;font-family:'DM Sans',sans-serif;" data-i18n-html="helper-text">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
 
                 <!-- Demo Controls -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎮 Demo Controls</h3>
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-demo">🎮 Demo Controls</h3>
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Simulate Fund Safe</div>
-              <div style="font-size:11px;color:#555;">Send test ETH to Safe</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="sim-fund">Simulate Fund Safe</div>
+              <div style="font-size:11px;color:#555;" data-i18n="sim-fund-desc">Send test ETH to Safe</div>
             </div>
             <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">💰 Run</button>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Complete M2</div>
-              <div style="font-size:11px;color:#555;">Mark milestone 2 done</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="complete-m2">Complete M2</div>
+              <div style="font-size:11px;color:#555;" data-i18n="complete-m2-desc">Mark milestone 2 done</div>
             </div>
             <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">✅ Done</button>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
             <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Agent Verify & Release</div>
-              <div style="font-size:11px;color:#555;">AI co-signs Safe tx</div>
+              <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="agent-verify">Agent Verify & Release</div>
+              <div style="font-size:11px;color:#555;" data-i18n="agent-verify-desc">AI co-signs Safe tx</div>
             </div>
             <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">🤖 Verify</button>
           </div>
@@ -1816,7 +1817,7 @@
 
       } catch(e) {
         console.error('Verify error:', e);
-        document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
+        // Agent Verify button text (translated via setLang)
         document.getElementById('modalVerifyBtn').disabled = false;
         const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
@@ -1846,11 +1847,11 @@
       loadInvestmentData();
       // Reset state
       modalPhase = 2;
-      document.getElementById('modalFundBtn').textContent = '💰 Simulate Fund Safe';
+      // Fund button text (translated via setLang)
       document.getElementById('modalFundBtn').disabled = true;
-      document.getElementById('modalM2Btn').textContent = '✅ Complete M2';
+      // M2 button text (translated via setLang)
       document.getElementById('modalM2Btn').disabled = false;
-      document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
+      // Agent Verify button text (translated via setLang)
       document.getElementById('modalVerifyBtn').disabled = true;
       document.getElementById('investBtn').textContent = 'Invest in El Paladar — $396 USD';
       document.getElementById('investBtn').disabled = false;
