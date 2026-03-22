@@ -638,7 +638,7 @@
       height: 100%;
       background: linear-gradient(90deg, var(--blue), var(--amber));
       border-radius: 3px;
-      width: 40%;
+      width: 4.4%;
     }
 
     .opp-raised span {
@@ -1030,7 +1030,7 @@
               </div>
               <div class="opp-raised">
                 <div class="bar"><div class="bar-fill"></div></div>
-                <span>$200 raised</span>
+                <span>$22 raised</span>
               </div>
             </div>
           </div>
@@ -1269,7 +1269,7 @@
       </div>
 
       <!-- Modal Body -->
-      <div style="padding:32px;">
+      <div style="padding:32px;font-family:'DM Sans',sans-serif;">
         <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
         <p style="color:var(--text-light);font-size:14px;margin-bottom:16px;">📍 Calle Obispo #123, Old Havana, Cuba</p>
 
@@ -1377,20 +1377,17 @@
         <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;border:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
             <span style="color:var(--text-light);">Safe Address</span>
-            <span style="font-family:monospace;color:var(--blue);font-weight:600;" id="modalSafeAddr">0xDEe8...loading</span>
+            <a href="https://sepolia.basescan.org/address/0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448" target="_blank" style="font-family:monospace;color:var(--blue);font-weight:600;text-decoration:underline;" id="modalSafeAddr">0xDEe8...4F884</a>
           </div>
           <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
             <span style="color:var(--text-light);">Escrow Balance</span>
             <span style="font-family:monospace;font-weight:700;" id="modalBalance">⏳ Loading...</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
-            <span style="color:var(--text-light);">Threshold</span>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="color:var(--text-light);">Signing Threshold</span>
             <span style="font-family:monospace;font-weight:700;" id="modalThreshold">⏳ Loading...</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;">
-            <span style="color:var(--text-light);">Nonce</span>
-            <span style="font-family:monospace;font-weight:700;" id="modalNonce">⏳ Loading...</span>
-          </div>
+
         </div>
 
         <!-- Activity Log -->
@@ -1450,17 +1447,6 @@
   </div>
 
   <script>
-    // Event delegation for opp-card clicks
-    document.addEventListener('DOMContentLoaded', function() {
-      document.addEventListener('click', function(e) {
-        var card = e.target.closest('.clickable-card');
-        if (card) {
-          e.preventDefault();
-          openModal();
-        }
-      });
-    });
-
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
 
     function shortAddr(addr) {
@@ -1476,14 +1462,11 @@
         const safe = new ethers.Contract(SAFE, abi, provider);
         const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
         const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
-        document.getElementById('modalSafeAddr').textContent = shortAddr(SAFE);
         document.getElementById('modalBalance').textContent = eth + ' ETH';
         document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
-        document.getElementById('modalNonce').textContent = nonce.toString();
         document.getElementById('modalSafeAddr').style.color = 'var(--blue)';
         document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
         document.getElementById('modalThreshold').style.color = 'var(--text)';
-        document.getElementById('modalNonce').style.color = 'var(--text)';
       } catch(e) {
         document.getElementById('modalBalance').textContent = '⚠️ RPC error';
       }
