@@ -1014,7 +1014,7 @@
       <p class="section-subtitle">Every opportunity is verified, milestone-structured, and backed by on-chain escrow. No speculation, no promises — just capital for real work.</p>
 
       <div class="opps-grid">
-        <div class="opp-card clickable-card" style="cursor:pointer;">
+        <div class="opp-card clickable-card" style="cursor:pointer;" onclick="openModal()">
           <div class="opp-img" style="background:#000;">
             <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge">● Raising</span>
@@ -1447,6 +1447,15 @@
   </div>
 
   <script>
+    // Event delegation for opp-card clicks
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.clickable-card');
+      if (card) {
+        e.preventDefault();
+        openModal();
+      }
+    });
+
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
 
     function shortAddr(addr) {
