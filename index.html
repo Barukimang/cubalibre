@@ -1452,7 +1452,7 @@
 
         document.getElementById('investBtn').textContent = '⏳ Waiting for MetaMask...';
         document.getElementById('investBtn').disabled = true;
-        document.getElementById('modalStatus').textContent = 'Sign in MetaMask to commit $' + amount + ' USDC equivalent...';
+        document.getElementById('modalStatus').textContent = 'Confirm in MetaMask to commit $' + amount + ' USDC on Base Sepolia...';
         document.getElementById('modalStatus').style.color = '#f97316';
 
         // Send ETH to the Safe (simulates commitment)
@@ -1464,6 +1464,7 @@
             to: SAFE,
             value: ethHex,
             gas: '0x5208', // 21000
+            chainId: '0x14a34', // Base Sepolia
           }]
         });
 
@@ -1497,7 +1498,11 @@
       } catch(e) {
         document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
         document.getElementById('investBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '❌ Transaction rejected or failed: ' + (e.message || e);
+        let msg = e.message || String(e);
+        if (msg.includes('-chainId') || msg.includes('invalid') || msg.includes('4001')) {
+          msg = 'Transaction cancelled or wrong network. Please switch to Base Sepolia in MetaMask.';
+        }
+        document.getElementById('modalStatus').textContent = '❌ ' + msg;
         document.getElementById('modalStatus').style.color = '#ef4444';
       }
     }
