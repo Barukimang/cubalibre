@@ -1584,7 +1584,7 @@
       const amount = parseInt(document.getElementById('investAmount').value) || 0;
       if (amount <= 0) {
         document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
-        document.getElementById('modalStatus').style.color = var(--red);
+        document.getElementById('modalStatus').style.color = 'var(--red)';
         return;
       }
       const ethValue = amount / 2800;
@@ -1608,7 +1608,7 @@
           document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
           document.getElementById('investBtn').disabled = false;
           document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
-          document.getElementById('modalStatus').style.color = var(--red);
+          document.getElementById('modalStatus').style.color = 'var(--red)';
           return;
         }
         await new Promise(r => setTimeout(r, 1000));
@@ -1663,7 +1663,7 @@
         document.getElementById('investBtn').disabled = false;
         const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg;
-        document.getElementById('modalStatus').style.color = var(--red);
+        document.getElementById('modalStatus').style.color = 'var(--red)';
       }
     }
 
@@ -1788,8 +1788,8 @@
         document.getElementById('modalVerifyBtn').disabled = false;
         const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
-        document.getElementById('modalStatus').style.color = var(--red);
-        addLogEntry('❌ Failed: ' + msg.slice(0, 80), var(--red));
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#cf142b');
       }
     }
 
@@ -1808,7 +1808,7 @@
       modal.style.display = 'flex';
       modal.style.visibility = 'visible';
       modal.style.opacity = '1';
-      alert('Modal should be open now!');
+
       document.body.style.overflow = 'hidden';
       loadModalSafeData();
       loadInvestmentData();
