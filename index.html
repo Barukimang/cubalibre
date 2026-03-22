@@ -252,6 +252,44 @@
       gap: 20px;
     }
 
+
+    .hero-problem-label,
+    .hero-solution-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero-problem-label {
+      background: rgba(207, 20, 43, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(207, 20, 43, 0.2);
+    }
+
+    .hero-solution-label {
+      background: rgba(0, 36, 125, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(0, 36, 125, 0.2);
+    }
+
+    .hero-solution-divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--red));
+      margin: 28px 0;
+      border-radius: 1px;
+    }
+
+    .hero-solution-headline {
+      font-size: clamp(28px, 3.5vw, 44px) !important;
+      margin-bottom: 16px !important;
+    }
+
     /* Cuba Libre drink illustration */
     .drink-hero {
       width: 100%;
@@ -935,8 +973,16 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <h1>Support Cuban<br>entrepreneurs.<br><span class="blue">From</span> <span class="red">anywhere.</span></h1>
-        <p>CubaLibre connects diaspora investors with Cuban businesses — through AI-verified milestones, Safe multisig escrow, and zero middlemen. Your capital, their growth, everyone's trust.</p>
+        <div class="hero-problem-label">The Problem</div>
+        <h1>Cuban businesses<br>can't get funded.<br>Diaspora can't<br><span class="blue">safely invest.</span></h1>
+        <p>Banks don't work cross-border. Platforms take 10-20% and offer zero transparency. Manual milestone verification is a black box. Neither side has any protection.</p>
+
+        <div class="hero-solution-divider"></div>
+
+        <div class="hero-solution-label">The Solution</div>
+        <h1 class="hero-solution-headline">AI-verified milestones.<br><span class="red">Safe multisig escrow.</span><br>Zero middlemen.</h1>
+        <p>CubaLibre connects diaspora investors with Cuban businesses — through an AI agent that verifies work, a Safe that holds funds, and smart contracts that release them. Trustless. Transparent. Built for Cuba.</p>
+
         <div class="hero-ctas">
           <a href="#opportunities" class="btn-primary">Browse Opportunities 🌴</a>
           <a href="#raise" class="btn-secondary">Raise Capital</a>
