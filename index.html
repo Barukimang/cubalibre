@@ -1393,6 +1393,30 @@
       }
     }
 
+    const BASE_SEPOLIA = {
+      chainId: '0x' + (84532).toString(16), // 0x14a34
+      chainName: 'Base Sepolia',
+      rpcUrls: ['https://sepolia.base.org'],
+      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      blockExplorerUrls: ['https://sepolia.basescan.org']
+    };
+
+    async function switchToBaseSepolia() {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: BASE_SEPOLIA.chainId }]
+        });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [BASE_SEPOLIA]
+          });
+        }
+      }
+    }
+
     function addLogEntry(msg, color) {
       const log = document.getElementById('modalLog');
       const now = new Date();
