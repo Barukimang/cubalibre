@@ -1317,32 +1317,15 @@
           </div>
         </div>
 
-        <!-- Demo Controls -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎮 Demo Controls</h3>
-        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
-            <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Simulate Fund Safe</div>
-              <div style="font-size:11px;color:#555;">Send test ETH to Safe</div>
-            </div>
-            <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">💰 Run</button>
+        <!-- Investment Progress -->
+        <div style="margin-bottom:28px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:8px;">
+            <span>$22 raised of $500 goal</span><span>$478 remaining</span>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
-            <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Complete M2</div>
-              <div style="font-size:11px;color:#555;">Mark milestone 2 done</div>
-            </div>
-            <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">✅ Done</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
-            <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:#fff;">Agent Verify & Release</div>
-              <div style="font-size:11px;color:#555;">AI co-signs Safe tx</div>
-            </div>
-            <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">🤖 Verify</button>
+          <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
+            <div style="height:100%;width:4.4%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:5px;"></div>
           </div>
         </div>
-        <div id="modalStatus" style="font-size:13px;color:#ccc;padding:12px 16px;background:#0d0d1f;border:1px solid #1a1a3a;border-radius:8px;margin-bottom:24px;"></div>
 
         <!-- Milestones -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎯 Investment Milestones</h3>
@@ -1448,28 +1431,7 @@
         </div>
         <div id="modalLog" style="display:none;"></div>
 
-        <!-- Invest Amount -->
-        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">💰 Your investment amount (USD)</h3>
-        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-            <span style="font-size:20px;font-weight:700;color:#ccc;">$</span>
-            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
-              style="flex:1;border:none;outline:none;font-size:32px;font-weight:800;color:#fff;background:transparent;width:100%;"
-              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USD'">
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$10</button>
-            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$50</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$100</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">Max</button>
-          </div>
-        </div>
-
-        <!-- CTA -->
-        <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;">
-          Invest — $478 USD
-        </button>
-        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
+text-align:center;font-size:12px;color:#555;margin-top:0;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
       </div>
     </div>
   </div>
@@ -1859,7 +1821,91 @@
     document.getElementById('elpaladar-modal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
-  </script>
+
+      st Amount -->
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">💰 Your investment amount (USD)</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:20px;font-weight:700;color:#ccc;">$</span>
+            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
+              style="flex:1;border:none;outline:none;font-size:32px;font-weight:800;color:#fff;background:transparent;width:100%;"
+              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USD'">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$100</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">Max</button>
+          </div>
+        </div>
+
+
+        <!-- CTA -->
+        <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;">
+          Invest — $478 USD
+        </button>
+        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
+
+
+        
+        <!-- Demo Controls -->
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">🎮 Demo Controls</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Simulate Fund Safe</div>
+              <div style="font-size:11px;color:#555;">Send test ETH to Safe</div>
+            </div>
+            <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">💰 Run</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Complete M2</div>
+              <div style="font-size:11px;color:#555;">Mark milestone 2 done</div>
+            </div>
+            <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">✅ Done</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:#fff;">Agent Verify & Release</div>
+              <div style="font-size:11px;color:#555;">AI co-signs Safe tx</div>
+            </div>
+            <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">🤖 Verify</button>
+          </div>
+        </div>
+        <div id="modalStatus" style="font-size:13px;color:#ccc;padding:12px 16px;background:#0d0d1f;border:1px solid #1a1a3a;border-radius:8px;margin-bottom:24px;"></div>
+
+
+
+        <!-- Invest Amount -->
+        <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">💰 Your investment amount (USD)</h3>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:20px;font-weight:700;color:#ccc;">$</span>
+            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
+              style="flex:1;border:none;outline:none;font-size:32px;font-weight:800;color:#fff;background:transparent;width:100%;"
+              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USD'">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">$100</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">Max</button>
+          </div>
+        </div>
+
+
+
+        <!-- CTA -->
+        <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;">
+          Invest — $478 USD
+        </button>
+        <p style="text-align:center;font-size:12px;color:#555;margin-top:0;">Sends real testnet ETH on Base Sepolia. <
+
+</script>
+
+      </div>
+    </div>
 
 </body>
 </html>
