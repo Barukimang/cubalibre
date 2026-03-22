@@ -1539,22 +1539,112 @@
       }, 1200);
     }
 
-    function modalVerify() {
-      document.getElementById('modalVerifyBtn').textContent = '⏳ Verifying...';
+    // ─── Config ──────────────────────────────────────────────────────────
+    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+    const RPC_URL = 'https://sepolia.base.org';
+    const BUSINESS_ADDRESS = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6';
+    const AGENT_ADDR = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'; // Agent signer address
+    const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
+
+    async function modalVerify() {
+      document.getElementById('modalVerifyBtn').textContent = '⏳ Preparing...';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto verifying on-chain...';
+      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto preparing release...';
       document.getElementById('modalStatus').style.color = '#6366f1';
-      addLogEntry('🤖 Agent verifying M2 evidence...', '#60a5fa');
-      setTimeout(() => {
-        const txHash = '0x' + Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
-        document.getElementById('modalVerifyBtn').textContent = '✅ Verified & Released';
-        document.getElementById('modalStatus').textContent = '✅ $150 released to El Paladar via Safe execTransaction! TX: ' + txHash.slice(0,12) + '...';
-        document.getElementById('modalStatus').style.color = '#22c55e';
-        modalPhase = 4;
-        addLogEntry('✅ M2 verified — Safe tx executed (2-of-2 signatures)', '#22c55e');
-        addLogEntry('💸 $150 released to El Paladar: ' + txHash.slice(0,16) + '...', '#22c55e');
-        addLogEntry('🏁 2 of 3 milestones complete', '#22c55e');
-      }, 2000);
+
+      try {
+        // 1. Get user account
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0];
+
+        // 2. Get current Safe state
+        const provider = new window.ethers.JsonRpcProvider(RPC_URL);
+        const safeReadABI = [
+          'function nonce() view returns (uint256)',
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address to, uint256 value, bytes data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, uint256 nonce) view returns (bytes32)'
+        ];
+        const safe = new window.ethers.Contract(SAFE_ADDRESS, safeReadABI, provider);
+
+        const [nonce, threshold] = await Promise.all([safe.nonce(), safe.getThreshold()]);
+        addLogEntry('🤖 Agent fetched Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+
+        // 3. Build the release transaction
+        const to = BUSINESS_ADDRESS;
+        const value = window.ethers.parseEther(RELEASE_AMOUNT_ETH);
+        const data = '0x';
+        const operation = 0; // CALL
+        const safeTxGas = 0;
+        const baseGas = 0;
+        const gasPrice = 0;
+        const gasToken = window.ethers.ZeroAddress;
+        const refundReceiver = window.ethers.ZeroAddress;
+
+        // 4. Get the Safe transaction hash (what MetaMask will show the user)
+        const txHash = await safe.getTransactionHash(to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce);
+
+        addLogEntry('🤖 Generated tx hash: ' + txHash.slice(0, 20) + '...', '#60a5fa');
+        addLogEntry('📋 Release: ' + RELEASE_AMOUNT_ETH + ' ETH → ' + to.slice(0, 10) + '... (nonce=' + nonce + ')', '#60a5fa');
+
+        // 5. User signs in MetaMask (personal_sign shows the hash with Ethereum prefix)
+        document.getElementById('modalStatus').textContent = 'Sign the release in MetaMask...';
+        addLogEntry('📝 Awaiting your signature in MetaMask...', '#fbbf24');
+
+        const userSigHex = await window.ethereum.request({
+          method: 'personal_sign',
+          params: [txHash, userAddress]
+        });
+
+        if (!userSigHex || userSigHex === '0x') throw new Error('Signature rejected or cancelled');
+        addLogEntry('✅ Your signature received: ' + userSigHex.slice(0, 14) + '...', '#22c55e');
+
+        // 6. Satoshi's pre-computed signature (ready)
+        addLogEntry('🤖 Satoshi Nakaboto co-signing...', '#60a5fa');
+
+        // 7. Combine signatures: [userSig(65 bytes)][agentSig(65 bytes)]
+        const combined = window.ethers.concat([
+          window.ethers.getBytes(userSigHex),
+          window.ethers.getBytes(AGENT_SIG)
+        ]);
+        const combinedHex = window.ethers.hexlify(combined);
+
+        // 8. Execute!
+        document.getElementById('modalStatus').textContent = '⏳ Executing 2-of-2 Safe transaction...';
+        addLogEntry('🔐 Combining signatures: [your sig][Satoshi sig] = 2-of-2 ✅', '#22c55e');
+
+        const execABI = ['function execTransaction(address to, uint256 value, bytes data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, bytes signatures) returns (bool)'];
+        const execSafe = new window.ethers.Contract(SAFE_ADDRESS, execABI, provider);
+
+        const tx = await execSafe.execTransaction(
+          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, combinedHex,
+          { gasLimit: 200000, maxFeePerGas: 0, maxPriorityFeePerGas: 0 }
+        );
+
+        document.getElementById('modalStatus').textContent = '⏳ Waiting for confirmation...';
+        const receipt = await tx.wait();
+
+        if (receipt.status === 1) {
+          document.getElementById('modalVerifyBtn').textContent = '✅ Verified & Released!';
+          document.getElementById('modalVerifyBtn').style.background = '#22c55e';
+          document.getElementById('modalStatus').textContent = '✅ Released on-chain! TX: ' + tx.hash.slice(0, 12) + '... block ' + receipt.blockNumber;
+          document.getElementById('modalStatus').style.color = '#22c55e';
+          modalPhase = 4;
+          addLogEntry('✅✅ SAFE TX EXECUTED! 2-of-2 threshold met', '#22c55e');
+          addLogEntry('💸 Released: ' + RELEASE_AMOUNT_ETH + ' ETH → ' + to.slice(0, 10) + '...', '#22c55e');
+          addLogEntry('🔗 TX: ' + tx.hash, '#22c55e');
+        } else {
+          throw new Error('Transaction reverted');
+        }
+
+      } catch(e) {
+        console.error('Verify error:', e);
+        document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
+        document.getElementById('modalVerifyBtn').disabled = false;
+        const msg = e.code === 4001 ? 'Signature cancelled' : (e.message || String(e));
+        document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
+        document.getElementById('modalStatus').style.color = '#ef4444';
+        addLogEntry('❌ Release failed: ' + msg.slice(0, 80), '#ef4444');
+      }
     }
 
     function openModal() {
