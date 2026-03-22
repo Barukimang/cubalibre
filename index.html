@@ -932,10 +932,10 @@
     </a>
     <ul class="nav-links">
       <li><a href="#how-it-works" data-i18n="how-it-works">How It Works</a></li>
-      <li><a href="#opportunities">Invest</a></li>
+      <li><a href="#opportunities" data-i18n="nav-invest">Invest</a></li>
       <li><a href="#raise">Raise Capital</a></li>
-      <li><a href="#agent">AI Agent</a></li>
-      <li><a href="#demo" class="nav-cta">Live Demo</a></li>
+      <li><a href="#agent" data-i18n="nav-ai-agent">AI Agent</a></li>
+      <li><a href="#demo" class="nav-cta" data-i18n="nav-live-demo">Live Demo</a></li>
     </ul>
     <button id="langToggle" onclick="toggleLang()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;margin-left:12px;font-family:'DM Sans',sans-serif;">🌐 ES</button>
   </nav>
@@ -968,7 +968,7 @@
           </div>
           <div class="float-card">
             <div class="fc-val">2-of-2</div>
-            <div class="fc-lbl">Safe multisig</div>
+            <div class="fc-lbl" data-i18n="safe-multisig">Safe multisig</div>
           </div>
         </div>
       </div>
@@ -1330,8 +1330,8 @@
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="width:10px;height:10px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:600;font-size:14px;color:var(--white);">Purchase kitchen equipment</div>
-              <div style="font-size:12px;color:#888;">Completed Mar 15 • $200 allocated</div>
+              <div style="font-weight:600;font-size:14px;color:var(--white);" data-i18n="m1-title">Purchase kitchen equipment</div>
+              <div style="font-size:12px;color:#888;" data-i18n="m1-status">Completed Mar 15 • $200 allocated</div>
             </div>
             <div style="font-weight:700;color:#3b82f6;font-size:14px;">$200</div>
           </div>
@@ -1339,8 +1339,8 @@
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;background:#0f0f1f;">
             <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:600;font-size:14px;color:var(--white);">Hire 2 additional staff</div>
-              <div style="font-size:12px;color:#888;">In progress • Interviews Mar 22</div>
+              <div style="font-weight:600;font-size:14px;color:var(--white);" data-i18n="m2-title">Hire 2 additional staff</div>
+              <div style="font-size:12px;color:#888;" data-i18n="m2-status">In progress • Interviews Mar 22</div>
             </div>
             <div style="font-weight:700;color:#f59e0b;font-size:14px;">$150</div>
           </div>
@@ -1348,8 +1348,8 @@
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
             <div style="width:10px;height:10px;border-radius:50%;background:#444;flex-shrink:0;"></div>
             <div style="flex:1;">
-              <div style="font-weight:600;font-size:14px;color:#888;">Launch expanded menu</div>
-              <div style="font-size:12px;color:#555;">Pending • Target: Apr 1</div>
+              <div style="font-weight:600;font-size:14px;color:#888;" data-i18n="m3-title">Launch expanded menu</div>
+              <div style="font-size:12px;color:#555;" data-i18n="m3-status">Pending • Target: Apr 1</div>
             </div>
             <div style="font-weight:700;color:#555;font-size:14px;">$150</div>
           </div>
@@ -1361,12 +1361,12 @@
           <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="width:36px;height:36px;border-radius:50%;background:#1a1a3a;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🇨🇺</div>
             <div style="flex:1;">
-              <div style="font-size:14px;font-weight:600;color:#fff;">From a diaspora investor</div>
-              <div style="font-size:12px;color:#555;">Cuban-American, Miami, FL</div>
+              <div style="font-size:14px;font-weight:600;color:#fff;" data-i18n="inv-story-label">From a diaspora investor</div>
+              <div style="font-size:12px;color:#555;" data-i18n="inv-story-loc">Cuban-American, Miami, FL</div>
             </div>
             <div style="text-align:right;">
               <div style="font-size:16px;font-weight:800;color:#3b82f6;">$500</div>
-              <div style="font-size:11px;color:#555;">committed</div>
+              <div style="font-size:11px;color:#555;" data-i18n="inv-story-committed">committed</div>
             </div>
           </div>
           <div style="padding:14px 20px;">
@@ -1386,13 +1386,13 @@
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
               <div style="font-size:12px;color:#888;" data-i18n="escrow-balance">Escrow Balance</div>
-              <div style="font-size:14px;font-weight:700;color:#3b82f6;" id="modalBalance">⏳ Loading...</div>
+              <div style="font-size:14px;font-weight:700;color:#3b82f6;" id="modalBalance" data-i18n="loading-balance">⏳ Loading...</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
             <div style="flex:1;">
               <div style="font-size:12px;color:#888;" data-i18n="signing-threshold">Signing Threshold</div>
-              <div style="font-size:14px;font-weight:700;color:#fff;" id="modalThreshold">⏳ Loading...</div>
+              <div style="font-size:14px;font-weight:700;color:#fff;" id="modalThreshold" data-i18n="loading-threshold">⏳ Loading...</div>
             </div>
           </div>
         </div>
@@ -1493,7 +1493,14 @@
       es: {
         "how-it-works": "Cómo Funciona",
         "hero-tagline": "CubaLibre conecta inversionistas de la diáspora con negocios cubanos — a través de hitos verificados por IA, Safe multisig escrow, y cero intermediarios. Tu capital, su crecimiento, la confianza de todos.",
-        "hero-headline": "Apoya a Emprendedores<br>Cubanos.<br><span class=\"blue\">Desde</span> <span class=\"red\">cualquier lugar.</span>",
+        "nav-invest": "Invertir",
+      "nav-ai-agent": "Agente IA",
+      "nav-live-demo": "Demo en Vivo",
+      "safe-multisig": "Multisig Safe",
+      "signatories": "Firmantes 2-de-2",
+      "hiw-label": "Cómo Funciona",
+      "demo-label": "Demo en Vivo",
+      "hero-headline": "Apoya a Emprendedores<br>Cubanos.<br><span class=\"blue\">Desde</span> <span class=\"red\">cualquier lugar.</span>",
         "browse-ops": "Ver Oportunidades 🌴",
         "raise-cap": "Recaudar Capital",
         "raised-of": "recaudado de $500",
@@ -1558,7 +1565,19 @@
         "safe-contains": "El Safe contiene",
         "total-invested": "Total invertido",
         "your-ownership": "Tu propiedad",
-        "helper-text": "Envía ETH real de testnet en Base Sepolia. <a href=\"https://www.alchemy.com/faucets/base-sepolia\" target=\"_blank\" style=\"color:#3b82f6;font-weight:600;text-decoration:none;\">Obtén ETH test gratuito →</a>",
+        
+      "m1-title": "Compra de equipos de cocina",
+      "m1-status": "Completado Mar 15 • $200 asignados",
+      "m2-title": "Contratar 2 empleados adicionales",
+      "m2-status": "En progreso • Entrevistas Mar 22",
+      "m3-title": "Lanzar menú expandido",
+      "m3-status": "Pendiente • Meta: Abr 1",
+      "inv-story-label": "De un inversionista de la diáspora",
+      "inv-story-loc": "Cubano-Americano, Miami, FL",
+      "inv-story-committed": "comprometido",
+      "loading-balance": "⏳ Cargando...",
+      "loading-threshold": "⏳ Cargando...",
+      "helper-text": "Envía ETH real de testnet en Base Sepolia. <a href=\"https://www.alchemy.com/faucets/base-sepolia\" target=\"_blank\" style=\"color:#3b82f6;font-weight:600;text-decoration:none;\">Obtén ETH test gratuito →</a>",
         "invest-10": "Invertir — $10 USD",
         "invest-50": "Invertir — $50 USD",
         "invest-100": "Invertir — $100 USD",
@@ -1582,7 +1601,7 @@
         if (T[lang][key]) el.innerHTML = T[lang][key];
       });
       const btn = document.getElementById('langToggle');
-      if (btn) btn.textContent = lang === 'en' ? '🌐 ES' : '🌐 EN';
+      if (btn) btn.textContent = lang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
     }
 
     function toggleLang() {
