@@ -4,23 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CubaLibre — Diaspora Investment</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --blue: #00247D;
       --blue-light: #1a5dc4;
+      --blue-glow: rgba(0, 36, 125, 0.3);
       --red: #CF142B;
       --red-light: #e8233a;
       --white: #FFFFFF;
       --off-white: #F8F8F6;
       --cream: #FFFEF5;
-      --bg: #FAFAFA;
-      --text: #1a1a1a;
-      --text-light: #555;
+      --bg: #000000;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --bg-modal: #0d0d0d;
+      --text: #FFFFFF;
+      --text-light: #999999;
       --amber: #D4A017;
       --amber-dark: #B8890F;
+      --border: #222222;
+      --border-light: #333333;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,8 +36,8 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--white);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
       line-height: 1.6;
@@ -46,9 +54,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255,255,255,0.92);
+      background: rgba(0,0,0,0.95);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,36,125,0.08);
+      border-bottom: 1px solid var(--border);
       transition: all 0.3s;
     }
 
@@ -127,7 +135,7 @@
       display: flex;
       align-items: center;
       padding: 120px 40px 80px;
-      background: var(--white);
+      background: var(--bg);
       position: relative;
       overflow: hidden;
     }
@@ -139,7 +147,7 @@
       right: -10%;
       width: 60%;
       height: 120%;
-      background: linear-gradient(135deg, var(--blue) 0%, #0a1f5c 100%);
+      background: linear-gradient(135deg, var(--blue) 0%, #000033 100%);
       border-radius: 0 0 0 40%;
       z-index: 0;
       opacity: 0.04;
@@ -211,7 +219,7 @@
     .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,36,125,0.3); }
 
     .btn-secondary {
-      background: var(--white);
+      background: var(--bg);
       color: var(--blue);
       border: 2px solid var(--blue);
       padding: 12px 26px;
@@ -309,7 +317,7 @@
         rgba(240,240,235,0.8) 100%
       );
       border-radius: 12px 12px 60px 60px;
-      border: 3px solid rgba(0,36,125,0.15);
+      border: 3px solid rgba(255,255,255,0.15);
       position: relative;
       overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.12), inset 0 0 30px rgba(255,255,255,0.5);
@@ -388,7 +396,7 @@
     .drink-label {
       text-align: center;
       margin-top: 20px;
-      font-size: 22px;
+      font-size: 32px;
       font-weight: 900;
       color: var(--blue);
       letter-spacing: -0.5px;
@@ -414,12 +422,12 @@
     }
 
     .float-card {
-      background: var(--white);
+      background: var(--bg);
       border-radius: 12px;
       padding: 12px 18px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       text-align: center;
-      border: 1px solid rgba(0,36,125,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .float-card .fc-val {
@@ -458,7 +466,7 @@
     }
 
     .section-cream {
-      background: var(--off-white);
+      background: var(--bg-card);
     }
 
     .section-inner {
@@ -514,17 +522,17 @@
     }
 
     .step {
-      background: var(--white);
+      background: var(--bg);
       border-radius: 20px;
       padding: 36px 28px;
       position: relative;
-      border: 1px solid rgba(0,36,125,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .step:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,36,125,0.1);
+      box-shadow: 0 12px 40px rgba(255,255,255,0.1);
     }
 
     .step-num {
@@ -534,7 +542,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 32px;
       font-weight: 900;
       margin-bottom: 20px;
     }
@@ -565,17 +573,17 @@
     }
 
     .opp-card {
-      background: var(--white);
+      background: var(--bg);
       border-radius: 20px;
       overflow: hidden;
-      border: 1px solid rgba(0,36,125,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
       transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
     }
 
     .opp-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,36,125,0.1);
+      box-shadow: 0 12px 40px rgba(255,255,255,0.1);
     }
 
     .opp-img {
@@ -589,7 +597,7 @@
       overflow: hidden;
     }
 
-    .opp-img::after {
+    .opp-img::after { pointer-events: none;
       content: '';
       position: absolute;
       inset: 0;
@@ -600,7 +608,7 @@
       position: absolute;
       top: 16px;
       right: 16px;
-      background: var(--white);
+      background: var(--bg);
       color: var(--blue);
       font-size: 12px;
       font-weight: 700;
@@ -637,7 +645,7 @@
       justify-content: space-between;
       align-items: center;
       padding-top: 16px;
-      border-top: 1px solid rgba(0,36,125,0.08);
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
 
     .opp-amount {
@@ -660,7 +668,7 @@
     .opp-raised .bar {
       height: 6px;
       width: 120px;
-      background: rgba(0,36,125,0.1);
+      background: rgba(255,255,255,0.1);
       border-radius: 3px;
       overflow: hidden;
       margin-bottom: 4px;
@@ -680,11 +688,11 @@
 
     /* ── Agent Section ── */
     .agent-section {
-      background: var(--off-white);
+      background: var(--bg-card);
     }
 
     .agent-card {
-      background: var(--white);
+      background: var(--bg);
       border-radius: 24px;
       padding: 48px;
       display: grid;
@@ -692,7 +700,7 @@
       gap: 48px;
       align-items: center;
       margin-top: 48px;
-      border: 1px solid rgba(0,36,125,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 8px 32px rgba(0,0,0,0.04);
     }
 
@@ -700,7 +708,7 @@
       width: 120px;
       height: 120px;
       border-radius: 24px;
-      background: linear-gradient(135deg, var(--blue) 0%, #0a1f5c 100%);
+      background: linear-gradient(135deg, var(--blue) 0%, #000033 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -736,8 +744,8 @@
     }
 
     .agent-power {
-      background: var(--off-white);
-      border: 1px solid rgba(0,36,125,0.1);
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.1);
       padding: 6px 14px;
       border-radius: 20px;
       font-size: 13px;
@@ -771,7 +779,7 @@
     }
 
     .split-card h3 {
-      font-size: 22px;
+      font-size: 32px;
       font-weight: 800;
       margin-bottom: 12px;
     }
@@ -805,7 +813,7 @@
 
     /* ── CTA ── */
     .cta-section {
-      background: linear-gradient(135deg, var(--red) 0%, #8B0A1A 100%);
+      background: linear-gradient(135deg, var(--red) 0%, #330008 100%);
       color: var(--white);
       text-align: center;
       padding: 100px 40px;
@@ -838,7 +846,7 @@
     }
 
     .cta-section .btn-white {
-      background: var(--white);
+      background: var(--bg);
       color: var(--red);
       border: none;
       padding: 16px 36px;
@@ -960,7 +968,7 @@
   <nav>
     <a href="#" class="nav-logo">
       <img src="logo.png" alt="CubaLibre" style="width:32px;height:32px;border-radius:6px;object-fit:cover;">
-      CubaLibre
+      <span style="color:var(--blue);">Cuba</span> <span style="color:var(--red);">Libre</span>
     </a>
     <ul class="nav-links">
       <li><a href="#how-it-works">How It Works</a></li>
@@ -975,26 +983,18 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="hero-news-tag">📰 Cuba is opening up.</div>
-        <h1>But how do you<br>actually invest<br>in the island?</h1>
-        <p>Banks don't work. Platforms take 20%. Wire transfers are blocked. There's no infrastructure for diaspora to support Cuban businesses — until now.</p>
-
-        <div class="hero-solution-divider"></div>
-
-        <div class="hero-solution-label">CubaLibre</div>
-        <h1 class="hero-solution-headline">Diaspora investment.<br><span class="red">Without the middlemen.</span></h1>
-        <p>AI-verified milestones. Safe multisig escrow. Direct capital flows. Your money goes exactly where it's supposed to — and nowhere else.</p>
-
+        <h1>Support Cuban<br>entrepreneurs.<br><span class="blue">From</span> <span class="red">anywhere.</span></h1>
+        <p>CubaLibre connects diaspora investors with Cuban businesses — through AI-agent-verified milestones, Safe multisig escrow, and zero middlemen. Your capital, their growth, everyone's trust.</p>
         <div class="hero-ctas">
           <a href="#opportunities" class="btn-primary">Browse Opportunities 🌴</a>
           <a href="#raise" class="btn-secondary">Raise Capital</a>
         </div>
       </div>
-      <div class="hero-visual">
+      <div class="hero-visual" style="text-align:center;">
         <div class="drink-hero">
           <img src="logo.png" alt="CubaLibre — Cuba Libre cocktail" style="width:320px;max-width:100%;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
           <div class="drink-label">Cuba <span>Libre</span></div>
-          <div class="drink-sublabel">Rum • Coke • Lime • Freedom</div>
+          <div class="drink-sublabel">AI-agents • Ethereum • Freedom</div>
         </div>
         <div class="float-cards">
           <div class="float-card">
@@ -1041,6 +1041,11 @@
     </div>
   </section>
 
+  <!-- DEBUG: Test button -->
+  <div style="background:red;padding:20px;text-align:center;z-index:9999;position:relative;">
+    <button onclick="alert('JS works! Click detected on: ' + event.target.tagName)" style="background:white;color:red;padding:16px 32px;font-size:20px;border:none;border-radius:12px;cursor:pointer;">TEST: Click me to verify JS works</button>
+  </div>
+
   <!-- Live Opportunities -->
   <section class="section" id="opportunities">
     <div class="section-inner">
@@ -1049,9 +1054,9 @@
       <p class="section-subtitle">Every opportunity is verified, milestone-structured, and backed by on-chain escrow. No speculation, no promises — just capital for real work.</p>
 
       <div class="opps-grid">
-        <div class="opp-card" onclick="openModal()" style="cursor:pointer;">
-          <div class="opp-img">
-            🍽️
+        <div class="opp-card clickable-card" style="cursor:pointer;">
+          <div class="opp-img" style="background:#000;">
+            <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge">● Raising</span>
           </div>
           <div class="opp-body">
@@ -1072,9 +1077,9 @@
         </div>
 
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
-          <div class="opp-img" style="background: linear-gradient(135deg, #555 0%, #333 100%);">
-            🔜
-            <span class="opp-badge" style="background:#eee;color:#555">Coming Soon</span>
+          <div class="opp-img" style="background:#000;">
+            <img src="opp-bodeguita.jpg" alt="Havana building" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
+            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
           </div>
           <div class="opp-body">
             <h3>La Bodeguita</h3>
@@ -1093,9 +1098,9 @@
         </div>
 
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
-          <div class="opp-img" style="background: linear-gradient(135deg, #8B6914 0%, #5a4010 100%);">
-            🎨
-            <span class="opp-badge" style="background:#eee;color:#555">Coming Soon</span>
+          <div class="opp-img" style="background:#000;">
+            <img src="opp-artesania.jpg" alt="Cuban art" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
+            <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
           </div>
           <div class="opp-body">
             <h3>Artesanía Cubana</h3>
@@ -1125,7 +1130,7 @@
       <p class="section-subtitle">Satoshi Nakaboto is the AI coordinator for CubaLibre. He doesn't sleep, doesn't take bribes, and can't be threatened. He verifies evidence, co-signs transactions, and keeps both sides honest.</p>
 
       <div class="agent-card">
-        <div class="agent-avatar">🐒</div>
+        <div class="agent-avatar"><img src="avatar-sat-n.png" alt="Satoshi Nakaboto" style="width:100%;height:100%;border-radius:24px;object-fit:cover;"></div>
         <div class="agent-info">
           <h3>Satoshi Nakaboto</h3>
           <div class="agent-role">🤖 CubaLibre AI Agent • OpenClaw</div>
@@ -1205,6 +1210,55 @@
     <a href="#opportunities" class="btn-white">Start Investing Now 🌴</a>
   </section>
 
+
+  <!-- Partners -->
+  <section style="background:var(--bg-card);padding:60px 40px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <h2 style="font-size:28px;font-weight:800;color:var(--white);text-align:center;margin-bottom:12px;">Partners & Integrations</h2>
+    <p style="text-align:center;color:var(--text-light);font-size:14px;margin-bottom:40px;">Built with the best tools in the space</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:900px;margin:0 auto;">
+      <!-- Synthesis -->
+      <a href="https://synthesis.md/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=synthesis.md&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Synthesis</div><div style="font-size:11px;color:var(--text-light);">Hackathon</div></div>
+      </a>
+      <!-- Safe -->
+      <a href="https://app.safe.global/welcome" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Safe</div><div style="font-size:11px;color:var(--text-light);">Wallet</div></div>
+      </a>
+      <!-- OpenClaw -->
+      <a href="https://openclaw.ai/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">OpenClaw</div><div style="font-size:11px;color:var(--text-light);">AI Agent</div></div>
+      </a>
+      <!-- MiniMax -->
+      <a href="https://www.minimax.io/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=minimax.io&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">MiniMax</div><div style="font-size:11px;color:var(--text-light);">LLM</div></div>
+      </a>
+      <!-- Ethereum -->
+      <a href="https://ethereum.org/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=ethereum.org&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Ethereum</div><div style="font-size:11px;color:var(--text-light);">Blockchain</div></div>
+      </a>
+      <!-- Claude -->
+      <a href="https://claude.ai/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Claude</div><div style="font-size:11px;color:var(--text-light);">AI Model</div></div>
+      </a>
+      <!-- Base -->
+      <a href="https://www.base.org/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=base.org&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">Base</div><div style="font-size:11px;color:var(--text-light);">L2 Network</div></div>
+      </a>
+      <!-- MetaMask -->
+      <a href="https://metamask.io/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;text-decoration:none;transition:all 0.2s;min-width:180px;" onmouseover="this.style.borderColor='var(--blue)';this.style.background='rgba(0,36,125,0.08)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)';">
+        <img src="https://www.google.com/s2/favicons?domain=metamask.io&sz=64" width="28" height="28" style="border-radius:6px;" alt="">
+        <div><div style="font-weight:700;font-size:14px;color:var(--white);">MetaMask</div><div style="font-size:11px;color:var(--text-light);">Wallet</div></div>
+      </a>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="flag-stripes">
@@ -1244,12 +1298,13 @@
 
   <!-- El Paladar Modal -->
   <div id="elpaladar-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
-    <div style="background:var(--white);border-radius:24px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.4);">
+    <div style="background:#1a1a1a;border:2px solid var(--blue);border-radius:24px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.5);">
 
       <!-- Modal Header -->
-      <div style="height:200px;background:linear-gradient(135deg,#00247D,#CF142B);display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;">
-        🍽️
-        <span style="position:absolute;top:16px;right:16px;background:var(--white);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;">● Raising</span>
+      <div style="height:200px;background:linear-gradient(135deg,#00247D,#CF142B);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <img src="opp-paladar.jpg" alt="El Paladar" style="width:100%;height:100%;object-fit:cover;opacity:0.4;">
+        <div style="position:absolute;font-size:64px;">🍽️</div>
+        <span style="position:absolute;top:16px;right:16px;background:var(--blue);color:var(--white);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;">● Raising</span>
         <button onclick="closeModal()" style="position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;">×</button>
       </div>
 
@@ -1262,26 +1317,26 @@
 
         <!-- Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
-          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+          <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">4.8★</div>
             <div style="font-size:12px;color:var(--text-light);">Rating</div>
           </div>
-          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+          <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">6</div>
             <div style="font-size:12px;color:var(--text-light);">Current Staff</div>
           </div>
-          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+          <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">3</div>
             <div style="font-size:12px;color:var(--text-light);">Milestones</div>
           </div>
-          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+          <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$22</div>
             <div style="font-size:12px;color:var(--text-light);">Raised</div>
           </div>
         </div>
 
         <!-- Your Investment Panel -->
-        <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#0a1f5c);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
+        <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <span style="font-size:14px;font-weight:700;">💼 Your Investment</span>
             <span id="investorAddress" style="font-size:12px;opacity:0.7;font-family:monospace;"></span>
@@ -1307,15 +1362,15 @@
           <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:8px;">
             <span>$22 raised of $500 goal</span><span>$478 remaining</span>
           </div>
-          <div style="height:10px;background:rgba(0,36,125,0.1);border-radius:5px;overflow:hidden;">
+          <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
             <div style="height:100%;width:40%;background:linear-gradient(90deg,var(--blue),var(--amber));border-radius:5px;"></div>
           </div>
         </div>
 
         <!-- Milestones -->
         <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🎯 Investment Milestones</h3>
-        <div style="border:1px solid rgba(0,36,125,0.1);border-radius:16px;overflow:hidden;margin-bottom:28px;">
-          <div style="display:flex;gap:16px;padding:16px 20px;background:#f0fdf4;border-bottom:1px solid rgba(0,36,125,0.08);">
+        <div style="border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;gap:16px;padding:16px 20px;background:rgba(34,197,94,0.1);border-bottom:1px solid rgba(34,197,94,0.2);">
             <div style="width:32px;height:32px;border-radius:50%;background:#DCFCE7;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:14px;">Purchase kitchen equipment</div>
@@ -1323,7 +1378,7 @@
             </div>
             <div style="font-weight:800;color:#22c55e;font-size:14px;">$200 ✅</div>
           </div>
-          <div style="display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid rgba(0,36,125,0.08);">
+          <div style="display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
             <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--amber-dark);">2</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:14px;">Hire 2 additional staff</div>
@@ -1332,7 +1387,7 @@
             <div style="font-weight:800;color:var(--blue);font-size:14px;">$150</div>
           </div>
           <div style="display:flex;gap:16px;padding:16px 20px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:var(--off-white);border:1px solid rgba(0,36,125,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text-light);">3</div>
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text-light);">3</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:14px;">Launch expanded menu</div>
               <div style="font-size:12px;color:var(--text-light);">Pending • Target: Apr 1</div>
@@ -1342,7 +1397,7 @@
         </div>
 
         <!-- Investor Story -->
-        <div style="background:linear-gradient(135deg,#00247D,#0a1f5c);border-radius:16px;padding:24px;color:white;margin-bottom:28px;">
+        <div style="background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:24px;color:white;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
             <span style="font-size:28px;">🇨🇺</span>
             <div>
@@ -1359,16 +1414,16 @@
 
         <!-- Live Safe Data -->
         <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🔐 Safe Escrow — Live On-Chain</h3>
-        <div style="background:var(--off-white);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;">
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+        <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;border:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
             <span style="color:var(--text-light);">Safe Address</span>
             <span style="font-family:monospace;color:var(--blue);font-weight:600;" id="modalSafeAddr">0xDEe8...loading</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
             <span style="color:var(--text-light);">Escrow Balance</span>
             <span style="font-family:monospace;font-weight:700;" id="modalBalance">⏳ Loading...</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0,0.06);">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
             <span style="color:var(--text-light);">Threshold</span>
             <span style="font-family:monospace;font-weight:700;" id="modalThreshold">⏳ Loading...</span>
           </div>
@@ -1381,20 +1436,20 @@
         <!-- Activity Log -->
         <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">📜 Activity Log</h3>
         <div id="modalLog" style="background:var(--off-white);border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;">
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
-            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
             <span style="color:#22c55e;">✓ Investment created</span>
           </div>
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
-            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
             <span style="color:#22c55e;">✓ $500 funded to Safe escrow</span>
           </div>
-          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
-            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="color:var(--text-light);white-space:nowrap;">Mar 15</span>
             <span style="color:#22c55e;">✓ M1 verified — $200 released</span>
           </div>
           <div style="display:flex;gap:10px;padding:6px 0;">
-            <span style="color:#888;white-space:nowrap;">Mar 21</span>
+            <span style="color:var(--text-light);white-space:nowrap;">Mar 21</span>
             <span style="color:#60a5fa;">ℹ️ M2 started — hiring in progress</span>
           </div>
         </div>
@@ -1412,16 +1467,16 @@
         <div style="margin-bottom:16px;">
           <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;" id="investAmountLabel">Your investment amount (USDC)</label>
           <div style="display:flex;align-items:center;gap:0;border:2px solid rgba(0,36,125,0.2);border-radius:12px;overflow:hidden;background:var(--white);">
-            <span style="padding:12px 16px;background:var(--off-white);font-weight:700;color:var(--blue);border-right:2px solid rgba(0,36,125,0.2);">$</span>
+            <span style="padding:12px 16px;background:var(--bg-card);font-weight:700;color:var(--text-light);border-right:2px solid rgba(0,36,125,0.2);">$</span>
             <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
               style="flex:1;border:none;outline:none;padding:12px 16px;font-size:20px;font-weight:800;color:var(--blue);background:transparent;width:100%;"
               oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USDC'">
           </div>
           <div style="display:flex;gap:8px;margin-top:8px;">
-            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
-            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:var(--off-white);border:1px solid rgba(255,255,255,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
           </div>
         </div>
 
@@ -1435,6 +1490,17 @@
   </div>
 
   <script>
+    // Event delegation for opp-card clicks
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        var card = e.target.closest('.clickable-card');
+        if (card) {
+          e.preventDefault();
+          openModal();
+        }
+      });
+    });
+
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
 
     function shortAddr(addr) {
@@ -1542,8 +1608,8 @@
       const now = new Date();
       const ts = now.toTimeString().slice(0,5);
       const div = document.createElement('div');
-      div.style = 'display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);';
-      div.innerHTML = '<span style="color:#888;white-space:nowrap;">' + ts + '</span><span style="color:' + (color||'var(--text)') + ';">' + msg + '</span>';
+      div.style = 'display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);';
+      div.innerHTML = '<span style="color:var(--text-light);white-space:nowrap;">' + ts + '</span><span style="color:' + (color||'var(--text)') + ';">' + msg + '</span>';
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
     }
@@ -1558,7 +1624,7 @@
       const amount = parseInt(document.getElementById('investAmount').value) || 0;
       if (amount <= 0) {
         document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
-        document.getElementById('modalStatus').style.color = '#ef4444';
+        document.getElementById('modalStatus').style.color = 'var(--red)';
         return;
       }
       const ethValue = amount / 2800;
@@ -1582,7 +1648,7 @@
           document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
           document.getElementById('investBtn').disabled = false;
           document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
-          document.getElementById('modalStatus').style.color = '#ef4444';
+          document.getElementById('modalStatus').style.color = 'var(--red)';
           return;
         }
         await new Promise(r => setTimeout(r, 1000));
@@ -1637,7 +1703,7 @@
         document.getElementById('investBtn').disabled = false;
         const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg;
-        document.getElementById('modalStatus').style.color = '#ef4444';
+        document.getElementById('modalStatus').style.color = 'var(--red)';
       }
     }
 
@@ -1762,15 +1828,27 @@
         document.getElementById('modalVerifyBtn').disabled = false;
         const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
-        document.getElementById('modalStatus').style.color = '#ef4444';
-        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#ef4444');
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#cf142b');
       }
     }
 
 
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.opp-card[onclick]').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var fn = card.getAttribute('onclick');
+          if (fn === 'openModal()') openModal();
+        });
+      });
+    });
+
     function openModal() {
-      const modal = document.getElementById('elpaladar-modal');
+      var modal = document.getElementById('elpaladar-modal');
       modal.style.display = 'flex';
+      modal.style.visibility = 'visible';
+      modal.style.opacity = '1';
+
       document.body.style.overflow = 'hidden';
       loadModalSafeData();
       loadInvestmentData();
