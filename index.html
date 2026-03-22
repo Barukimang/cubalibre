@@ -1663,7 +1663,8 @@
         if (lang === 'es' && T['es'][key]) {
           el.textContent = T['es'][key];
         } else if (lang === 'en') {
-          el.textContent = el.getAttribute('data-original') || el.textContent;
+          const orig = el.getAttribute('data-original');
+          el.textContent = orig || el.textContent;
         }
       });
       document.querySelectorAll('[data-i18n-html]').forEach(el => {
@@ -1671,7 +1672,8 @@
         if (lang === 'es' && T['es'][key]) {
           el.innerHTML = T['es'][key];
         } else if (lang === 'en') {
-          el.innerHTML = el.getAttribute('data-original') || el.innerHTML;
+          const orig = el.getAttribute('data-original');
+          el.innerHTML = orig || el.innerHTML;
         }
       });
       const btn = document.getElementById('langToggle');
