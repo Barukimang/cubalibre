@@ -1394,7 +1394,7 @@
     }
 
     const BASE_SEPOLIA = {
-      chainId: '0x' + (84532).toString(16), // 0x14a34
+      chainId: '0x14a34', // Base Sepolia chainId
       chainName: 'Base Sepolia',
       rpcUrls: ['https://sepolia.base.org'],
       nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
@@ -1402,17 +1402,23 @@
     };
 
     async function switchToBaseSepolia() {
+      console.log('Attempting to switch to Base Sepolia, chainId:', BASE_SEPOLIA.chainId);
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: BASE_SEPOLIA.chainId }]
         });
+        console.log('Switch successful');
       } catch (switchError) {
+        console.error('Switch error:', switchError.code, switchError.message);
         if (switchError.code === 4902) {
+          console.log('Chain not found, adding...');
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [BASE_SEPOLIA]
           });
+        } else {
+          throw switchError; // re-throw so caller handles it
         }
       }
     }
