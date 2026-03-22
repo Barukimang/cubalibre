@@ -1227,7 +1227,7 @@
             <div style="font-size:12px;color:var(--text-light);">Milestones</div>
           </div>
           <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$200</div>
+            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$22</div>
             <div style="font-size:12px;color:var(--text-light);">Raised</div>
           </div>
         </div>
@@ -1235,7 +1235,7 @@
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:8px;">
-            <span>$200 raised of $500 goal</span><span>40%</span>
+            <span>$22 raised of $500 goal</span><span>$478 remaining</span>
           </div>
           <div style="height:10px;background:rgba(0,36,125,0.1);border-radius:5px;overflow:hidden;">
             <div style="height:100%;width:40%;background:linear-gradient(90deg,var(--blue),var(--amber));border-radius:5px;"></div>
@@ -1338,11 +1338,28 @@
         </div>
         <div id="modalStatus" style="font-size:13px;color:var(--text-light);padding:10px 14px;background:var(--off-white);border-radius:8px;margin-bottom:24px;"></div>
 
+        <!-- Invest Amount -->
+        <div style="margin-bottom:16px;">
+          <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;">Your investment amount (USDC)</label>
+          <div style="display:flex;align-items:center;gap:0;border:2px solid rgba(0,36,125,0.2);border-radius:12px;overflow:hidden;background:var(--white);">
+            <span style="padding:12px 16px;background:var(--off-white);font-weight:700;color:var(--blue);border-right:2px solid rgba(0,36,125,0.2);">$</span>
+            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
+              style="flex:1;border:none;outline:none;padding:12px 16px;font-size:20px;font-weight:800;color:var(--blue);background:transparent;width:100%;"
+              oninput="document.getElementById('investBtn').textContent = 'Invest — $' + (this.value || '0') + ' USDC'">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
+            <button onclick="document.getElementById('investAmount').value=478;document.getElementById('investBtn').textContent='Invest — $478 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
+          </div>
+        </div>
+
         <!-- CTA -->
         <button class="btn-primary" id="investBtn" onclick="modalInvest()" style="width:100%;background:var(--blue);font-size:17px;padding:16px;justify-content:center;">
-          Invest in El Paladar — $500 USDC
+          Invest — $478 USDC
         </button>
-        <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:10px;">Connects MetaMask. Funds stay in Safe you control.</p>
+        <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:10px;">Connects MetaMask. Funds stay in Safe you control. 2-of-2 required to release.</p>
       </div>
     </div>
   </div>
@@ -1456,7 +1473,7 @@
       document.getElementById('modalM2Btn').disabled = false;
       document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('investBtn').textContent = 'Invest in El Paladar — $500 USDC';
+      document.getElementById('investBtn').textContent = 'Invest in El Paladar — $478 USDC';
       document.getElementById('investBtn').disabled = false;
       document.getElementById('modalStatus').textContent = '';
     }
