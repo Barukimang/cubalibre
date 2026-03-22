@@ -556,7 +556,7 @@
       overflow: hidden;
     }
 
-    .opp-img::after {
+    .opp-img::after { pointer-events: none;
       content: '';
       position: absolute;
       inset: 0;
@@ -1010,7 +1010,7 @@
       <div class="opps-grid">
         <div class="opp-card" onclick="openModal()" style="cursor:pointer;">
           <div class="opp-img" style="background:#000;">
-            <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;">
+            <img src="opp-paladar.jpg" alt="Cuban restaurant" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge">● Raising</span>
           </div>
           <div class="opp-body">
@@ -1032,7 +1032,7 @@
 
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
           <div class="opp-img" style="background:#000;">
-            <img src="opp-bodeguita.jpg" alt="Havana building" style="width:100%;height:100%;object-fit:cover;">
+            <img src="opp-bodeguita.jpg" alt="Havana building" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
           </div>
           <div class="opp-body">
@@ -1053,7 +1053,7 @@
 
         <div class="opp-card" style="opacity:0.5;cursor:not-allowed">
           <div class="opp-img" style="background:#000;">
-            <img src="opp-artesania.jpg" alt="Cuban art" style="width:100%;height:100%;object-fit:cover;">
+            <img src="opp-artesania.jpg" alt="Cuban art" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">
             <span class="opp-badge" style="background:rgba(255,255,255,0.1);color:#999">Coming Soon</span>
           </div>
           <div class="opp-body">
@@ -1777,7 +1777,17 @@
     }
 
 
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.opp-card[onclick]').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var fn = card.getAttribute('onclick');
+          if (fn === 'openModal()') openModal();
+        });
+      });
+    });
+
     function openModal() {
+      console.log('openModal called');
       const modal = document.getElementById('elpaladar-modal');
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
