@@ -959,7 +959,7 @@
   <!-- Nav -->
   <nav>
     <a href="#" class="nav-logo">
-      <div class="drink-icon"></div>
+      <img src="logo.png" alt="CubaLibre" style="width:32px;height:32px;border-radius:6px;object-fit:cover;">
       CubaLibre
     </a>
     <ul class="nav-links">
@@ -992,12 +992,7 @@
       </div>
       <div class="hero-visual">
         <div class="drink-hero">
-          <div class="drink-glass">
-            <div class="rum-layer"></div>
-            <div class="coke-layer"></div>
-            <div class="straw"></div>
-            <div class="lime-slice"><div class="lime-circle"></div></div>
-          </div>
+          <img src="logo.png" alt="CubaLibre — Cuba Libre cocktail" style="width:320px;max-width:100%;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
           <div class="drink-label">Cuba <span>Libre</span></div>
           <div class="drink-sublabel">Rum • Coke • Lime • Freedom</div>
         </div>
@@ -1054,7 +1049,7 @@
       <p class="section-subtitle">Every opportunity is verified, milestone-structured, and backed by on-chain escrow. No speculation, no promises — just capital for real work.</p>
 
       <div class="opps-grid">
-        <div class="opp-card">
+        <div class="opp-card" onclick="openModal()" style="cursor:pointer;">
           <div class="opp-img">
             🍽️
             <span class="opp-badge">● Raising</span>
@@ -1244,6 +1239,568 @@
         })
         .catch(() => {});
     }
+  </script>
+
+
+  <!-- El Paladar Modal -->
+  <div id="elpaladar-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+    <div style="background:var(--white);border-radius:24px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.4);">
+
+      <!-- Modal Header -->
+      <div style="height:200px;background:linear-gradient(135deg,#00247D,#CF142B);display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;">
+        🍽️
+        <span style="position:absolute;top:16px;right:16px;background:var(--white);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;">● Raising</span>
+        <button onclick="closeModal()" style="position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;">×</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding:32px;">
+        <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
+        <p style="color:var(--text-light);font-size:14px;margin-bottom:16px;">📍 Calle Obispo #123, Old Havana, Cuba</p>
+
+        <p style="font-size:15px;color:var(--text-light);line-height:1.7;margin-bottom:24px;">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
+
+        <!-- Stats Row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--blue);">4.8★</div>
+            <div style="font-size:12px;color:var(--text-light);">Rating</div>
+          </div>
+          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--blue);">6</div>
+            <div style="font-size:12px;color:var(--text-light);">Current Staff</div>
+          </div>
+          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--blue);">3</div>
+            <div style="font-size:12px;color:var(--text-light);">Milestones</div>
+          </div>
+          <div style="background:var(--off-white);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$22</div>
+            <div style="font-size:12px;color:var(--text-light);">Raised</div>
+          </div>
+        </div>
+
+        <!-- Your Investment Panel -->
+        <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#0a1f5c);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:14px;font-weight:700;">💼 Your Investment</span>
+            <span id="investorAddress" style="font-size:12px;opacity:0.7;font-family:monospace;"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorBalance">—</div>
+              <div style="font-size:11px;opacity:0.7;">Safe Balance (ETH)</div>
+            </div>
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorTotal">—</div>
+              <div style="font-size:11px;opacity:0.7;">Your Investment ($)</div>
+            </div>
+            <div>
+              <div style="font-size:22px;font-weight:800;" id="investorOwnership">—</div>
+              <div style="font-size:11px;opacity:0.7;">Ownership %</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Investment Progress -->
+        <div style="margin-bottom:28px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:8px;">
+            <span>$22 raised of $500 goal</span><span>$478 remaining</span>
+          </div>
+          <div style="height:10px;background:rgba(0,36,125,0.1);border-radius:5px;overflow:hidden;">
+            <div style="height:100%;width:40%;background:linear-gradient(90deg,var(--blue),var(--amber));border-radius:5px;"></div>
+          </div>
+        </div>
+
+        <!-- Milestones -->
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🎯 Investment Milestones</h3>
+        <div style="border:1px solid rgba(0,36,125,0.1);border-radius:16px;overflow:hidden;margin-bottom:28px;">
+          <div style="display:flex;gap:16px;padding:16px 20px;background:#f0fdf4;border-bottom:1px solid rgba(0,36,125,0.08);">
+            <div style="width:32px;height:32px;border-radius:50%;background:#DCFCE7;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:14px;">Purchase kitchen equipment</div>
+              <div style="font-size:12px;color:var(--text-light);">Completed Mar 15 • $200 allocated</div>
+            </div>
+            <div style="font-weight:800;color:#22c55e;font-size:14px;">$200 ✅</div>
+          </div>
+          <div style="display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid rgba(0,36,125,0.08);">
+            <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--amber-dark);">2</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:14px;">Hire 2 additional staff</div>
+              <div style="font-size:12px;color:var(--text-light);">In progress • Interviews Mar 22</div>
+            </div>
+            <div style="font-weight:800;color:var(--blue);font-size:14px;">$150</div>
+          </div>
+          <div style="display:flex;gap:16px;padding:16px 20px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--off-white);border:1px solid rgba(0,36,125,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text-light);">3</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:14px;">Launch expanded menu</div>
+              <div style="font-size:12px;color:var(--text-light);">Pending • Target: Apr 1</div>
+            </div>
+            <div style="font-weight:800;color:var(--blue);font-size:14px;">$150</div>
+          </div>
+        </div>
+
+        <!-- Investor Story -->
+        <div style="background:linear-gradient(135deg,#00247D,#0a1f5c);border-radius:16px;padding:24px;color:white;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <span style="font-size:28px;">🇨🇺</span>
+            <div>
+              <div style="font-weight:700;font-size:15px;">From a diaspora investor</div>
+              <div style="font-size:13px;opacity:0.7;">Cuban-American, Miami, FL</div>
+            </div>
+          </div>
+          <p style="font-size:14px;opacity:0.9;line-height:1.6;margin:0;">"My grandmother would have loved this place. I've been wanting to support Cuban businesses but never had a safe way to do it. This is exactly what we needed."</p>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:24px;font-weight:900;">$500 USDC</span>
+            <span style="font-size:13px;opacity:0.7;">committed via Safe escrow</span>
+          </div>
+        </div>
+
+        <!-- Live Safe Data -->
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🔐 Safe Escrow — Live On-Chain</h3>
+        <div style="background:var(--off-white);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+            <span style="color:var(--text-light);">Safe Address</span>
+            <span style="font-family:monospace;color:var(--blue);font-weight:600;" id="modalSafeAddr">0xDEe8...loading</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+            <span style="color:var(--text-light);">Escrow Balance</span>
+            <span style="font-family:monospace;font-weight:700;" id="modalBalance">⏳ Loading...</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0,0.06);">
+            <span style="color:var(--text-light);">Threshold</span>
+            <span style="font-family:monospace;font-weight:700;" id="modalThreshold">⏳ Loading...</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:var(--text-light);">Nonce</span>
+            <span style="font-family:monospace;font-weight:700;" id="modalNonce">⏳ Loading...</span>
+          </div>
+        </div>
+
+        <!-- Activity Log -->
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">📜 Activity Log</h3>
+        <div id="modalLog" style="background:var(--off-white);border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;">
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+            <span style="color:#22c55e;">✓ Investment created</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+            <span style="color:#22c55e;">✓ $500 funded to Safe escrow</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);">
+            <span style="color:#888;white-space:nowrap;">Mar 15</span>
+            <span style="color:#22c55e;">✓ M1 verified — $200 released</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:6px 0;">
+            <span style="color:#888;white-space:nowrap;">Mar 21</span>
+            <span style="color:#60a5fa;">ℹ️ M2 started — hiring in progress</span>
+          </div>
+        </div>
+
+        <!-- Demo Controls -->
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:16px;">🎮 Demo Controls</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+          <button class="btn-primary" id="modalFundBtn" onclick="modalFund()" style="background:var(--blue);">💰 Simulate Fund Safe</button>
+          <button class="btn-primary" id="modalM2Btn" onclick="modalCompleteM2()" style="background:#f97316;" disabled>✅ Complete M2</button>
+          <button class="btn-primary" id="modalVerifyBtn" onclick="modalVerify()" style="background:#6366f1;" disabled>🤖 Agent Verify & Release</button>
+        </div>
+        <div id="modalStatus" style="font-size:13px;color:var(--text-light);padding:10px 14px;background:var(--off-white);border-radius:8px;margin-bottom:24px;"></div>
+
+        <!-- Invest Amount -->
+        <div style="margin-bottom:16px;">
+          <label style="font-size:14px;font-weight:600;color:var(--text);display:block;margin-bottom:8px;" id="investAmountLabel">Your investment amount (USDC)</label>
+          <div style="display:flex;align-items:center;gap:0;border:2px solid rgba(0,36,125,0.2);border-radius:12px;overflow:hidden;background:var(--white);">
+            <span style="padding:12px 16px;background:var(--off-white);font-weight:700;color:var(--blue);border-right:2px solid rgba(0,36,125,0.2);">$</span>
+            <input type="number" id="investAmount" value="478" min="1" max="478" step="1"
+              style="flex:1;border:none;outline:none;padding:12px 16px;font-size:20px;font-weight:800;color:var(--blue);background:transparent;width:100%;"
+              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USDC'">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USDC'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">$100</button>
+            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Add — $100 more'" style="background:var(--off-white);border:1px solid rgba(0,36,125,0.1);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-light);">Max ($478)</button>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button class="btn-primary" id="investBtn" onclick="modalInvest()" style="width:100%;background:var(--blue);font-size:17px;padding:16px;justify-content:center;">
+          Invest — $478 USDC
+        </button>
+        <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:10px;">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:var(--blue);font-weight:600;">Get free test ETH →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
+
+    function shortAddr(addr) {
+      return addr.slice(0,6) + '...' + addr.slice(-4);
+    }
+
+    async function loadModalSafeData() {
+      const SAFE = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+      const RPC = 'https://sepolia.base.org';
+      const abi = ['function getThreshold() view returns (uint256)', 'function nonce() view returns (uint256)'];
+      try {
+        const provider = new ethers.JsonRpcProvider(RPC);
+        const safe = new ethers.Contract(SAFE, abi, provider);
+        const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
+        const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
+        document.getElementById('modalSafeAddr').textContent = shortAddr(SAFE);
+        document.getElementById('modalBalance').textContent = eth + ' ETH';
+        document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
+        document.getElementById('modalNonce').textContent = nonce.toString();
+        document.getElementById('modalSafeAddr').style.color = 'var(--blue)';
+        document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
+        document.getElementById('modalThreshold').style.color = 'var(--text)';
+        document.getElementById('modalNonce').style.color = 'var(--text)';
+      } catch(e) {
+        document.getElementById('modalBalance').textContent = '⚠️ RPC error';
+      }
+    }
+
+
+    function loadInvestmentData() {
+      const stored = localStorage.getItem('cubalibre_investment');
+      const panel = document.getElementById('yourInvestmentPanel');
+      const balanceEl = document.getElementById('investorBalance');
+      const totalEl = document.getElementById('investorTotal');
+      const ownershipEl = document.getElementById('investorOwnership');
+      const addressEl = document.getElementById('investorAddress');
+      const labelEl = document.getElementById('investAmountLabel');
+
+      if (!stored) {
+        panel.style.display = 'none';
+        return;
+      }
+
+      const data = JSON.parse(stored);
+      const safeBalance = parseFloat(document.getElementById('modalBalance').textContent) || 0;
+
+      panel.style.display = 'block';
+      addressEl.textContent = data.address ? data.address.slice(0, 8) + '...' : '—';
+      totalEl.textContent = '$' + (data.total || 0);
+      balanceEl.textContent = safeBalance.toFixed(4) + ' ETH';
+
+      // Estimate ETH value at ~$2500/ETH
+      const investedEth = (data.total || 0) / 2500;
+      ownershipEl.textContent = safeBalance > 0
+        ? Math.min(100, Math.round((investedEth / safeBalance) * 100)) + '%'
+        : '0%';
+
+      // Update button label
+      labelEl.textContent = 'Add to your investment (USDC)';
+      document.getElementById('investBtn').textContent = 'Add — $10';
+      document.getElementById('investAmount').value = 10;
+    }
+
+    function saveInvestment(address, totalUsd) {
+      const existing = localStorage.getItem('cubalibre_investment');
+      let data = existing ? JSON.parse(existing) : { address, total: 0 };
+      data.address = address;
+      data.total = (data.total || 0) + totalUsd;
+      localStorage.setItem('cubalibre_investment', JSON.stringify(data));
+      loadInvestmentData();
+    }
+
+
+
+    const BASE_SEPOLIA = {
+      chainId: '0x14a34', // Base Sepolia chainId
+      chainName: 'Base Sepolia',
+      rpcUrls: ['https://sepolia.base.org'],
+      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      blockExplorerUrls: ['https://sepolia.basescan.org']
+    };
+
+    async function switchToBaseSepolia() {
+      console.log('Attempting to switch to Base Sepolia, chainId:', BASE_SEPOLIA.chainId);
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: BASE_SEPOLIA.chainId }]
+        });
+        console.log('Switch successful');
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+            await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [BASE_SEPOLIA]
+          });
+        } else {
+          throw switchError; // re-throw so caller handles it
+        }
+      }
+    }
+
+    function addLogEntry(msg, color) {
+      const log = document.getElementById('modalLog');
+      const now = new Date();
+      const ts = now.toTimeString().slice(0,5);
+      const div = document.createElement('div');
+      div.style = 'display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(0,36,125,0.06);';
+      div.innerHTML = '<span style="color:#888;white-space:nowrap;">' + ts + '</span><span style="color:' + (color||'var(--text)') + ';">' + msg + '</span>';
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function modalInvest() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('Install MetaMask from metamask.io');
+        return;
+      }
+
+      const SAFE = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+      const amount = parseInt(document.getElementById('investAmount').value) || 0;
+      if (amount <= 0) {
+        document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
+        document.getElementById('modalStatus').style.color = '#ef4444';
+        return;
+      }
+      const ethValue = amount / 2800;
+      const ethHex = '0x' + Math.floor(ethValue * 1e18).toString(16);
+
+      document.getElementById('investBtn').textContent = '⏳ Connecting...';
+      document.getElementById('investBtn').disabled = true;
+      document.getElementById('modalStatus').textContent = 'Connecting wallet...';
+      document.getElementById('modalStatus').style.color = '#f97316';
+
+      try {
+        // 1. Connect wallet
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const from = accounts[0];
+
+        // 2. Switch to Base Sepolia
+        document.getElementById('modalStatus').textContent = 'Switch to Base Sepolia in MetaMask...';
+        try {
+          await switchToBaseSepolia();
+        } catch(swErr) {
+          document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
+          document.getElementById('investBtn').disabled = false;
+          document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
+          document.getElementById('modalStatus').style.color = '#ef4444';
+          return;
+        }
+        await new Promise(r => setTimeout(r, 1000));
+
+        // 3. Send transaction
+        document.getElementById('modalStatus').textContent = 'Confirm in MetaMask...';
+        const txHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: from, to: SAFE, value: ethHex, gas: '0x5208' }]
+        });
+
+        document.getElementById('modalStatus').textContent = '⏳ Confirming on-chain...';
+        document.getElementById('modalStatus').style.color = '#6366f1';
+
+        // Poll for receipt
+        let receipt = null;
+        for (let i = 0; i < 15; i++) {
+          await new Promise(r => setTimeout(r, 2000));
+          receipt = await window.ethereum.request({
+            method: 'eth_getTransactionReceipt',
+            params: [txHash]
+          });
+          if (receipt && receipt.blockNumber) break;
+        }
+
+        if (receipt && receipt.status === '0x1') {
+          const blockNum = parseInt(receipt.blockNumber, 16);
+          // Save investment to localStorage
+          saveInvestment(accounts[0], parseInt(amount));
+          document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USDC!';
+          document.getElementById('investBtn').style.background = '#22c55e';
+          document.getElementById('investBtn').disabled = true;
+          document.getElementById('modalStatus').textContent = '✅ Committed! TX: ' + txHash.slice(0, 12) + '... (block ' + blockNum + ')';
+          document.getElementById('modalStatus').style.color = '#22c55e';
+          addLogEntry('💰 Investment committed: $' + amount + ' USDC → Safe escrow', '#22c55e');
+          addLogEntry('🔐 2-of-2 Safe multisig active (TX: ' + txHash.slice(0,16) + '...)', '#60a5fa');
+          // Update UI for next investment
+          document.getElementById('investAmountLabel').textContent = 'Add to your investment (USDC)';
+          document.getElementById('investAmount').value = 10;
+          document.getElementById('investBtn').textContent = 'Add — $10 more';
+          document.getElementById('investBtn').style.background = 'var(--blue)';
+          document.getElementById('investBtn').disabled = false;
+          // Refresh Safe data to update balance
+          loadModalSafeData();
+          loadInvestmentData();
+        } else {
+          throw new Error('Transaction reverted');
+        }
+
+      } catch(e) {
+        document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
+        document.getElementById('investBtn').disabled = false;
+        const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
+        document.getElementById('modalStatus').textContent = '❌ ' + msg;
+        document.getElementById('modalStatus').style.color = '#ef4444';
+      }
+    }
+
+    function modalFund() {
+      document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
+      document.getElementById('modalFundBtn').disabled = true;
+      document.getElementById('modalM2Btn').disabled = false;
+      document.getElementById('modalStatus').textContent = '✅ Safe funded! $500 USDC in escrow — 2-of-2 multisig active.';
+      document.getElementById('modalStatus').style.color = 'var(--blue)';
+      modalPhase = 2;
+      addLogEntry('✅ Safe funded: $500 USDC (simulated)', '#22c55e');
+      addLogEntry('🔐 2-of-2 Safe multisig: Investor + Satoshi Nakaboto', '#60a5fa');
+    }
+
+    function modalCompleteM2() {
+      document.getElementById('modalM2Btn').textContent = '⏳ Reviewing...';
+      setTimeout(() => {
+        document.getElementById('modalM2Btn').textContent = '✅ Submitted';
+        document.getElementById('modalM2Btn').disabled = true;
+        document.getElementById('modalVerifyBtn').disabled = false;
+        document.getElementById('modalStatus').textContent = '📋 M2 evidence submitted — Satoshi Nakaboto reviewing...';
+        document.getElementById('modalStatus').style.color = '#f97316';
+        modalPhase = 3;
+        addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
+        addLogEntry('🤖 Agent Satoshi Nakaboto reviewing evidence...', '#60a5fa');
+      }, 1200);
+    }
+
+    // ─── Config ──────────────────────────────────────────────────────────
+    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+    const RPC_URL = 'https://sepolia.base.org';
+    const BUSINESS_ADDRESS = '0x00c8160b76E960247bE5ab5A50782C4bb2D45E54'; // El Paladar restaurant owner
+    const AGENT_ADDR = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'; // Agent signer address
+    const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
+
+    async function modalVerify() {
+      document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
+      document.getElementById('modalVerifyBtn').disabled = true;
+      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
+      document.getElementById('modalStatus').style.color = '#6366f1';
+      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0];
+        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
+
+        const provider = new window.ethers.JsonRpcProvider(RPC_URL);
+        const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
+          'function nonce() view returns (uint256)',
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
+        ], provider);
+
+        const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+        addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+
+        const to = BUSINESS_ADDRESS; // El Paladar restaurant wallet
+        const value = window.ethers.parseEther(RELEASE_AMOUNT_ETH);
+        const data = '0x';
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
+        const gasToken = window.ethers.ZeroAddress;
+        const refundReceiver = window.ethers.ZeroAddress;
+
+        // Compute EIP-712 Safe transaction hash
+        const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
+        const domainSeparator = window.ethers.TypedDataEncoder.hashDomain({
+          chainId: 84532,
+          verifyingContract: SAFE_ADDRESS
+        });
+        const encodedData = window.ethers.keccak256(
+          window.ethers.AbiCoder.defaultAbiCoder().encode(
+            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
+            [SAFE_TX_TYPEHASH, to, value, window.ethers.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+          )
+        );
+        const txHash = window.ethers.keccak256(
+          window.ethers.concat(['0x1901', domainSeparator, encodedData])
+        );
+        addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
+
+        // Agent signs the EIP-712 hash
+        // ethers v6 SigningKey.sign returns { r, s, yParity: 1 }
+        // For Safe API: r(32) + s(32) + v(1) where v=27→0x1b, v=28→0x1c
+        const msgBytes = window.ethers.getBytes(txHash);
+        const sig = window.ethers.SigningKey.sign(msgBytes);
+        const v_hex = sig.yParity ? '1c' : '1b'; // yParity=1 → v=28 (0x1c), else v=27 (0x1b)
+        const sigHex = sig.r + sig.s.slice(2) + v_hex;
+
+        // Propose to Safe Transaction Service API
+        const proposeBody = {
+          to, value: value.toString(), data, operation, safeTxGas, baseGas,
+          gasPrice: String(gasPrice), gasToken, refundReceiver,
+          nonce: parseInt(nonce.toString()),
+          contractTransactionHash: txHash,
+          sender: AGENT_ADDR,
+          signature: sigHex,
+          origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
+        };
+
+        const apiResp = await fetch(
+          'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
+        );
+
+        if (apiResp.status === 201) {
+          document.getElementById('modalStatus').textContent = '✅ Proposed! Open Safe app to sign & execute...';
+          document.getElementById('modalStatus').style.color = '#22c55e';
+          addLogEntry('✅ Proposed to Safe! 1-of-2 on-chain', '#22c55e');
+          addLogEntry('🔗 Go to app.safe.global → Connect → Transactions → Execute', '#fbbf24');
+          document.getElementById('modalVerifyBtn').textContent = '✅ Proposed — Execute in Safe App';
+          document.getElementById('modalVerifyBtn').style.background = '#6366f1';
+          modalPhase = 4;
+        } else {
+          const errData = await apiResp.json();
+          throw new Error('Safe API ' + apiResp.status + ': ' + JSON.stringify(errData).slice(0, 120));
+        }
+
+      } catch(e) {
+        console.error('Verify error:', e);
+        document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
+        document.getElementById('modalVerifyBtn').disabled = false;
+        const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
+        document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
+        document.getElementById('modalStatus').style.color = '#ef4444';
+        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#ef4444');
+      }
+    }
+
+
+    function openModal() {
+      const modal = document.getElementById('elpaladar-modal');
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      loadModalSafeData();
+      loadInvestmentData();
+      // Reset state
+      modalPhase = 2;
+      document.getElementById('modalFundBtn').textContent = '💰 Simulate Fund Safe';
+      document.getElementById('modalFundBtn').disabled = true;
+      document.getElementById('modalM2Btn').textContent = '✅ Complete M2';
+      document.getElementById('modalM2Btn').disabled = false;
+      document.getElementById('modalVerifyBtn').textContent = '🤖 Agent Verify & Release';
+      document.getElementById('modalVerifyBtn').disabled = true;
+      document.getElementById('investBtn').textContent = 'Invest in El Paladar — $478 USDC';
+      document.getElementById('investBtn').disabled = false;
+      document.getElementById('modalStatus').textContent = '';
+    }
+
+    function closeModal() {
+      document.getElementById('elpaladar-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    // Close on ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Click outside to close
+    document.getElementById('elpaladar-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
   </script>
 
 </body>
