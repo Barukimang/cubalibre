@@ -11,16 +11,22 @@
     :root {
       --blue: #00247D;
       --blue-light: #1a5dc4;
+      --blue-glow: rgba(0, 36, 125, 0.3);
       --red: #CF142B;
       --red-light: #e8233a;
       --white: #FFFFFF;
       --off-white: #F8F8F6;
       --cream: #FFFEF5;
-      --bg: #FAFAFA;
-      --text: #1a1a1a;
-      --text-light: #555;
+      --bg: #000000;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --bg-modal: #0d0d0d;
+      --text: #FFFFFF;
+      --text-light: #999999;
       --amber: #D4A017;
       --amber-dark: #B8890F;
+      --border: #222222;
+      --border-light: #333333;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +35,7 @@
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: var(--white);
+      background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
       line-height: 1.6;
