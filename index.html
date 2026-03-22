@@ -1410,10 +1410,8 @@
         });
         console.log('Switch successful');
       } catch (switchError) {
-        console.error('Switch error:', switchError.code, switchError.message);
         if (switchError.code === 4902) {
-          console.log('Chain not found, adding...');
-          await window.ethereum.request({
+            await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [BASE_SEPOLIA]
           });
@@ -1442,30 +1440,42 @@
 
       const SAFE = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
       const amount = parseInt(document.getElementById('investAmount').value) || 0;
-      const ethValue = amount / 2800; // rough ETH/USD on Base
+      if (amount <= 0) {
+        document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
+        document.getElementById('modalStatus').style.color = '#ef4444';
+        return;
+      }
+      const ethValue = amount / 2800;
       const ethHex = '0x' + Math.floor(ethValue * 1e18).toString(16);
 
-      // Also need investor signature for the Safe, but let's first send a simple ETH tx to the Safe
+      document.getElementById('investBtn').textContent = '⏳ Connecting...';
+      document.getElementById('investBtn').disabled = true;
+      document.getElementById('modalStatus').textContent = 'Connecting wallet...';
+      document.getElementById('modalStatus').style.color = '#f97316';
+
       try {
+        // 1. Connect wallet
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const from = accounts[0];
 
-        document.getElementById('investBtn').textContent = '⏳ Waiting for MetaMask...';
-        document.getElementById('investBtn').disabled = true;
-        document.getElementById('modalStatus').textContent = 'Confirm in MetaMask to commit $' + amount + ' USDC on Base Sepolia...';
-        document.getElementById('modalStatus').style.color = '#f97316';
+        // 2. Switch to Base Sepolia
+        document.getElementById('modalStatus').textContent = 'Switch to Base Sepolia in MetaMask...';
+        try {
+          await switchToBaseSepolia();
+        } catch(swErr) {
+          document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
+          document.getElementById('investBtn').disabled = false;
+          document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
+          document.getElementById('modalStatus').style.color = '#ef4444';
+          return;
+        }
+        await new Promise(r => setTimeout(r, 1000));
 
-        // Send ETH to the Safe (simulates commitment)
-        // Note: in production this would be a proper token transfer + Safe tx
+        // 3. Send transaction
+        document.getElementById('modalStatus').textContent = 'Confirm in MetaMask...';
         const txHash = await window.ethereum.request({
           method: 'eth_sendTransaction',
-          params: [{
-            from: from,
-            to: SAFE,
-            value: ethHex,
-            gas: '0x5208', // 21000
-            chainId: '0x14a34', // Base Sepolia
-          }]
+          params: [{ from: from, to: SAFE, value: ethHex, gas: '0x5208' }]
         });
 
         document.getElementById('modalStatus').textContent = '⏳ Confirming on-chain...';
@@ -1487,21 +1497,18 @@
           document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USDC!';
           document.getElementById('investBtn').style.background = '#22c55e';
           document.getElementById('investBtn').disabled = true;
-          document.getElementById('modalStatus').textContent = '✅ Investment committed! TX: ' + txHash.slice(0, 14) + '... (block ' + blockNum + ')';
+          document.getElementById('modalStatus').textContent = '✅ Committed! TX: ' + txHash.slice(0, 12) + '... (block ' + blockNum + ')';
           document.getElementById('modalStatus').style.color = '#22c55e';
-          addLogEntry('💰 Investment committed: $' + amount + ' USDC → Safe escrow (TX: ' + txHash.slice(0, 16) + '...)', '#22c55e');
-          addLogEntry('🔐 2-of-2 Safe multisig now active for this investment', '#60a5fa');
+          addLogEntry('💰 Investment committed: $' + amount + ' USDC → Safe escrow', '#22c55e');
+          addLogEntry('🔐 2-of-2 Safe multisig active (TX: ' + txHash.slice(0,16) + '...)', '#60a5fa');
         } else {
-          throw new Error('Transaction failed on-chain');
+          throw new Error('Transaction reverted');
         }
 
       } catch(e) {
         document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USDC';
         document.getElementById('investBtn').disabled = false;
-        let msg = e.message || String(e);
-        if (msg.includes('-chainId') || msg.includes('invalid') || msg.includes('4001')) {
-          msg = 'Transaction cancelled or wrong network. Please switch to Base Sepolia in MetaMask.';
-        }
+        const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg;
         document.getElementById('modalStatus').style.color = '#ef4444';
       }
