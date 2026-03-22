@@ -337,21 +337,22 @@
     </div>
 
     <!-- Safe Technical Details -->
-    <div class="card">
-      <div class="card-header">
-        <div><h2>🔐 Safe Escrow Details</h2><p class="sub">Technical execution via 2-of-2 multisig</p></div>
-      </div>
-      <div class="safe-box">
-        <div class="safe-row"><span class="label">Safe Address</span><span class="mono green">0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448</span></div>
-        <div class="safe-row"><span class="label">Network</span><span class="mono">Base Sepolia (chainId: 84532)</span></div>
-        <div class="safe-row"><span class="label">Threshold</span><span class="mono yellow">2-of-2 (Investor + Agent)</span></div>
-        <div class="safe-row"><span class="label">Agent (co-signer)</span><span class="mono">0xDf6f...00A6</span></div>
-        <div class="safe-row"><span class="label">Escrow Balance</span><span class="mono yellow" id="safeBalance">$300 remaining</span></div>
-        <div class="safe-row"><span class="label">Executions</span><span class="mono" id="execCount">1 confirmed on-chain</span></div>
-        <div class="safe-row"><span class="label">Last TX</span><span class="mono">0x4852a467... (M1 release: 0.00001 ETH ≈ $200)</span></div>
-      </div>
-    </div>
-  </div>
+        <div class="card">
+          <div class="card-header">
+            <div><h2>🔐 Safe Escrow — Live On-Chain</h2><p class="sub">Reading directly from Base Sepolia</p></div>
+            <button class="btn" style="font-size:12px;padding:8px 16px" onclick="loadLiveSafeData()">🔄 Refresh</button>
+          </div>
+          <!-- Live Safe data loaded by JS -->
+        <div class="safe-box">
+          <div class="safe-row"><span class="label">Safe Address</span><span class="mono green" id="liveSafeAddr">0xDEe8...loading</span></div>
+          <div class="safe-row"><span class="label">Network</span><span class="mono">Base Sepolia (chainId: 84532)</span></div>
+          <div class="safe-row"><span class="label">Threshold</span><span class="mono yellow" id="liveThreshold">⏳ Loading...</span></div>
+          <div class="safe-row"><span class="label">Owners</span><span class="mono" id="liveOwners">⏳ Loading...</span></div>
+          <div class="safe-row"><span class="label">Escrow Balance</span><span class="mono yellow" id="liveBalance">⏳ Loading...</span></div>
+          <div class="safe-row"><span class="label">Nonce</span><span class="mono" id="liveNonce">⏳ Loading...</span></div>
+          <div class="safe-row"><span class="label">Last Exec TX</span><span class="mono" id="liveLastTx">0x4852a467... (M1: 0.00001 ETH → business)</span></div>
+        </div>
+        </div>
 
   <script>
     // ─── State ───────────────────────────────────────────────────────────────
@@ -518,6 +519,54 @@
 
     // ─── Init ─────────────────────────────────────────────────────────────────
     updateUI();
-  </script>
+  
+
+    // ─── Live Safe Data ─────────────────────────────────────────────────────
+    const SAFE_ADDRESS = '0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448';
+    const RPC_URL = 'https://sepolia.base.org';
+
+    const safeABI = [
+      'function getThreshold() view returns (uint256)',
+      'function getOwners() view returns (address[])',
+      'function nonce() view returns (uint256)'
+    ];
+
+    function short(addr) {
+      return addr.slice(0,6) + '...' + addr.slice(-4);
+    }
+
+    async function loadLiveSafeData() {
+      try {
+        const provider = new ethers.JsonRpcProvider(RPC_URL);
+        const safe = new ethers.Contract(SAFE_ADDRESS, safeABI, provider);
+        const [threshold, owners, nonce, balance] = await Promise.all([
+          safe.getThreshold(),
+          safe.getOwners(),
+          safe.nonce(),
+          provider.getBalance(SAFE_ADDRESS)
+        ]);
+        const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
+
+        document.getElementById('liveSafeAddr').textContent = short(SAFE_ADDRESS);
+        document.getElementById('liveThreshold').textContent = threshold.toString() + '-of-' + owners.length;
+        document.getElementById('liveOwners').innerHTML = owners.map(o =>
+          o === '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'
+            ? '<span style="color:#60a5fa">' + short(o) + ' (Agent)</span>'
+            : '<span>' + short(o) + ' (Investor)</span>'
+        ).join(' + ');
+        document.getElementById('liveBalance').textContent = eth + ' ETH';
+        document.getElementById('liveNonce').textContent = nonce.toString();
+      } catch(e) {
+        console.error('Failed to load Safe data:', e);
+        document.getElementById('liveBalance').textContent = '⚠️ RPC error';
+      }
+    }
+
+    // Load on page init
+    window.addEventListener('load', function() {
+      loadLiveSafeData();
+    });
+
+</script>
 </body>
 </html>
