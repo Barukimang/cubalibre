@@ -1026,7 +1026,7 @@
               </div>
               <div class="opp-raised">
                 <div class="bar"><div class="bar-fill"></div></div>
-                <span>$104 raised</span>
+                <span data-i18n="raised-card">$104 raised</span>
               </div>
             </div>
           </div>
@@ -1267,48 +1267,48 @@
       <!-- Modal Body -->
       <div style="padding:32px;font-family:'DM Sans',sans-serif;">
         <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
-        <p style="color:#ccc;font-size:14px;margin-bottom:16px;">📍 Calle Obispo #123, Old Havana, Cuba</p>
+        <p style="color:#ccc;font-size:14px;margin-bottom:16px;" data-i18n-html="modal-location">📍 Calle Obispo #123, La Habana Vieja, Cuba</p>
 
-        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
+        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;" data-i18n-html="modal-desc">Querido restaurante familiar sirve cocina cubana tradicional desde 2018. Destacado en Lonely Planet 2024. Buscando capital para ampliar asientos y contratar 2 empleados adicionales para la temporada turística.</p>
 
         <!-- Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">4.8★</div>
-            <div style="font-size:12px;color:#aaa;">Rating</div>
+            <div style="font-size:12px;color:#aaa;" data-i18n="rating">Rating</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">6</div>
-            <div style="font-size:12px;color:#aaa;">Current Staff</div>
+            <div style="font-size:12px;color:#aaa;" data-i18n="current-staff">Current Staff</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--blue);">3</div>
-            <div style="font-size:12px;color:#aaa;">Milestones</div>
+            <div style="font-size:12px;color:#aaa;" data-i18n="milestones-count">Milestones</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
             <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">$104</div>
-            <div style="font-size:12px;color:var(--text-light);">Raised</div>
+            <div style="font-size:12px;color:var(--text-light);" data-i18n="raised-label">Raised</div>
           </div>
         </div>
 
         <!-- Your Investment Panel -->
         <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;">💼 Your Investment</span>
+            <span style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
             <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorBalance">—</div>
-              <div style="font-size:11px;opacity:0.7;">Safe Balance (ETH)</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="safe-balance-eth">Balance Safe (ETH)</div>
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorTotal">—</div>
-              <div style="font-size:11px;opacity:0.7;">Your Investment ($)</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="your-investment-usd">Tu Inversión ($)</div>
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorOwnership">—</div>
-              <div style="font-size:11px;opacity:0.7;">Ownership %</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="ownership-pct">% de Propiedad</div>
             </div>
           </div>
         </div>
@@ -1459,21 +1459,21 @@
               <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="sim-fund">Simulate Fund Safe</div>
               <div style="font-size:11px;color:#555;" data-i18n="sim-fund-desc">Send test ETH to Safe</div>
             </div>
-            <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">💰 Run</button>
+            <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;" data-i18n="run-btn">💰 EJECUTAR</button>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
             <div style="flex:1;">
               <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="complete-m2">Complete M2</div>
               <div style="font-size:11px;color:#555;" data-i18n="complete-m2-desc">Mark milestone 2 done</div>
             </div>
-            <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">✅ Done</button>
+            <button id="modalM2Btn" onclick="modalCompleteM2()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;" data-i18n="done-btn">✅ Listo</button>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
             <div style="flex:1;">
               <div style="font-size:13px;font-weight:600;color:#fff;" data-i18n="agent-verify">Agent Verify & Release</div>
               <div style="font-size:11px;color:#555;" data-i18n="agent-verify-desc">AI co-signs Safe tx</div>
             </div>
-            <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;">🤖 Verify</button>
+            <button id="modalVerifyBtn" onclick="modalVerify()" disabled style="background:#1a1a3a;color:#555;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:not-allowed;" data-i18n="verify-btn">🤖 Verificar</button>
           </div>
         </div>
         <div id="modalStatus" style="font-size:13px;color:#ccc;padding:12px 16px;background:#0d0d1f;border:1px solid #1a1a3a;border-radius:8px;margin-bottom:24px;"></div>
