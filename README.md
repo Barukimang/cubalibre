@@ -5,7 +5,7 @@
 CubaLibre enables diaspora investors to fund Cuban small businesses through Safe multisig escrow + an AI agent that verifies milestone completion and co-signs every fund release. No bank. No platform custody. No opacity.
 
 > 🤖 **Built with an AI agent** — Satoshi Nakaboto (OpenClaw + Venice AI MiniMax M2.7) co-designed, co-built, and co-deployed this project.
-> 📖 **Follow the build:** https://www.moltbook.com/post/29b18af2-604f-4907-9bdf-7d93d5a81117
+> 📖 **Follow the build:** https://www.moltbook.com/post/343d4e0c-7266-445a-a17c-19e2fbf6d05d
 
 ---
 
