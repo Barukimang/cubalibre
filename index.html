@@ -1758,7 +1758,7 @@
 
     async function loadModalSafeData() {
       const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
-      const RPC_URLS = ['https://sepolia.base.org', 'https://base-sepolia.public.blastapi.io', 'https://rpc.ankr.com/base_sepolia'];
+      const RPC_URLS = ['https://gateway.tenderly.co/public/base-sepolia', 'https://sepolia.base.org'];
       const abi = ['function getThreshold() view returns (uint256)', 'function nonce() view returns (uint256)'];
       try {
         const [threshold, nonce, balance] = await fetchWithFallback(RPC_URLS, async (provider) => {
@@ -1981,7 +1981,7 @@
 
     // ─── Config ──────────────────────────────────────────────────────────
     const SAFE_ADDRESS = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
-    const RPC_URL = 'https://sepolia.base.org';
+    const RPC_URLS = ['https://gateway.tenderly.co/public/base-sepolia', 'https://sepolia.base.org'];
     const BUSINESS_ADDRESS = '0x00c8160b76E960247bE5ab5A50782C4bb2D45E54'; // El Paladar restaurant owner
     const AGENT_ADDR = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'; // Agent signer address
     const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
@@ -1998,7 +1998,7 @@
         const userAddress = accounts[0];
         addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
-        const provider = new window.ethers.JsonRpcProvider(RPC_URL);
+        const provider = new window.ethers.JsonRpcProvider(RPC_URLS[0]);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
           'function getThreshold() view returns (uint256)',
