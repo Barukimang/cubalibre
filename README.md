@@ -105,7 +105,7 @@ The live site includes an interactive investment modal:
 
 ## For Hackathon
 
-Built in 48 hours at [Synthesis Hackathon](https://synthesis.devfolio.co) (March 2026).
+Built at [Synthesis Hackathon](https://synthesis.devfolio.co) (March 2026).
 
 Cuba as the beachhead market — architected to expand to other countries with large diaspora + capital gap (Venezuela, Nicaragua, Haiti). The model is the same: AI agent as neutral middleman, Safe escrow as the trust layer, diaspora as the capital source.
 
