@@ -2731,7 +2731,7 @@
       }
     });
 
-    let lastSafeBalance = 0.0548; // Updated on modal open from Safe balance
+    let lastSafeBalance = 0.0555; // ~$200 at $3600/ETH // Updated on modal open from Safe balance
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
 
     function shortAddr(addr) {
@@ -2749,7 +2749,7 @@
         ]);
         const wei = parseInt(balRes.result||'0x0',16);
         lastSafeBalance = wei / 1e18;
-        const usd = Math.round(lastSafeBalance * 1800);
+        const usd = Math.round(lastSafeBalance * 3600);
         document.getElementById('modalBalance').textContent = '~$' + usd + ' USD (' + lastSafeBalance.toFixed(2) + ' ETH)';
         const threshHex = (threshRes.result||'0x0000000000000000000000000000000000000000000000000000000000000002').slice(-1);
         document.getElementById('modalThreshold').textContent = parseInt(threshHex,16) + '-of-2';
@@ -2781,10 +2781,10 @@
       panel.style.display = 'block';
       addressEl.textContent = data.address ? data.address.slice(0, 8) + '...' : '—';
       totalEl.textContent = '$' + (data.total || 0);
-      balanceEl.textContent = lastSafeBalance.toFixed(2) + ' ETH (~$' + Math.round(lastSafeBalance*1800) + ' USD)';
+      balanceEl.textContent = lastSafeBalance.toFixed(2) + ' ETH (~$' + Math.round(lastSafeBalance*3600) + ' USD)';
 
       // Estimate ETH value at ~$2500/ETH
-      const investedEth = (data.total || 0) / 1800;
+      const investedEth = (data.total || 0) / 3600;
       ownershipEl.textContent = safeBalance > 0
         ? Math.min(100, Math.round((investedEth / safeBalance) * 100)) + '%'
         : '0%';
@@ -2943,8 +2943,8 @@
       document.getElementById('modalFundBtn').disabled = true;
       document.getElementById('modalM2Btn').disabled = false;
       modalPhase = 2;
-      const addedUsd = Math.round(0.05 * 1800);
-      const totalUsd = Math.round(lastSafeBalance * 1800) + addedUsd;
+      const addedUsd = Math.round(0.05 * 3600);
+      const totalUsd = Math.round(lastSafeBalance * 3600) + addedUsd;
       document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$' + totalUsd + ' USD in escrow — 2-of-2 multisig active.';
       document.getElementById('modalStatus').style.color = 'var(--blue)';
       const balEl = document.getElementById('modalBalance');
