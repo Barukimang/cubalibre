@@ -2382,13 +2382,16 @@
             <div style="font-weight:700;color:#3b82f6;font-size:14px;">$200</div>
           </div>
           <!-- M2: In Progress -->
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;background:#0f0f1f;">
+          <div id="m2Row" style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;background:#0f0f1f;">
             <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
             <div style="flex:1;">
               <div style="font-weight:600;font-size:14px;color:var(--white);" data-i18n="m2-title">Hire 2 additional staff</div>
               <div style="font-size:12px;color:#888;" data-i18n="m2-status">In progress • Interviews Mar 22</div>
             </div>
-            <div style="font-weight:700;color:#f59e0b;font-size:14px;">$100</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="font-weight:700;color:#f59e0b;font-size:14px;">$100</div>
+              <button id="modalM2Btn" onclick="modalCompleteM2()" style="background:#f59e0b;color:#000;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;" data-i18n="done-btn">🤖 Verify Release</button>
+            </div>
           </div>
           <!-- M3: Pending -->
           <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
@@ -2419,7 +2422,7 @@
 
         <!-- Live Safe Data -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-safe">🔐 Safe Escrow — Live On-Chain</h3>
-        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:14px 20px;margin-bottom:28px;display:flex;gap:24px;flex-wrap:wrap;">
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:14px 20px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
           <div style="flex:1;min-width:140px;">
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="safe-address">Safe Address</div>
             <a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
@@ -2432,6 +2435,10 @@
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="signing-threshold">Signing Threshold</div>
             <div style="font-size:15px;font-weight:700;color:#fff;" id="modalThreshold" data-i18n="loading-threshold">⏳ Loading...</div>
           </div>
+          <button id="modalFundBtn" onclick="modalFund()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">💰 Simulate Investment</button>
+        </div>
+        <div id="safeActions" style="display:none;margin-bottom:28px;gap:10px;display:flex;">
+          <button id="modalVerifyBtn" onclick="modalVerify()" style="background:#f59e0b;color:#000;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;">🤖 Verify & Propose M2 Release</button>
         </div>
 
         <!-- Activity Log -->
@@ -2945,6 +2952,7 @@
       document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
       document.getElementById('modalFundBtn').disabled = true;
       document.getElementById('modalM2Btn').disabled = false;
+      document.getElementById('safeActions').style.display = 'flex';
       modalPhase = 2;
       const addedUsd = Math.round(0.05 * 3600);
       const totalUsd = Math.round(lastSafeBalance * 3600) + addedUsd;
