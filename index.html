@@ -1897,6 +1897,8 @@
       100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
     }
     .toast-show { animation: toastIn 3.5s ease forwards; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
   </style>
 </head>
 <body>
@@ -2962,17 +2964,92 @@
     }
 
     function modalCompleteM2() {
-      document.getElementById('modalM2Btn').textContent = '⏳ Reviewing...';
-      setTimeout(() => {
-        document.getElementById('modalM2Btn').textContent = '✅ Submitted';
-        document.getElementById('modalM2Btn').disabled = true;
-        document.getElementById('modalVerifyBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '📋 M2 evidence submitted — Satoshi Nakaboto reviewing...';
-        document.getElementById('modalStatus').style.color = '#f97316';
-        modalPhase = 3;
-        addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
-        addLogEntry('🤖 Agent Satoshi Nakaboto reviewing evidence...', '#60a5fa');
-      }, 1200);
+      document.getElementById('modalM2Btn').textContent = '🤖 Reviewing...';
+      document.getElementById('modalM2Btn').disabled = true;
+      document.getElementById('modalStatus').textContent = '';
+      document.getElementById('modalStatus').style.color = '';
+      modalPhase = 3;
+
+      // Create Satoshi evaluation panel
+      const evalPanel = document.createElement('div');
+      evalPanel.id = 'satoshiEval';
+      evalPanel.style = 'background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:20px;margin-bottom:20px;animation:slideIn 0.4s ease;';
+      evalPanel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <img src="avatar-sat-n.png" style="width:36px;height:36px;border-radius:50%;border:1px solid #3b82f6;">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;">Satoshi Nakaboto</div>
+            <div style="font-size:11px;color:#888;">Evaluating milestone evidence...</div>
+          </div>
+          <div id="evalDots" style="margin-left:auto;font-size:18px;letter-spacing:2px;color:#3b82f6;">...</div>
+        </div>
+        <div id="evalText" style="font-size:13px;color:#aaa;line-height:1.6;min-height:60px;font-family:monospace;">
+          <span style="color:#60a5fa;">> </span><span id="evalLine1"></span><span id="evalCursor" style="color:#3b82f6;animation:blink 1s infinite;">▋</span>
+        </div>
+        <div id="evalResult" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #1a1a3a;">
+          <div style="font-size:13px;font-weight:700;color:#22c55e;" id="evalVerdict"></div>
+        </div>
+      `;
+      const statusEl = document.getElementById('modalStatus');
+      statusEl.style.display = 'none';
+      statusEl.parentNode.insertBefore(evalPanel, statusEl);
+
+      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
+
+      // Animate typing dots
+      let dotCount = 0;
+      const dotInterval = setInterval(() => {
+        dotCount = (dotCount + 1) % 4;
+        document.getElementById('evalDots').textContent = '.'.repeat(dotCount || 3);
+      }, 400);
+
+      // Type out Satoshi's evaluation in steps
+      const lines = [
+        'Verifying evidence: hire contracts + payroll records...',
+        'Checking on-chain Safe balance: confirmed sufficient.',
+        'Cross-referencing business address: El Paladar OK.',
+        'All checks passed. Approving milestone release.',
+      ];
+
+      let lineIdx = 0;
+      const typeNext = () => {
+        if (lineIdx >= lines.length) {
+          clearInterval(dotInterval);
+          // Show verdict
+          document.getElementById('evalCursor').style.display = 'none';
+          document.getElementById('evalLine1').textContent = lines[lines.length - 1];
+          const result = document.getElementById('evalResult');
+          result.style.display = 'block';
+          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Safe';
+          result.style.color = '#22c55e';
+          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
+          // Enable verify button and auto-trigger after 1.5s
+          document.getElementById('modalM2Btn').textContent = '✅ Approved';
+          document.getElementById('modalM2Btn').style.background = '#166534';
+          document.getElementById('modalM2Btn').style.color = '#fff';
+          document.getElementById('modalVerifyBtn').disabled = false;
+          statusEl.style.display = '';
+          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
+          statusEl.style.color = '#22c55e';
+          setTimeout(() => modalVerify(), 1500);
+          return;
+        }
+        const lineEl = document.getElementById('evalLine1');
+        const cursorEl = document.getElementById('evalCursor');
+        let charIdx = 0;
+        const typeChar = () => {
+          if (charIdx < lines[lineIdx].length) {
+            lineEl.textContent += lines[lineIdx][charIdx];
+            charIdx++;
+            setTimeout(typeChar, 28);
+          } else {
+            lineIdx++;
+            setTimeout(typeNext, 400);
+          }
+        };
+        typeChar();
+      };
+      setTimeout(typeNext, 600);
     }
 
     // ─── Config ──────────────────────────────────────────────────────────
