@@ -2898,6 +2898,9 @@
           // Refresh Safe data to update balance
           loadModalSafeData();
           loadInvestmentData();
+          // Enable M2 flow after first investment
+          document.getElementById('modalM2Btn').disabled = false;
+          document.getElementById('safeActions').style.display = 'flex';
         } else {
           throw new Error('Transaction reverted');
         }
@@ -3152,12 +3155,9 @@
       loadInvestmentData();
       // Reset state
       modalPhase = 2;
-      // Fund button text (translated via setLang)
-      document.getElementById('modalFundBtn').disabled = true;
-      // M2 button text (translated via setLang)
       document.getElementById('modalM2Btn').disabled = false;
-      // Agent Verify button text (translated via setLang)
       document.getElementById('modalVerifyBtn').disabled = true;
+      document.getElementById('safeActions').style.display = 'none';
       document.getElementById('investBtn').textContent = 'Invest in El Paladar — $396 USD';
       document.getElementById('investBtn').disabled = false;
       document.getElementById('modalStatus').textContent = '';
