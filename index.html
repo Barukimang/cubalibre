@@ -2740,22 +2740,23 @@
 
     async function loadModalSafeData() {
       const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
-      const RPC = 'https://sepolia.base.org';
-      const abi = ['function getThreshold() view returns (uint256)', 'function nonce() view returns (uint256)'];
+      const RPC = 'https://gateway.tenderly.co/public/base-sepolia';
+      const jbody = (m,p=[]) => JSON.stringify({jsonrpc:'2.0',id:1,method:m,params:p});
       try {
-        const provider = new ethers.JsonRpcProvider(RPC);
-        const safe = new ethers.Contract(SAFE, abi, provider);
-        const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
-        const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
-        lastSafeBalance = parseFloat(ethers.formatEther(balance));
-        document.getElementById('modalBalance').textContent = eth + ' ETH';
-        document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
-        
-        document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
-        document.getElementById('modalThreshold').style.color = 'var(--text)';
+        const [balRes, threshRes] = await Promise.all([
+          fetch(RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:jbody('eth_getBalance',[SAFE,'latest'])}).then(r=>r.json()),
+          fetch(RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:jbody('eth_call',[{to:SAFE,data:'0x7215e819'},'latest'])}).then(r=>r.json())
+        ]);
+        const wei = parseInt(balRes.result||'0x0',16);
+        lastSafeBalance = wei / 1e18;
+        const usd = Math.round(lastSafeBalance * 1800);
+        document.getElementById('modalBalance').textContent = '~$' + usd + ' USD (' + lastSafeBalance.toFixed(2) + ' ETH)';
+        const threshHex = (threshRes.result||'0x0000000000000000000000000000000000000000000000000000000000000002').slice(-1);
+        document.getElementById('modalThreshold').textContent = parseInt(threshHex,16) + '-of-2';
         refreshInvestmentPanel();
       } catch(e) {
         document.getElementById('modalBalance').textContent = '⚠️ RPC error';
+        refreshInvestmentPanel();
       }
     }
 
@@ -2780,10 +2781,10 @@
       panel.style.display = 'block';
       addressEl.textContent = data.address ? data.address.slice(0, 8) + '...' : '—';
       totalEl.textContent = '$' + (data.total || 0);
-      balanceEl.textContent = safeBalance.toFixed(4) + ' ETH';
+      balanceEl.textContent = lastSafeBalance.toFixed(2) + ' ETH (~$' + Math.round(lastSafeBalance*1800) + ' USD)';
 
       // Estimate ETH value at ~$2500/ETH
-      const investedEth = (data.total || 0) / 2500;
+      const investedEth = (data.total || 0) / 1800;
       ownershipEl.textContent = safeBalance > 0
         ? Math.min(100, Math.round((investedEth / safeBalance) * 100)) + '%'
         : '0%';
@@ -2941,18 +2942,21 @@
       document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
       document.getElementById('modalFundBtn').disabled = true;
       document.getElementById('modalM2Btn').disabled = false;
-      document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$104 USD in escrow — 2-of-2 multisig active.';
-      document.getElementById('modalStatus').style.color = 'var(--blue)';
       modalPhase = 2;
-      // Update the displayed Safe balance with simulated new amount
-      const newBal = (parseFloat(lastSafeBalance || 0) + 0.05).toFixed(2);
+      const addedUsd = Math.round(0.05 * 1800);
+      const totalUsd = Math.round(lastSafeBalance * 1800) + addedUsd;
+      document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$' + totalUsd + ' USD in escrow — 2-of-2 multisig active.';
+      document.getElementById('modalStatus').style.color = 'var(--blue)';
       const balEl = document.getElementById('modalBalance');
-      if (balEl) { balEl.textContent = newBal + ' ETH'; balEl.classList.remove('balance-pulse'); void balEl.offsetWidth; balEl.classList.add('balance-pulse'); }
+      if (balEl) {
+        balEl.textContent = '~$' + totalUsd + ' USD (' + (lastSafeBalance + 0.05).toFixed(2) + ' ETH)';
+        balEl.classList.remove('balance-pulse'); void balEl.offsetWidth; balEl.classList.add('balance-pulse');
+      }
       lastSafeBalance += 0.05;
       refreshInvestmentPanel();
       animateProgressBar();
-      showToast('💰 ~$104 USD received in Safe escrow!');
-      addLogEntry('✅ Safe funded: ~$104 USD (~$0.05 ETH)', '#3b82f6');
+      showToast('💰 ~$' + addedUsd + ' USD received in Safe escrow!');
+      addLogEntry('✅ Safe funded: ~$' + addedUsd + ' USD (~$0.05 ETH)', '#3b82f6');
       addLogEntry('🔐 2-of-2 Safe multisig: Investor + Satoshi Nakaboto', '#60a5fa');
     }
 
