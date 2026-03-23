@@ -1742,14 +1742,29 @@
       return addr.slice(0,6) + '...' + addr.slice(-4);
     }
 
+    async function fetchWithFallback(urls, fn, timeout = 5000) {
+      for (const url of urls) {
+        try {
+          const provider = new ethers.JsonRpcProvider(url);
+          const result = await Promise.race([
+            fn(provider),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+          ]);
+          return result;
+        } catch(e) { continue; }
+      }
+      throw new Error('all RPCs failed');
+    }
+
     async function loadModalSafeData() {
       const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
-      const RPC = 'https://sepolia.base.org';
+      const RPC_URLS = ['https://sepolia.base.org', 'https://base-sepolia.public.blastapi.io', 'https://rpc.ankr.com/base_sepolia'];
       const abi = ['function getThreshold() view returns (uint256)', 'function nonce() view returns (uint256)'];
       try {
-        const provider = new ethers.JsonRpcProvider(RPC);
-        const safe = new ethers.Contract(SAFE, abi, provider);
-        const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
+        const [threshold, nonce, balance] = await fetchWithFallback(RPC_URLS, async (provider) => {
+          const safe = new ethers.Contract(SAFE, abi, provider);
+          return Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
+        });
         const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
         document.getElementById('modalBalance').textContent = eth + ' ETH';
         document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
