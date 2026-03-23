@@ -2417,24 +2417,18 @@
 
         <!-- Live Safe Data -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;" data-i18n="modal-safe">🔐 Safe Escrow — Live On-Chain</h3>
-        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;overflow:hidden;margin-bottom:28px;">
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
-            <div style="flex:1;">
-              <div style="font-size:12px;color:#888;" data-i18n="safe-address">Safe Address</div>
-              <div style="font-size:14px;font-weight:600;"><a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-family:monospace;color:#3b82f6;text-decoration:none;">0x8948…d731</a></div>
-            </div>
+        <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:14px 20px;margin-bottom:28px;display:flex;gap:24px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:140px;">
+            <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="safe-address">Safe Address</div>
+            <a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #1a1a3a;">
-            <div style="flex:1;">
-              <div style="font-size:12px;color:#888;" data-i18n="escrow-balance">Escrow Balance</div>
-              <div style="font-size:14px;font-weight:700;color:#3b82f6;" id="modalBalance" data-i18n="loading-balance">⏳ Loading...</div>
-            </div>
+          <div style="flex:1;min-width:120px;">
+            <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="escrow-balance">Escrow Balance</div>
+            <div style="font-size:15px;font-weight:700;color:#22c55e;" id="modalBalance" data-i18n="loading-balance">⏳ Loading...</div>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;padding:14px 20px;">
-            <div style="flex:1;">
-              <div style="font-size:12px;color:#888;" data-i18n="signing-threshold">Signing Threshold</div>
-              <div style="font-size:14px;font-weight:700;color:#fff;" id="modalThreshold" data-i18n="loading-threshold">⏳ Loading...</div>
-            </div>
+          <div style="flex:1;min-width:120px;">
+            <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="signing-threshold">Signing Threshold</div>
+            <div style="font-size:15px;font-weight:700;color:#fff;" id="modalThreshold" data-i18n="loading-threshold">⏳ Loading...</div>
           </div>
         </div>
 
@@ -2756,7 +2750,7 @@
         lastSafeBalance = parseFloat(ethers.formatEther(balance));
         document.getElementById('modalBalance').textContent = eth + ' ETH';
         document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
-        document.getElementById('modalSafeAddr').style.color = 'var(--blue)';
+        
         document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
         document.getElementById('modalThreshold').style.color = 'var(--text)';
         refreshInvestmentPanel();
