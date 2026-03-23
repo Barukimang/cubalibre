@@ -2,7 +2,12 @@
 
 **Diaspora investment infrastructure for Cuban businesses — without middlemen.**
 
-CubaLibre enables trustless, milestone-based investment from international investors into Cuban businesses, powered by AI agents and smart contracts.
+> ⚠️ **Power outage fallback:** If the primary demo URL is unreachable, use: https://barukimang.github.io/cubalibre/
+
+## Live Demo
+
+- **Primary:** https://methods-leisure-extremely-montgomery.trycloudflare.com/
+- **Backup (GitHub Pages):** https://barukimang.github.io/cubalibre/
 
 ## The Problem
 
@@ -15,44 +20,38 @@ Cuban diaspora and international investors want to support Cuban businesses but 
 ## The Solution
 
 CubaLibre combines:
-- **ERC-8004 identity** — both investor and business have on-chain identity
-- **Smart contract escrow** — funds held until milestones are verified
-- **AI agent coordination** — agent verifies milestones, releases funds, provides transparency
-- **Safe multisig** — investors never fully lose control of committed capital
+- **Safe multisig escrow** — funds held until milestones are verified
+- **AI agent coordination** — agent verifies milestones, co-signs fund releases
+- **Diaspora-first UX** — EN/ES bilingual, mobile-friendly
 
 ## How It Works
 
 ```
-1. Business creates profile with ERC-8004 identity
-2. Business posts investment ask with milestones
-3. InvestorBrowse businesses, commits stablecoins to escrow
-4. Agent monitors milestone completion
-5. Agent releases funds as milestones are verified
-6. Both parties build on-chain reputation
+1. InvestorBrowse businesses, commits to Safe escrow
+2. Business completes milestones, submits evidence
+3. AI agent (Satoshi Nakaboto) verifies milestone completion
+4. Agent co-signs Safe transaction → funds release on-chain
+5. Full on-chain audit trail, no middlemen
 ```
-
-## Tracks
-
-- Agents that pay
-- Agents that trust  
-- Agents that cooperate
 
 ## Tech Stack
 
-- **Smart Contracts**: Solidity (Base)
-- **Frontend**: Next.js
-- **Wallet**: Safe
-- **Agent**: OpenClaw
-- **Identity**: ERC-8004
+- **Frontend:** Vanilla JS + Google Fonts
+- **Blockchain:** Base Sepolia (Ethers.js v6)
+- **Escrow:** Safe{Wallet} 2-of-2 multisig
+- **AI Agent:** OpenClaw + Venice AI (MiniMax M2.7)
+- **Infrastructure:** Cloudflare Tunnel + GitHub Pages
+
+## Project Addresses (Base Sepolia)
+
+- **Safe Escrow:** `0x8948F10E9f3389b428891Df35d68CB031a83d731`
+- **AI Agent (Satoshi):** `0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6`
+- **Restaurant:** `0x00c8160b76E960247bE5ab5A50782C4bb2D45E54`
 
 ## For Hackathon
 
-Built for The Synthesis hackathon (March 2026). Cuba as the beachhead market, architected to expand to other countries with diaspora + capital gap (Venezuela, Nicaragua, etc.).
+Built for the Synthesis Hackathon (March 2026). The agent acts as a neutral, incorruptible middleman — verifying milestone completion and co-signing Safe releases. Cuba as the beachhead market, architected to expand.
 
 ## Status
 
-Under development — building towards March 22 submission deadline.
-
-## Testnet ETH Faucet
-- **Alchemy Base Sepolia**: https://www.alchemy.com/faucets/base-sepolia (0.1 ETH/day, free account)
-- Fund Safe directly: `0xDEe832DBCC6fF79c9b296cA6006BfEdE75F88448`
+Live on Base Sepolia testnet with real Safe escrow.
