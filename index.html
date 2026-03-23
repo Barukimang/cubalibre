@@ -2227,6 +2227,47 @@
       bar.classList.add('bar-fill-animated');
     }
 
+    function updateInvestMax() {
+      const input = document.getElementById('investAmount');
+      const max = parseInt(input.max) || 0;
+      if (parseInt(input.value) > max) input.value = max;
+      updateInvestBtnText();
+    }
+
+    function updateInvestBtnText() {
+      const btn = document.getElementById('investBtn');
+      const val = document.getElementById('investAmount').value || '0';
+      btn.textContent = 'Invest — $' + val + ' USD';
+    }
+
+    function refreshInvestmentPanel() {
+      // Called after modalFund - updates raised, progress, remaining, max investment
+      const goal = 500;
+      // Recalculate from Safe balance + M1 allocation
+      const m1Allocated = 200;
+      const currentRaised = m1Allocated + lastSafeBalance;
+      const remaining = Math.max(0, goal - currentRaised);
+      const pct = Math.min(100, (currentRaised / goal) * 100);
+
+      // Update raised stat card
+      const raisedCard = document.getElementById('modalRaisedStat');
+      if (raisedCard) raisedCard.textContent = '~$' + currentRaised;
+
+      // Update progress bar
+      const bar = document.getElementById('progressBar');
+      if (bar) { bar.style.width = pct + '%'; bar.classList.remove('bar-fill-animated'); void bar.offsetWidth; bar.classList.add('bar-fill-animated'); }
+
+      // Update raised/remaining text
+      const raisedOf = document.querySelector('[data-i18n="raised-of"]');
+      const remainingEl = document.querySelector('[data-i18n="remaining"]');
+      if (raisedOf) raisedOf.textContent = '~$' + currentRaised + ' raised of $500 goal';
+      if (remainingEl) remainingEl.textContent = '~$' + remaining + ' remaining';
+
+      // Update investment panel max
+      const input = document.getElementById('investAmount');
+      if (input) { input.max = remaining; if (parseInt(input.value) > remaining) input.value = remaining; updateInvestBtnText(); }
+    }
+
     // Scroll animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -2289,7 +2330,7 @@
             <div style="font-size:12px;color:#aaa;" data-i18n="milestones-count">Milestones</div>
           </div>
           <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
-            <div style="font-size:22px;font-weight:800;color:var(--amber-dark);">~$304</div>
+            <div id="modalRaisedStat" style="font-size:22px;font-weight:800;color:var(--amber-dark);">~$304</div>
             <div style="font-size:12px;color:var(--text-light);" data-i18n="raised-label">Raised</div>
           </div>
         </div>
@@ -2319,7 +2360,7 @@
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:8px;">
-            <span data-i18n="raised-of">~$304 raised of $500 goal</span><span data-i18n="remaining">~$196 remaining</span>
+            <span id="raisedOfEl" data-i18n="raised-of">~$304 raised of $500 goal</span><span id="remainingEl" data-i18n="remaining">~$196 remaining</span>
           </div>
           <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
             <div style="height:100%;width:60.8%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:5px;"></div>
@@ -2424,22 +2465,22 @@
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:16px;margin-bottom:28px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
             <span style="font-size:20px;font-weight:700;color:#ccc;font-family:'DM Sans',sans-serif;">$</span>
-            <input type="number" id="investAmount" value="396" min="1" max="396" step="1"
+            <input type="number" id="investAmount" value="196" min="1" max="196" step="1"
               style="flex:1;border:none;outline:none;font-size:32px;font-weight:800;color:#fff;background:transparent;width:100%;font-family:'DM Sans',sans-serif;"
-              oninput="const btn = document.getElementById('investBtn'); const val = this.value || '0'; btn.textContent = btn.textContent.startsWith('Add') ? 'Add — $' + val + ' more' : 'Invest — $' + val + ' USD'">
+              oninput="updateInvestMax()">
           </div>
           <div style="display:flex;gap:8px;">
-            <button onclick="document.getElementById('investAmount').value=10;document.getElementById('investBtn').textContent='Invest — $10 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$10</button>
-            <button onclick="document.getElementById('investAmount').value=50;document.getElementById('investBtn').textContent='Invest — $50 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$50</button>
-            <button onclick="document.getElementById('investAmount').value=100;document.getElementById('investBtn').textContent='Invest — $100 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$100</button>
-            <button onclick="document.getElementById('investAmount').value=396;document.getElementById('investBtn').textContent='Invest — $396 USD'" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Max</button>
+            <button onclick="document.getElementById('investAmount').value=10;updateInvestBtnText()" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$10</button>
+            <button onclick="document.getElementById('investAmount').value=50;updateInvestBtnText()" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$50</button>
+            <button onclick="document.getElementById('investAmount').value=100;updateInvestBtnText()" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">$100</button>
+            <button onclick="document.getElementById('investAmount').value=document.getElementById('investAmount').max;updateInvestBtnText()" style="background:#1a1a3a;color:#ccc;border:1px solid #1a1a3a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Max</button>
           </div>
         </div>
 
 
                 <!-- CTA -->
         <button id="investBtn" onclick="modalInvest()" style="width:100%;background:#3b82f6;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;padding:16px;cursor:pointer;margin-bottom:12px;font-family:'DM Sans',sans-serif;">
-          Invest — $396 USD
+          Invest — $196 USD
         </button>
         <p style="text-align:center;font-size:12px;color:#555;margin-top:0;margin-bottom:32px;font-family:'DM Sans',sans-serif;" data-i18n-html="helper-text">Sends real testnet ETH on Base Sepolia. <a href="https://www.alchemy.com/faucets/base-sepolia" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:none;">Get free test ETH →</a></p>
 
@@ -2696,6 +2737,7 @@
       }
     });
 
+    let lastSafeBalance = 0.0548; // Updated on modal open from Safe balance
     let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
 
     function shortAddr(addr) {
@@ -2711,11 +2753,13 @@
         const safe = new ethers.Contract(SAFE, abi, provider);
         const [threshold, nonce, balance] = await Promise.all([safe.getThreshold(), safe.nonce(), provider.getBalance(SAFE)]);
         const eth = parseFloat(ethers.formatEther(balance)).toFixed(4);
+        lastSafeBalance = parseFloat(ethers.formatEther(balance));
         document.getElementById('modalBalance').textContent = eth + ' ETH';
         document.getElementById('modalThreshold').textContent = threshold.toString() + '-of-2';
         document.getElementById('modalSafeAddr').style.color = 'var(--blue)';
         document.getElementById('modalBalance').style.color = 'var(--amber-dark)';
         document.getElementById('modalThreshold').style.color = 'var(--text)';
+        refreshInvestmentPanel();
       } catch(e) {
         document.getElementById('modalBalance').textContent = '⚠️ RPC error';
       }
@@ -2906,6 +2950,12 @@
       document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$104 USD in escrow — 2-of-2 multisig active.';
       document.getElementById('modalStatus').style.color = 'var(--blue)';
       modalPhase = 2;
+      // Update the displayed Safe balance with simulated new amount
+      const newBal = (parseFloat(lastSafeBalance || 0) + 0.05).toFixed(2);
+      const balEl = document.getElementById('modalBalance');
+      if (balEl) { balEl.textContent = newBal + ' ETH'; balEl.classList.remove('balance-pulse'); void balEl.offsetWidth; balEl.classList.add('balance-pulse'); }
+      lastSafeBalance += 0.05;
+      refreshInvestmentPanel();
       animateProgressBar();
       showToast('💰 ~$104 USD received in Safe escrow!');
       addLogEntry('✅ Safe funded: ~$104 USD (~$0.05 ETH)', '#3b82f6');
