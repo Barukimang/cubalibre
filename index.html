@@ -1883,7 +1883,21 @@
       .nav-links { display: none; }
       .section { padding: 60px 20px; }
     }
-    </style>
+  
+    @keyframes barFill {
+      from { width: 0%; }
+    }
+    .bar-fill-animated {
+      animation: barFill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+    .toast-show { animation: toastIn 3.5s ease forwards; }
+  </style>
 </head>
 <body>
 
@@ -1987,7 +2001,7 @@
                 <small>meta de inversión</small>
               </div>
               <div class="opp-raised">
-                <div class="bar"><div class="bar-fill"></div></div>
+                <div class="bar"><div class="bar-fill bar-fill-animated" id="progressBar"></div></div>
                 <span data-i18n="raised-card">~$304 raised</span>
               </div>
             </div>
@@ -2193,6 +2207,26 @@
   </footer>
 
   <script>
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      const m = document.getElementById('toastMsg');
+      m.textContent = msg;
+      t.className = '';
+      t.style.display = 'block';
+      void t.offsetWidth;
+      t.className = 'toast-show';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    function animateProgressBar() {
+      const bar = document.getElementById('progressBar');
+      if (!bar) return;
+      bar.classList.remove('bar-fill-animated');
+      void bar.offsetWidth;
+      bar.classList.add('bar-fill-animated');
+    }
+
     // Scroll animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -2216,6 +2250,13 @@
 
   <!-- El Paladar Modal -->
   <div id="elpaladar-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+        <div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,#00227a,#001145);border:1px solid #3b82f6;color:white;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:transform 0.4s ease,opacity 0.4s ease;opacity:0;min-width:280px;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+            <span style="font-size:18px;">💰</span>
+            <span id="toastMsg">New investment received!</span>
+          </div>
+        </div>
+
     <div style="background:#1a1a1a;border:2px solid var(--blue);border-radius:24px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.5);">
 
       <!-- Modal Header -->
@@ -2862,10 +2903,12 @@
       document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
       document.getElementById('modalFundBtn').disabled = true;
       document.getElementById('modalM2Btn').disabled = false;
-      document.getElementById('modalStatus').textContent = '✅ Safe funded! $500 USD in escrow — 2-of-2 multisig active.';
+      document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$104 USD in escrow — 2-of-2 multisig active.';
       document.getElementById('modalStatus').style.color = 'var(--blue)';
       modalPhase = 2;
-      addLogEntry('✅ Safe funded: $500 USD (simulated)', '#3b82f6');
+      animateProgressBar();
+      showToast('💰 ~$104 USD received in Safe escrow!');
+      addLogEntry('✅ Safe funded: ~$104 USD (~$0.05 ETH)', '#3b82f6');
       addLogEntry('🔐 2-of-2 Safe multisig: Investor + Satoshi Nakaboto', '#60a5fa');
     }
 
