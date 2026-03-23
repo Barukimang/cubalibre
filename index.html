@@ -2247,7 +2247,7 @@
       const goal = 500;
       // Recalculate from Safe balance + M1 allocation
       const m1Allocated = 200;
-      const currentRaised = m1Allocated + lastSafeBalance;
+      const currentRaised = m1Allocated + Math.round(lastSafeBalance * 3600);
       const remaining = Math.max(0, goal - currentRaised);
       const pct = Math.min(100, (currentRaised / goal) * 100);
 
@@ -2262,7 +2262,7 @@
       // Update raised/remaining text
       const raisedOf = document.querySelector('[data-i18n="raised-of"]');
       const remainingEl = document.querySelector('[data-i18n="remaining"]');
-      if (raisedOf) raisedOf.textContent = '~$' + currentRaised + ' raised of $500 goal';
+      if (raisedOf) raisedOf.textContent = '~$' + currentRaised + ' USD raised of $500 goal';
       if (remainingEl) remainingEl.textContent = '~$' + remaining + ' remaining';
 
       // Update investment panel max
@@ -2362,7 +2362,7 @@
         <!-- Investment Progress -->
         <div style="margin-bottom:28px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:8px;">
-            <span id="raisedOfEl" data-i18n="raised-of">~$304 raised of $500 goal</span><span id="remainingEl" data-i18n="remaining">~$196 remaining</span>
+            <span id="raisedOfEl" data-i18n="raised-of">~$304 USD raised of $500 goal</span><span id="remainingEl" data-i18n="remaining">~$196 remaining</span>
           </div>
           <div style="height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;">
             <div style="height:100%;width:60.8%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:5px;"></div>
