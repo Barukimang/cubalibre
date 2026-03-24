@@ -2400,7 +2400,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:14px 20px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
           <div style="flex:1;min-width:140px;">
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="safe-address">Safe Address</div>
-            <a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
+            <a href="https://app.safe.global/transactions/queue?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
           </div>
           <div style="flex:1;min-width:120px;">
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="escrow-balance">Escrow Balance</div>
@@ -3142,7 +3142,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
         if (apiResp.status === 201 || apiResp.status === 200) {
           document.getElementById('safeActions').innerHTML =
-            '<a href="https://app.safe.global/home?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+            '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
             'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
             '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
             '🔗 Sign & Execute in Safe App' +
