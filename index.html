@@ -2340,7 +2340,7 @@
         <!-- Your Investment Panel -->
         <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
+            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
             <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -2401,6 +2401,7 @@
             <div style="font-size:15px;font-weight:700;color:#fff;" id="modalThreshold" data-i18n="loading-threshold">⏳ Loading...</div>
           </div>
         </div>
+        <div id="modalStatus" style="min-height:24px;font-size:13px;font-weight:600;margin-bottom:16px;color:#ccc;"></div>
         <div id="safeActions" style="display:none;margin-bottom:28px;gap:10px;display:flex;">
           <button id="modalVerifyBtn" onclick="modalVerify()" style="background:#f59e0b;color:#000;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;">🤖 Verify & Propose M2 Release</button>
         </div>
@@ -2940,7 +2941,6 @@
     function modalCompleteM2() {
       var m2btn = document.getElementById('modalM2Btn');
       var statusEl = document.getElementById('modalStatus');
-      console.log('modalCompleteM2 called, modalM2Btn:', m2btn, 'statusEl:', statusEl);
       if (!m2btn || !statusEl) { console.error('modal elements missing'); return; }
       m2btn.textContent = '🤖 Reviewing...';
       m2btn.disabled = true;
