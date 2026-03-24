@@ -3064,27 +3064,24 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
-          'function getThreshold() view returns (uint256)'
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
 
         const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
         addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
 
-        // Use raw eth_call to getTransactionHash — avoids ethers contract ABI encoding issues
+        // Same approach as CLI: call getTransactionHash directly on the contract
         const to = BUSINESS_ADDRESS;
-        const valueWei = '' + Math.round(parseFloat(RELEASE_AMOUNT_ETH) * 1e18);
+        const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
-        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = '0';
-        const zeroAddr = '0x0000000000000000000000000000000000000000';
-        const nonceNum = parseInt(nonce.toString());
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
+        const gasToken = window.ethers.constants.ZeroAddress;
+        const refundReceiver = window.ethers.constants.ZeroAddress;
 
-        // Selector for getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256)
-        const selector = '0xd8d11f78';
-        // Use ethers defaultAbiCoder for proper packing
-        const types = ['address','uint256','bytes','uint8','uint256','uint256','uint256','address','address','uint256'];
-        const values = [to, valueWei, data, operation, safeTxGas, baseGas, gasPrice, zeroAddr, zeroAddr, nonceNum];
-        const encodedParams = window.ethers.utils.defaultAbiCoder.encode(types, values).slice(2);
-        const txHash = await provider.call({ to: SAFE_ADDRESS, data: '0x' + selector + encodedParams });
+        const txHash = await safeContract.getTransactionHash(
+          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
+        );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
         // Agent signs via signing server
