@@ -3051,7 +3051,7 @@
         const userAddress = accounts[0];
         addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
-        const provider = new window.ethers.JsonRpcProvider(RPC_URL);
+        const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
           'function getThreshold() view returns (uint256)',
@@ -3062,25 +3062,27 @@
         addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
 
         const to = BUSINESS_ADDRESS;
-        const value = window.ethers.parseEther(RELEASE_AMOUNT_ETH);
+        const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
         const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
-        const gasToken = window.ethers.ZeroAddress;
+        const gasToken = window.ethers.constants.ZeroAddress;
         const refundReceiver = window.ethers.ZeroAddress;
 
         // Compute EIP-712 Safe transaction hash
-        const domainSeparator = window.ethers.TypedDataEncoder.hashDomain({
-          chainId: 84532,
-          verifyingContract: SAFE_ADDRESS
-        });
-        const encodedData = window.ethers.keccak256(
-          window.ethers.AbiCoder.defaultAbiCoder().encode(
-            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
-            [window.ethers.id(window.ethers.toUtf8Bytes('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)')), to, value, window.ethers.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+        const domainSeparator = window.ethers.utils.keccak256(
+          window.ethers.utils.defaultAbiCoder.encode(
+            ['bytes32','uint256','address'],
+            [window.ethers.utils.keccak256(window.ethers.utils.toUtf8Bytes('EIP712Domain(uint256 chainId,address verifyingContract)')), 84532, SAFE_ADDRESS]
           )
         );
-        const txHash = window.ethers.keccak256(
-          window.ethers.concat(['0x1901', domainSeparator, encodedData])
+        const encodedData = window.ethers.utils.keccak256(
+          window.ethers.utils.defaultAbiCoder.encode(
+            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
+            [window.ethers.utils.id(window.ethers.utils.toUtf8Bytes('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)')), to, value, window.ethers.utils.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+          )
+        );
+        const txHash = window.ethers.utils.keccak256(
+          window.ethers.utils.concat(['0x1901', domainSeparator, encodedData])
         );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
