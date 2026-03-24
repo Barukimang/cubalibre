@@ -2938,10 +2938,13 @@
     }
 
     function modalCompleteM2() {
-      document.getElementById('modalM2Btn').textContent = '🤖 Reviewing...';
-      document.getElementById('modalM2Btn').disabled = true;
-      document.getElementById('modalStatus').textContent = '';
-      document.getElementById('modalStatus').style.color = '';
+      var m2btn = document.getElementById('modalM2Btn');
+      var statusEl = document.getElementById('modalStatus');
+      if (!m2btn || !statusEl) { console.error('modal elements missing'); return; }
+      m2btn.textContent = '🤖 Reviewing...';
+      m2btn.disabled = true;
+      statusEl.textContent = '';
+      statusEl.style.color = '';
       modalPhase = 3;
 
       // Create Satoshi evaluation panel
@@ -2998,9 +3001,12 @@
           result.style.color = '#22c55e';
           addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
-          document.getElementById('modalM2Btn').textContent = '✅ Approved';
-          document.getElementById('modalM2Btn').style.background = '#166534';
-          document.getElementById('modalM2Btn').style.color = '#fff';
+          var m2btn = document.getElementById('modalM2Btn');
+          if (m2btn) {
+            m2btn.textContent = '✅ Approved';
+            m2btn.style.background = '#166534';
+            m2btn.style.color = '#fff';
+          }
           document.getElementById('modalVerifyBtn').disabled = false;
           statusEl.style.display = '';
           statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
