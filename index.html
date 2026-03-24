@@ -3075,12 +3075,13 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         // Check Safe API for existing pending proposal at this nonce signed by agent
         let nonce = parseInt(nonceBN.toString());
         try {
-          const apiData = await fetch(
+          const apiResp = await fetch(
             'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/?nonce=' + nonce + '&limit=1'
-          ).then(r => r.json());
-          const alreadySigned = apiData?.results?.[0]?.confirmations?.some(c =>
-            c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase()
           );
+          const apiData = await apiResp.json();
+          const confs = apiData?.results?.[0]?.confirmations || [];
+          const alreadySigned = confs.some(c => c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase());
+          addLogEntry('🔍 API nonce=' + nonce + ': ' + confs.length + ' existing sig(s)', confs.length > 0 ? '#fbbf24' : '#6b7280');
           if (alreadySigned) {
             nonce++;
             addLogEntry('⚠️ Nonce was already signed — advancing to nonce=' + nonce, '#fbbf24');
@@ -3093,6 +3094,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
         const gasToken = '0x0000000000000000000000000000000000000000';
         const refundReceiver = '0x0000000000000000000000000000000000000000';
+
+        addLogEntry('🔢 Using nonce=' + nonce + ' for proposal', '#a78bfa');
 
         let txHash;
         try {
@@ -3156,6 +3159,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
       } catch(e) {
         console.error('Verify error:', e);
+        addLogEntry('❌ ' + (e.message || String(e)).slice(0, 120), '#f87171');
         document.getElementById('modalVerifyBtn').disabled = false;
         const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
         document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
