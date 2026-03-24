@@ -2134,7 +2134,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     <div class="section-inner">
       <span class="section-label" data-i18n="demo-label">Live Demo</span>
       <h2 class="section-title" data-i18n="demo-headline">See it in action.</h2>
-      <p class="section-subtitle" data-i18n="demo-subtitle">This is a live demo running on Base Sepolia. The Safe below holds real funds. Try the full investment flow.</p>
+      <p class="section-subtitle" data-i18n="demo-subtitle">Explore a live investment opportunity on Base Sepolia with a real Safe escrow. Click "Invest" to try the full investment flow.</p>
 
       <div class="demo-embed">
         <div class="demo-embed-header">
@@ -3088,7 +3088,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const encodedData = window.ethers.utils.keccak256(
           window.ethers.utils.defaultAbiCoder.encode(
             ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
-            [window.ethers.utils.id(window.ethers.utils.toUtf8Bytes('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)')), to, value, window.ethers.utils.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+            [window.ethers.utils.id('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)'), to, value, window.ethers.utils.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
           )
         );
         const txHash = window.ethers.utils.keccak256(
