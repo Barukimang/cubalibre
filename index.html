@@ -2940,6 +2940,7 @@
     function modalCompleteM2() {
       var m2btn = document.getElementById('modalM2Btn');
       var statusEl = document.getElementById('modalStatus');
+      console.log('modalCompleteM2 called, modalM2Btn:', m2btn, 'statusEl:', statusEl);
       if (!m2btn || !statusEl) { console.error('modal elements missing'); return; }
       m2btn.textContent = '🤖 Reviewing...';
       m2btn.disabled = true;
