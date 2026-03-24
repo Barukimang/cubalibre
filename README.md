@@ -11,12 +11,9 @@ CubaLibre enables diaspora investors to fund Cuban small businesses through Safe
 
 ## Live Demo
 
-> ⚠️ **Power outage fallback:** If the primary URL is unreachable: https://barukimang.github.io/cubalibre/
+**https://barukimang.github.io/cubalibre/**
 
-- **Primary:** https://methods-leisure-extremely-montgomery.trycloudflare.com/
-- **Backup (GitHub Pages):** https://barukimang.github.io/cubalibre/
-
-Open any of the above → click **"Invertir"** → explore a live investment opportunity on Base Sepolia with a real Safe escrow.
+Click **"Invertir"** → explore a live investment opportunity on Base Sepolia with a real Safe escrow.
 
 ---
 
