@@ -3120,7 +3120,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
           nonce: parseInt(nonce.toString()),
-          contractTransactionHash: txHash,
           sender: AGENT_ADDR,
           signature: sigHex,
           origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
@@ -3130,6 +3129,13 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
+
+        const respText = await apiResp.text();
+        addLogEntry('📬 Safe API: ' + apiResp.status + ' ' + apiResp.statusText, apiResp.ok ? '#4ade80' : '#f87171');
+        if (!apiResp.ok) {
+          addLogEntry('❌ ' + respText.slice(0, 150), '#f87171');
+          throw new Error('Safe API ' + apiResp.status + ': ' + respText.slice(0, 100));
+        }
 
         if (apiResp.status === 201 || apiResp.status === 200) {
           document.getElementById('safeActions').innerHTML =
@@ -3144,8 +3150,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           addLogEntry('🔗 Click the link above to sign and execute', '#fbbf24');
           modalPhase = 4;
         } else {
-          const errData = await apiResp.json();
-          throw new Error('Safe API ' + apiResp.status + ': ' + JSON.stringify(errData).slice(0, 120));
+          // respText already captured above
+          throw new Error('Safe API ' + apiResp.status + ': ' + respText.slice(0, 120));
         }
 
       } catch(e) {
