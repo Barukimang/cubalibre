@@ -3078,7 +3078,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const gasToken = window.ethers.constants.ZeroAddress;
         const refundReceiver = window.ethers.constants.ZeroAddress;
 
-        // Use Safe contract's built-in getTransactionHash (reliable, no manual EIP-712 needed)
+        // Use Safe contract's built-in getTransactionHash method
         const txHash = await safeContract.getTransactionHash(
           to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
         );
