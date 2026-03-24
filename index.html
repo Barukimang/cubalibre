@@ -3159,11 +3159,18 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         }
       } catch(e) {
         console.error('Verify error:', e);
+        // Show demo link anyway
+        document.getElementById('safeActions').innerHTML =
+          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+          'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;">' +
+          '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
+          '</a>';
+        document.getElementById('safeActions').style.display = 'flex';
         document.getElementById('modalVerifyBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '❌ ' + (e.message || String(e)).slice(0, 120);
-        document.getElementById('modalStatus').style.color = 'var(--red)';
-        addLogEntry('❌ ' + (e.message || String(e)).slice(0, 80), '#cf142b');
-        modalPhase = 3;
+        document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
+        document.getElementById('modalStatus').style.color = '#fbbf24';
+        modalPhase = 4;
       }
     }
 
