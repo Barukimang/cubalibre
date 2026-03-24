@@ -3076,8 +3076,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
         const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
-        const gasToken = window.ethers.constants.ZeroAddress;
-        const refundReceiver = window.ethers.constants.ZeroAddress;
+        const gasToken = window.ethers.constants.AddressZero;
+        const refundReceiver = window.ethers.constants.AddressZero;
 
         const txHash = await safeContract.getTransactionHash(
           to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
