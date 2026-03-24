@@ -3078,21 +3078,9 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const gasToken = window.ethers.constants.ZeroAddress;
         const refundReceiver = window.ethers.constants.ZeroAddress;
 
-        // Compute EIP-712 Safe transaction hash
-        const domainSeparator = window.ethers.utils.keccak256(
-          window.ethers.utils.defaultAbiCoder.encode(
-            ['bytes32','uint256','address'],
-            [window.ethers.utils.keccak256(window.ethers.utils.toUtf8Bytes('EIP712Domain(uint256 chainId,address verifyingContract)')), 84532, SAFE_ADDRESS]
-          )
-        );
-        const encodedData = window.ethers.utils.keccak256(
-          window.ethers.utils.defaultAbiCoder.encode(
-            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
-            [window.ethers.utils.id('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)'), to, value, window.ethers.utils.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
-          )
-        );
-        const txHash = window.ethers.utils.keccak256(
-          window.ethers.utils.concat(['0x1901', domainSeparator, encodedData])
+        // Use Safe contract's built-in getTransactionHash (reliable, no manual EIP-712 needed)
+        const txHash = await safeContract.getTransactionHash(
+          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
         );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
