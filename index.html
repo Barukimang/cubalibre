@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CubaLibre — Diaspora Investment</title>
   <link rel="icon" type="image/png" href="logo.png">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -3040,28 +3040,100 @@
     const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
 
     async function modalVerify() {
-      var btn = document.getElementById('modalVerifyBtn');
-      var statusEl = document.getElementById('modalStatus');
-      if (!btn || !statusEl) return;
-      btn.textContent = '⏳ Preparing Safe transaction...';
-      btn.disabled = true;
-      statusEl.textContent = '🤖 Satoshi Nakaboto verifying milestone completion...';
-      statusEl.style.color = '#6366f1';
-      addLogEntry('🤖 Agent verifying M2 milestone completion...', '#60a5fa');
+      document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
+      document.getElementById('modalVerifyBtn').disabled = true;
+      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
+      document.getElementById('modalStatus').style.color = '#6366f1';
+      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
 
-      // Simulate agent verification delay
-      setTimeout(function() {
-        statusEl.textContent = '✅ Milestone verified! Open Safe App to propose release.';
-        statusEl.style.color = '#22c55e';
-        btn.textContent = '✅ Verified — Opening Safe App...';
-        btn.style.background = '#166534';
-        btn.disabled = false;
-        btn.onclick = function() {
-          window.open('https://app.safe.global/home?safe=basesep:' + SAFE_ADDRESS, '_blank');
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0];
+        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
+
+        const provider = new window.ethers.JsonRpcProvider(RPC_URL);
+        const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
+          'function nonce() view returns (uint256)',
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
+        ], provider);
+
+        const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+        addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+
+        const to = BUSINESS_ADDRESS;
+        const value = window.ethers.parseEther(RELEASE_AMOUNT_ETH);
+        const data = '0x';
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
+        const gasToken = window.ethers.ZeroAddress;
+        const refundReceiver = window.ethers.ZeroAddress;
+
+        // Compute EIP-712 Safe transaction hash
+        const domainSeparator = window.ethers.TypedDataEncoder.hashDomain({
+          chainId: 84532,
+          verifyingContract: SAFE_ADDRESS
+        });
+        const encodedData = window.ethers.keccak256(
+          window.ethers.AbiCoder.defaultAbiCoder().encode(
+            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
+            [window.ethers.id(window.ethers.toUtf8Bytes('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)')), to, value, window.ethers.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
+          )
+        );
+        const txHash = window.ethers.keccak256(
+          window.ethers.concat(['0x1901', domainSeparator, encodedData])
+        );
+        addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
+
+        // Agent signs via signing server
+        const sigResp = await fetch('https://musicians-avi-translation-thousands.trycloudflare.com/sign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hash: txHash })
+        });
+        if (!sigResp.ok) throw new Error('Signer error: ' + sigResp.status);
+        const { signature: sigHex } = await sigResp.json();
+
+        // Propose to Safe Transaction Service API
+        const proposeBody = {
+          to, value: value.toString(), data, operation, safeTxGas, baseGas,
+          gasPrice: String(gasPrice), gasToken, refundReceiver,
+          nonce: parseInt(nonce.toString()),
+          contractTransactionHash: txHash,
+          sender: AGENT_ADDR,
+          signature: sigHex,
+          origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
         };
-        addLogEntry('✅ M2 verified! Open Safe App to propose the release.', '#22c55e');
-        modalPhase = 4;
-      }, 2000);
+
+        const apiResp = await fetch(
+          'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
+        );
+
+        if (apiResp.status === 201 || apiResp.status === 200) {
+          document.getElementById('safeActions').innerHTML =
+            '<a href="https://app.safe.global/home?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+            'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
+            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
+            '🔗 Sign & Execute in Safe App' +
+            '</a>';
+          document.getElementById('modalStatus').textContent = '✅ Transaction proposed! Click the link to sign and execute.';
+          document.getElementById('modalStatus').style.color = '#22c55e';
+          addLogEntry('✅ Transaction proposed to Safe!', '#22c55e');
+          addLogEntry('🔗 Click the link above to sign and execute', '#fbbf24');
+          modalPhase = 4;
+        } else {
+          const errData = await apiResp.json();
+          throw new Error('Safe API ' + apiResp.status + ': ' + JSON.stringify(errData).slice(0, 120));
+        }
+
+      } catch(e) {
+        console.error('Verify error:', e);
+        document.getElementById('modalVerifyBtn').disabled = false;
+        const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
+        document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#cf142b');
+      }
     }
 
 
