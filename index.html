@@ -3004,7 +3004,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           document.getElementById('evalLine1').textContent = lines[lines.length - 1];
           const result = document.getElementById('evalResult');
           result.style.display = 'block';
-          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Safe';
+          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise';
           result.style.color = '#22c55e';
           addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
@@ -3111,14 +3111,14 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        await streamText(pAI, '✅ MILESTONE 2 APPROVED — Proposing release to Safe', 15);
+        await streamText(pAI, '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise', 15);
         await sleep(800);
 
         // Show demo link in pAI
         pAI.innerHTML = '<div style="text-align:center;margin-top:8px;">' +
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
-          '🔗 Open Safe to Sign — Demo Tx' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
           '</a>' +
           '</div>';
 
@@ -3139,7 +3139,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         pAI.innerHTML = '<div style="text-align:center;margin-top:8px;">' +
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #fbbf24;border-radius:10px;text-decoration:none;color:#fbbf24;font-size:13px;font-weight:700;">' +
-          '🔗 Open Safe to Sign — Demo Tx' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
           '</a>' +
           '</div>';
         document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
@@ -3864,7 +3864,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           document.getElementById('evalLine1').textContent = lines[lines.length - 1];
           const result = document.getElementById('evalResult');
           result.style.display = 'block';
-          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Safe';
+          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise';
           result.style.color = '#22c55e';
           addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
@@ -3998,7 +3998,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
           '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 Open Safe to Sign — Demo Tx' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
           '</a>';
         document.getElementById('safeActions').style.display = 'flex';
         document.getElementById('modalVerifyBtn').disabled = false;
@@ -4021,7 +4021,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;">' +
           '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 Open Safe to Sign — Demo Tx' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
           '</a>';
         document.getElementById('safeActions').style.display = 'flex';
         document.getElementById('modalVerifyBtn').disabled = false;
