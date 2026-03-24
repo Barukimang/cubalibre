@@ -4052,7 +4052,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       modal.style.visibility = 'visible';
       modal.style.opacity = '1';
 
-      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       loadModalSafeData();
       loadInvestmentData();
       // Reset state
@@ -4067,7 +4067,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
     function closeModal() {
       document.getElementById('elpaladar-modal').style.display = 'none';
-      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
 
     // Close on ESC
