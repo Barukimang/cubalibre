@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CubaLibre — Diaspora Investment</title>
   <link rel="icon" type="image/png" href="logo.png">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js?v=4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -3061,51 +3061,27 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const userAddress = accounts[0];
         addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
+        // Same exact approach as CLI — ethers v5 can call view functions directly
         const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
-
-        // Read Safe state via contract calls
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
-          'function getThreshold() view returns (uint256)'
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
+
         const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
         addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
 
-        // Same approach as CLI: use raw eth_call with manually ABI-encoded data
-        // This bypasses ethers Contract ABI encoding bugs entirely
         const to = BUSINESS_ADDRESS;
-        const valueWei = BigInt(Math.round(parseFloat(RELEASE_AMOUNT_ETH) * 1e18));
+        const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
-        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = '0';
-        const zeroAddr = '0x0000000000000000000000000000000000000000';
-        const nonceNum = parseInt(nonce.toString());
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
+        const gasToken = window.ethers.constants.ZeroAddress;
+        const refundReceiver = window.ethers.constants.ZeroAddress;
 
-        // getTransactionHash selector: keccak256('getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256)')
-        const selector = 'd8d11f78';  // getTransactionHash selector (no 0x - we add it below)
-
-        // ABI encode: address(uint256 takes 32 bytes, bytes is offset+len+data)
-        const pad = (v, n) => v.replace('0x', '').padStart(n * 2, '0');
-        const addrP = pad(to, 20);
-        const valueP = pad(valueWei.toString(16), 32);
-        // bytes: offset to data (after selector + 9*32 bytes = 4+288=292 = 0x124)
-        const dataOffset = '0x' + (292).toString(16).padStart(64, '0');
-        const opP = operation.toString(16).padStart(128, '0');
-        const stgP = pad(safeTxGas.toString(16), 32);
-        const bgP = pad(baseGas.toString(16), 32);
-        const gpP = pad(gasPrice, 32);
-        const gtP = pad(zeroAddr, 20);
-        const rrP = pad(zeroAddr, 20);
-        const nonceP = pad(nonceNum.toString(16), 32);
-        // bytes data (type=bytes: offset+len+padded data)
-        const dataLen = (data.length - 2) / 2; // byte length
-        const dataPadded = data.slice(2).padEnd(64, '0');
-        const dataLenP = dataLen.toString(16).padStart(64, '0');
-
-        const encodedData = '0x' + selector
-          + addrP + valueP + dataOffset + opP + stgP + bgP + gpP + gtP + rrP + nonceP
-          + dataLenP + dataPadded;
-
-        const txHash = await provider.call({ to: SAFE_ADDRESS, data: encodedData });
+        const txHash = await safeContract.getTransactionHash(
+          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
+        );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
         // Agent signs via signing server
