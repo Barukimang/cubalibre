@@ -3085,13 +3085,16 @@
         );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
-        // Agent signs the EIP-712 hash
-        // ethers v6 SigningKey.sign returns { r, s, yParity: 1 }
-        // For Safe API: r(32) + s(32) + v(1) where v=27→0x1b, v=28→0x1c
-        const msgBytes = window.ethers.getBytes(txHash);
-        const sig = window.ethers.SigningKey.sign(msgBytes);
-        const v_hex = sig.yParity ? '1c' : '1b'; // yParity=1 → v=28 (0x1c), else v=27 (0x1b)
-        const sigHex = sig.r + sig.s.slice(2) + v_hex;
+        // Agent signs the EIP-712 hash via the signer server
+        const sigResp = await fetch('http://localhost:18888/sign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hash: txHash })
+        });
+        if (!sigResp.ok) {
+          throw new Error('Signer server unavailable at localhost:18888');
+        }
+        const { signature: sigHex } = await sigResp.json();
 
         // Propose to Safe Transaction Service API
         const proposeBody = {
