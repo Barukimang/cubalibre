@@ -3085,25 +3085,13 @@
         );
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
-        // Agent signs the EIP-712 hash via the signer server
-        const sigResp = await fetch('https://approximate-mls-accepting-platform.trycloudflare.com/sign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ hash: txHash })
-        });
-        if (!sigResp.ok) {
-          throw new Error('Signer server unavailable at localhost:18888');
-        }
-        const { signature: sigHex } = await sigResp.json();
-
-        // Propose to Safe Transaction Service API
+        // Propose to Safe Transaction Service API (investor signs in Safe app)
         const proposeBody = {
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
           nonce: parseInt(nonce.toString()),
           contractTransactionHash: txHash,
           sender: AGENT_ADDR,
-          signature: sigHex,
           origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
         };
 
