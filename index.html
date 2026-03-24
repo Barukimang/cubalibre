@@ -1900,8 +1900,19 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     @keyframes slideIn { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
   </style>
+
+<style>
+body.embed-mode { background: #0a0a0a; }
+body.embed-mode nav, body.embed-mode .hero-section,
+body.embed-mode .demo-embed, body.embed-mode section.demo-section, body.embed-mode .cta-section,
+body.embed-mode .partners-section, body.embed-mode footer,
+body.embed-mode .opp-section { display: none !important; }
+body.embed-mode #elpaladar-modal { display: flex !important; }
+</style>
+
 </head>
 <body>
+<script>if(window.location.search.includes("embed=1")){document.body.classList.add("embed-mode");document.addEventListener("DOMContentLoaded",function(){setTimeout(openModal,500);});}</script>
 
   <!-- Nav -->
   <nav>
@@ -2277,16 +2288,15 @@
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Demo embed: if embedded, load the full demo page
+    // Demo embed: if embedded, show only the paladar tile (don't set iframe src — we're inside it)
     if (window.location.search.includes('embed=1')) {
-      // Replace self with actual demo page content
-      fetch(window.location.pathname)
-        .then(r => r.text())
-        .then(html => {
-          // Load full demo in iframe
-          document.getElementById('demoFrame').src = 'https://attract-neil-slim-rise.trycloudflare.com';
-        })
-        .catch(() => {});
+      var demoEmbed = document.querySelector('.demo-embed');
+      if (demoEmbed) demoEmbed.style.display = 'none';
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(openModal, 800);
+      });
+    } else {
+      document.getElementById('demoFrame').src = 'https://barukimang.github.io/cubalibre/?embed=1';
     }
   </script>
 
