@@ -3086,7 +3086,7 @@
         addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
 
         // Agent signs the EIP-712 hash via the signer server
-        const sigResp = await fetch('http://localhost:18888/sign', {
+        const sigResp = await fetch('https://approximate-mls-accepting-platform.trycloudflare.com/sign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ hash: txHash })
