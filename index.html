@@ -3134,44 +3134,36 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         );
 
         const respText = await apiResp.text();
-        addLogEntry('📬 Safe API: ' + apiResp.status + ' ' + apiResp.statusText, apiResp.ok ? '#4ade80' : '#f87171');
-        if (!apiResp.ok) {
-          addLogEntry('❌ ' + respText.slice(0, 150), '#f87171');
-          throw new Error('Safe API ' + apiResp.status + ': ' + respText.slice(0, 100));
-        }
+        addLogEntry('📬 Safe API: ' + apiResp.status, apiResp.ok ? '#4ade80' : '#f87171');
 
-        if (apiResp.status === 201 || apiResp.status === 200) {
-          document.getElementById('safeActions').innerHTML =
-            '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-            'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
-            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-            '🔗 Sign & Execute in Safe App' +
-            '</a>';
-          document.getElementById('modalStatus').textContent = '✅ Transaction proposed! Click the link to sign and execute.';
-          document.getElementById('modalStatus').style.color = '#22c55e';
-          addLogEntry('✅ Transaction proposed to Safe!', '#22c55e');
-          addLogEntry('🔗 Click the link above to sign and execute', '#fbbf24');
-          modalPhase = 4;
-        } else {
-          // respText already captured above
-          throw new Error('Safe API ' + apiResp.status + ': ' + respText.slice(0, 120));
-        }
-
-      } catch(e) {
-        console.error('Verify error:', e);
-        // For demo: show the Safe queue link anyway
+        // For demo: ALWAYS show the Safe queue link regardless of API outcome
         document.getElementById('safeActions').innerHTML =
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
           '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 View Demo Tx in Safe' +
+          '🔗 View Demo Tx in Safe — Sign & Execute' +
           '</a>';
         document.getElementById('safeActions').style.display = 'flex';
         document.getElementById('modalVerifyBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe (needs your signature)';
-        document.getElementById('modalStatus').style.color = '#fbbf24';
-        addLogEntry('❌ API call failed — showing demo link anyway', '#fbbf24');
-        modalPhase = 4;
+
+        if (apiResp.ok) {
+          document.getElementById('modalStatus').textContent = '✅ Proposed! Sign in Safe to execute.';
+          document.getElementById('modalStatus').style.color = '#4ade80';
+          addLogEntry('✅ Transaction proposed to Safe!', '#4ade80');
+          modalPhase = 4;
+        } else {
+          document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
+          document.getElementById('modalStatus').style.color = '#fbbf24';
+          addLogEntry('❌ API ' + apiResp.status + ': ' + respText.slice(0, 120), '#f87171');
+          modalPhase = 4;
+        }
+      } catch(e) {
+        console.error('Verify error:', e);
+        document.getElementById('modalVerifyBtn').disabled = false;
+        document.getElementById('modalStatus').textContent = '❌ ' + (e.message || String(e)).slice(0, 120);
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+        addLogEntry('❌ ' + (e.message || String(e)).slice(0, 80), '#cf142b');
+        modalPhase = 3;
       }
     }
 
