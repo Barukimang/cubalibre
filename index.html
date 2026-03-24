@@ -3079,12 +3079,18 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const gasToken = '0x0000000000000000000000000000000000000000';
         const refundReceiver = '0x0000000000000000000000000000000000000000';
 
-        const txHash = await safeContract.getTransactionHash(
-          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
-        );
-        addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
+        let txHash;
+        try {
+          txHash = await safeContract.getTransactionHash(
+            to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
+          );
+          addLogEntry('✅ txHash: ' + txHash.slice(0, 18) + '...', '#4ade80');
+        } catch(e) {
+          addLogEntry('❌ txHash error: ' + e.message.slice(0, 80), '#f87171');
+          throw e;
+        }
 
-        // Agent signs via signing server
+        addLogEntry('📡 Signing...', '#fbbf24');
         const sigResp = await fetch('https://musicians-avi-translation-thousands.trycloudflare.com/sign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -3092,8 +3098,9 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         });
         if (!sigResp.ok) throw new Error('Signer error: ' + sigResp.status);
         const { signature: sigHex } = await sigResp.json();
+        addLogEntry('✍️ Signed: ' + sigHex.slice(0, 18) + '...', '#60a5fa');
 
-        // Propose to Safe Transaction Service API
+        addLogEntry('📡 Proposing to Safe API...', '#fbbf24');
         const proposeBody = {
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
