@@ -2292,7 +2292,19 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     if (window.location.search.includes('embed=1')) {
       var demoEmbed = document.querySelector('.demo-embed');
       if (demoEmbed) demoEmbed.style.display = 'none';
-      document.addEventListener('DOMContentLoaded', function() {
+      function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function streamText(el, text, speed) {
+      el.innerHTML = '';
+      el.style.display = 'block';
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === '\n') { el.innerHTML += '<br>'; }
+        else { el.innerHTML += text[i]; }
+        await sleep(speed || 20);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         setTimeout(openModal, 800);
       });
     } else {
@@ -2341,21 +2353,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div style="font-size:22px;font-weight:800;color:var(--blue);">3</div>
             <div style="font-size:12px;color:#aaa;" data-i18n="milestones-count">Milestones</div>
           </div>
-          <div style="background:var(--bg-card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
-            <div id="modalRaisedStat" style="font-size:22px;font-weight:800;color:var(--amber-dark);">~$304</div>
-            <div style="font-size:12px;color:var(--text-light);" data-i18n="raised-label">Raised</div>
-          </div>
-        </div>
-
-        <!-- Your Investment Panel -->
-        <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
-            <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-            <div>
-              <div style="font-size:22px;font-weight:800;" id="investorBalance">—</div>
               <div style="font-size:11px;opacity:0.7;" data-i18n="safe-balance-eth">Balance Safe (ETH)</div>
             </div>
             <div>
