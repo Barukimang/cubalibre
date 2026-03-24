@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CubaLibre — Diaspora Investment</title>
   <link rel="icon" type="image/png" href="logo.png">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js?v=4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,13 +33,12 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow-x: hidden;
       line-height: 1.6;
     }
 
@@ -956,13 +955,12 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow-x: hidden;
       line-height: 1.6;
     }
 
@@ -1908,6 +1906,8 @@ body.embed-mode .demo-embed, body.embed-mode section.demo-section, body.embed-mo
 body.embed-mode .partners-section, body.embed-mode footer,
 body.embed-mode .opp-section { display: none !important; }
 body.embed-mode #elpaladar-modal { display: flex !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .tx-spinner { display:inline-block;width:14px;height:14px;border:2px solid rgba(34,197,94,0.3);border-top-color:#22c55e;border-radius:50%;animation:spin 0.8s linear infinite;margin-left:8px;vertical-align:middle; }
 </style>
 
 </head>
@@ -2011,7 +2011,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $500
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <div class="bar"><div class="bar-fill bar-fill-animated" id="progressBar"></div></div>
@@ -2033,7 +2033,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $1,200
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <span data-i18n="under-review">Under review</span>
@@ -2054,7 +2054,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $800
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <span data-i18n="under-review">Under review</span>
@@ -2134,7 +2134,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     <div class="section-inner">
       <span class="section-label" data-i18n="demo-label">Live Demo</span>
       <h2 class="section-title" data-i18n="demo-headline">See it in action.</h2>
-      <p class="section-subtitle" data-i18n="demo-subtitle">This is a live demo running on Base Sepolia. The Safe below holds real funds. Try the full investment flow.</p>
+      <p class="section-subtitle" data-i18n="demo-subtitle">Explore a live investment opportunity on Base Sepolia with a real Safe escrow. Click "Invest" to try the full investment flow.</p>
 
       <div class="demo-embed">
         <div class="demo-embed-header">
@@ -2205,18 +2205,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
   </section>
 
   <!-- Footer -->
-    >
-    <div class="flag-stripes">
-      <div class="stripe-blue"></div>
-      <div class="stripe-white"></div>
-      <div class="stripe-red"></div>
-      <div class="stripe-white"></div>
-      <div class="stripe-blue"></div>
-    </div>
-    <div class="footer-logo">CubaLibre</div>
-    <p data-i18n="footer-text">Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
-    Built for The Synthesis Hackathon, March 2026.</p>
-    <p style="margin-top:12px;opacity:0.4">Safe: 0x8948F10E9f3389b428891Df35d68CB031a83d731 • Base Sepolia</p>
   </footer>
 
   <script>
@@ -2292,7 +2280,670 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     if (window.location.search.includes('embed=1')) {
       var demoEmbed = document.querySelector('.demo-embed');
       if (demoEmbed) demoEmbed.style.display = 'none';
-      document.addEventListener('DOMContentLoaded', function() {
+      function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function streamText(el, text, speed) {
+      el.innerHTML = '';
+      el.style.display = 'block';
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === '\n') { el.innerHTML += '<br>'; }
+        else { el.innerHTML += text[i]; }
+        await sleep(speed || 20);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(openModal, 800);
+      });
+    } else {
+      document.getElementById('demoFrame').src = 'https://barukimang.github.io/cubalibre/?embed=1';
+    }
+  </script>
+
+
+
+  <script>
+    const T = {
+      en: {},
+      es: {
+        "how-it-works": "Cómo Funciona",
+        "hero-tagline": "CubaLibre conecta inversionistas de la diáspora con negocios cubanos — a través de hitos verificados por IA, Safe multisig escrow, y cero intermediarios. Tu capital, su crecimiento, la confianza de todos.",
+        "nav-invest": "Invertir",
+      "nav-ai-agent": "Agente IA",
+      "nav-live-demo": "Demo en Vivo",
+      "safe-multisig": "Multisig Safe",
+      "signatories": "Firmantes 2-de-2",
+      "hiw-label": "Cómo Funciona",
+      "demo-label": "Demo en Vivo",
+      "hero-headline": "Apoya a Emprendedores<br>Cubanos.<br><span class=\"blue\">Desde</span> <span class=\"red\">cualquier lugar.</span>",
+        "browse-ops": "Ver Oportunidades 🌴",
+        "raise-cap": "Recaudar Capital",
+        "raised-of": "recaudado de $500",
+        "remaining": "$300 restante",
+        "milestones-lbl": "Hitos",
+        
+      "hiw-title": "Inversión sin<br>los intermediarios.",
+
+      "drink-sublabel": "Agentes IA • Ethereum • Libertad",
+
+
+      "two-sides-text": "Para quienes tienen capital.<br><span style=\"color:var(--amber);\">Y quienes lo necesitan.</span>",
+
+
+      "opps-subtitle": "Abierto para inversión.<br>Cada oportunidad es verificada, estructurada en hitos, y respaldada por escrow en cadena. Sin especulación, sin promesas — solo capital para trabajo real.",
+
+
+      "photo-bodeguita": "Edificio La Habana",
+      "photo-artesania": "Arte cubano",
+      "partner-hackathon": "Hackathon",
+      "partner-wallet": "Wallet",
+      "partner-llm": "LLM",
+      "partner-blockchain": "Blockchain",
+      "partner-l2": "L2 Network",
+      "trust-headline": "An AI agent you<br>can actually trust.",
+      "two-sides-headline": "Para quienes tienen capital.<br><span style=\"color:var(--amber);\">Y quienes lo necesitan.</span>",
+
+
+      "power-milestone": "✓ Verificación de hitos",
+      "power-cosigner": "✓ Co-firmante Safe (2-de-2)",
+      "power-audit": "✓ Pista de auditoría transparente",
+      "power-nocustody": "✓ Sin custodia de fondos",
+      "power-realtime": "✓ Actualizaciones en tiempo real",
+      "demo-headline": "Vélo en acción.",
+      "demo-subtitle": "Esta es una demo en vivo ejecutándose en Base Sepolia. El Safe abajo contiene fondos reales. Prueba el flujo de inversión completo.",
+      "demo-title": "cubalibre.app — Demo de Inversión El Paladar",
+      "demo-cta-text": "Tu diáspora construyó esta isla una vez.<br>Hora de construirla de nuevo.",
+      "demo-tagline": "CubaLibre está abierto. Bitcoin trajo libertad a las finanzas.<br>CubaLibre la trae a Cuba.",
+      "start-invest-now": "Comenzar a Invertir Ahora 🌴",
+      "partners-subtitle": "Construido con las mejores herramientas del espacio",
+      "opps-subtitle": "Abierto para inversión.<br>Cada oportunidad es verificada, estructurada en hitos, y respaldada por escrow en cadena. Sin especulación, sin promesas — solo capital para trabajo real.",
+      "under-review": "En revisión",
+      "photo-bodeguita": "Edificio La Habana",
+      "photo-artesania": "Arte cubano",
+      "open-investment": "Abierto para inversión.",
+
+
+      "power-milestone": "✓ Verificación de hitos",
+      "power-cosigner": "✓ Co-firmante Safe (2-de-2)",
+      "power-audit": "✓ Pista de auditoría transparente",
+      "power-nocustody": "✓ Sin custodia de fondos",
+      "power-realtime": "✓ Actualizaciones en tiempo real",
+      "two-sides-text": "Para quienes tienen capital.<br><span style=\"color:var(--amber);\">Y quienes lo necesitan.</span>",
+      "demo-headline": "Vélo en acción.",
+      "demo-subtitle": "Esta es una demo en vivo ejecutándose en Base Sepolia. El Safe abajo contiene fondos reales. Prueba el flujo de inversión completo.",
+      "demo-title": "cubalibre.app — Demo de Inversión El Paladar",
+      "demo-cta-text": "Tu diáspora construyó esta isla una vez.<br>Hora de construirla de nuevo.",
+      "demo-tagline": "CubaLibre está abierto. Bitcoin trajo libertad a las finanzas.<br>CubaLibre la trae a Cuba.",
+      "start-invest-now": "Comenzar a Invertir Ahora 🌴",
+      "partners-subtitle": "Construido con las mejores herramientas del espacio",
+      "opps-subtitle": "Abierto para inversión.<br>Cada oportunidad es verificada, estructurada en hitos, y respaldada por escrow en cadena. Sin especulación, sin promesas — solo capital para trabajo real.",
+      "under-review": "En revisión",
+      "photo-bodeguita": "Edificio La Habana",
+      "photo-artesania": "Arte cubano",
+      "open-investment": "Abierto para inversión.",
+
+      "hiw-label": "Cómo Funciona",
+      "opps-label": "Oportunidades en Vivo",
+      "trust-label": "La Capa de Confianza",
+      "two-sides-label": "Dos Lados",
+      "demo-label": "Demo en Vivo",
+      "hiw-subtitle": "Las plataformas tradicionales cobran comisiones, no ofrecen transparencia, y te dan cero protección. CubaLibre es diferente — tu dinero permanece en un Safe que tú controlas hasta que un agente IA verifica cada hito.",
+        "step1-title": "Explorar Oportunidades",
+        "step1-desc": "Descubre negocios cubanos buscando capital — restaurantes, tiendas, artesanos. Cada oportunidad tiene hitos claros y una meta de financiación transparente.",
+        "step2-title": "Comprometer al Safe Escrow",
+        "step2-desc": "Tus fondos van a un multisig Safe 2-de-2 — nunca pierdes el control total. El agente IA (Satoshi Nakaboto) es el co-firmante.",
+        "step3-title": "IA Verifica y Libera",
+        "step3-desc": "El negocio completa hitos, envía evidencia. Satoshi verifica, luego co-firma la transacción Safe para liberar fondos. Estás informado en cada paso.",
+        "raising": "● Recaudando",
+        "paladar-title": "El Paladar de María",
+        "paladar-desc": "Querido restaurante familiar sirve cocina cubana tradicional. Destacado en Lonely Planet 2024. Ampliando asientos y contratando 2 empleados.",
+        "bodeguita-title": "La Bodeguita",
+        "bodeguita-desc": "Colectivo de 12 artesanos locales produciendo artesanías cubanas tradicionales. Expandiendo para alcanzar compradores internacionales.",
+        "artesania-title": "Artesanía Cubana",
+        "coming-soon": "Próximamente",
+        "agent-desc": "Satoshi Nakaboto es el coordinador IA de CubaLibre. No duerme, no acepta sobornos, y no puede ser amenazado. Verifica evidencia, co-firma transacciones, y mantiene a ambas partes honestas.",
+        "agent-role": "🤖 Agente IA CubaLibre • OpenClaw",
+        "agent-detail": "Satoshi monitorea cada hito. Cuando un negocio envía evidencia de completitud, él la revisa, verifica su legitimidad, y — si todo está bien — co-firma la transacción Safe que libera el próximo tramo de fondos. Sin aprobación manual. Solo código y confianza.",
+        "power1": "✓ Verificación de hitos",
+        "power2": "✓ Co-firma de transacciones",
+        "power3": "✓ Transparencia total",
+        "inv-title": "Inversionistas de la Diáspora",
+        "inv1": "Explorar negocios cubanos verificados",
+        "inv2b": "Comprometer fondos a un Safe que tú controlas",
+        "inv3": "Fondos liberados solo con tu co-firma",
+        "inv4b": "Rastrea cada hito en tiempo real",
+        "inv5": "Construir reputación en cadena como inversionista",
+        "inv-desc": "El país de tu familia necesita inversión. Los bancos no ayudan. Las plataformas existentes son opacas y costosas. CubaLibre te da acceso directo, transparencia total, y tu dinero protegido por un Safe que tú controlas.",
+        "biz-title": "Negocios Cubanos",
+        "biz1": "Estructura tu financiación en hitos",
+        "biz1b": "Crea un perfil con identidad verificable",
+        "biz3": "Solo paga cuando los hitos son verificados",
+        "biz3b": "Recibe capital sin intermediarios",
+        "biz5": "Construir reputación internacional en cadena",
+        "biz-desc": "Sin acceso a bancos. Sin historial crediticio que el mundo reconozca. CubaLibre abre la puerta al capital de la diáspora — con términos claros, sin tarifas ocultas, y una IA que evalúa tu negocio honestamente.",
+        "start-invest": "Comenzar a Invertir",
+        "apply-btn": "Solicitar Recaudar Capital",
+        "partners-title": "Socios e Integraciones",
+        "footer-text": "Infraestructura de inversión para la diáspora — impulsada por agentes IA y multisig Safe.",
+        "modal-milestones": "🎯 Hitos de Inversión",
+        "modal-safe": "🔐 Safe Escrow — En Cadena",
+        "modal-activity": "📜 Registro de Actividad",
+        "modal-demo": "🎮 Controles de Demo",
+        "modal-invest-amt": "💰 Tu monto de inversión (USD)",
+        "investor-story": "👤 Historia del Inversionista",
+        "safe-address": "Dirección Safe",
+        "escrow-balance": "Balance en Escrow",
+        "signing-threshold": "Umbral de Firma",
+        "required-conf": "Confirmaciones requeridas",
+        "activity-created": "Inversión creada",
+        "activity-m1": "M1 verificado — equipo de cocina",
+        "sim-fund": "Simular Financiar Safe",
+        "sim-fund-desc": "Enviar ETH test al Safe",
+        "complete-m2": "Completar M2",
+        "complete-m2-desc": "Marcar hito 2 como completado",
+        "agent-verify": "Agente Verifica y Libera",
+        "agent-verify-desc": "El Agente IA co-firma la tx Safe",
+        "safe-contains": "El Safe contiene",
+        "total-invested": "Total invertido",
+        "your-ownership": "Tu propiedad",
+        
+      "m1-title": "Compra de equipos de cocina",
+      "m1-status": "Completado Mar 15 • $200 asignados",
+      "m2-title": "Contratar 2 empleados adicionales",
+      "m2-status": "En progreso • Entrevistas Mar 22",
+      "m3-title": "Lanzar menú expandido",
+      "m3-status": "Pendiente • Meta: Abr 1",
+      "inv-story-label": "De un inversionista de la diáspora",
+      "inv-story-loc": "Cubano-Americano, Miami, FL",
+      "inv-story-committed": "comprometido",
+      "loading-balance": "⏳ Cargando...",
+      "loading-threshold": "⏳ Cargando...",
+      "helper-text": "Envía ETH real de testnet en Base Sepolia. <a href=\"https://www.alchemy.com/faucets/base-sepolia\" target=\"_blank\" style=\"color:#3b82f6;font-weight:600;text-decoration:none;\">Obtén ETH test gratuito →</a>",
+        "invest-10": "Invertir — $10 USD",
+        "invest-50": "Invertir — $50 USD",
+        "invest-100": "Invertir — $100 USD",
+        "invest-max": "Máx",
+        "invest-cta": "Invertir en El Paladar — $396 USD",
+        "add-more": "Agregar — $ más",
+        "invalid-amount": "❌ Ingresa un monto válido",
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (lang === 'es' && T['es'][key]) {
+          el.textContent = T['es'][key];
+        } else if (lang === 'en') {
+          const orig = el.getAttribute('data-original');
+          el.textContent = orig || el.textContent;
+        }
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (lang === 'es' && T['es'][key]) {
+          el.innerHTML = T['es'][key];
+        } else if (lang === 'en') {
+          const orig = el.getAttribute('data-original');
+          el.innerHTML = orig || el.innerHTML;
+        }
+      });
+      const btn = document.getElementById('langToggle');
+      if (btn) btn.textContent = lang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
+    }
+
+    function toggleLang() {
+      setLang(currentLang === 'en' ? 'es' : 'en');
+    }
+  </script>
+
+          <script>
+    // Event delegation for opp-card clicks
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.clickable-card');
+      if (card) {
+        e.preventDefault();
+        openModal();
+      }
+    });
+
+    let lastSafeBalance = 0.0555; // ~$200 at $3600/ETH // Updated on modal open from Safe balance
+    let modalPhase = 2; // 1=created, 2=funded, 3=milestone2, 4=done
+
+    function shortAddr(addr) {
+      return addr.slice(0,6) + '...' + addr.slice(-4);
+    }
+
+    async function loadModalSafeData() {
+      const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
+      const RPC = 'https://gateway.tenderly.co/public/base-sepolia';
+      const jbody = (m,p=[]) => JSON.stringify({jsonrpc:'2.0',id:1,method:m,params:p});
+      try {
+        const [balRes, threshRes] = await Promise.all([
+          fetch(RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:jbody('eth_getBalance',[SAFE,'latest'])}).then(r=>r.json()),
+          fetch(RPC,{method:'POST',headers:{'Content-Type':'application/json'},body:jbody('eth_call',[{to:SAFE,data:'0x7215e819'},'latest'])}).then(r=>r.json())
+        ]);
+        const wei = parseInt(balRes.result||'0x0',16);
+        lastSafeBalance = wei / 1e18;
+        const usd = Math.round(lastSafeBalance * 3600);
+        document.getElementById('modalBalance').textContent = '~$' + usd + ' USD (' + lastSafeBalance.toFixed(2) + ' ETH)';
+        const threshHex = (threshRes.result||'0x0000000000000000000000000000000000000000000000000000000000000002').slice(-1);
+        document.getElementById('modalThreshold').textContent = parseInt(threshHex,16) + '-of-2';
+        refreshInvestmentPanel();
+      } catch(e) {
+        document.getElementById('modalBalance').textContent = '⚠️ RPC error';
+        refreshInvestmentPanel();
+      }
+    }
+
+
+    function loadInvestmentData() {
+      const stored = localStorage.getItem('cubalibre_investment');
+      const panel = document.getElementById('yourInvestmentPanel');
+      const balanceEl = document.getElementById('investorBalance');
+      const totalEl = document.getElementById('investorTotal');
+      const ownershipEl = document.getElementById('investorOwnership');
+      const addressEl = document.getElementById('investorAddress');
+      const labelEl = document.getElementById('investAmountLabel');
+
+      if (!stored) {
+        panel.style.display = 'none';
+        return;
+      }
+
+      const data = JSON.parse(stored);
+      const safeBalance = parseFloat(document.getElementById('modalBalance').textContent) || 0;
+
+      panel.style.display = 'block';
+      addressEl.textContent = data.address ? data.address.slice(0, 8) + '...' : '—';
+      totalEl.textContent = '$' + (data.total || 0);
+      balanceEl.textContent = lastSafeBalance.toFixed(2) + ' ETH (~$' + Math.round(lastSafeBalance*3600) + ' USD)';
+
+      // Estimate ETH value at ~$2500/ETH
+      const investedEth = (data.total || 0) / 3600;
+      ownershipEl.textContent = safeBalance > 0
+        ? Math.min(100, Math.round((investedEth / safeBalance) * 100)) + '%'
+        : '0%';
+
+      // Update button label
+      labelEl.textContent = 'Add to your investment (USD)';
+      document.getElementById('investBtn').textContent = 'Add — $10';
+      document.getElementById('investAmount').value = 10;
+    }
+
+    function saveInvestment(address, totalUsd) {
+      const existing = localStorage.getItem('cubalibre_investment');
+      let data = existing ? JSON.parse(existing) : { address, total: 0 };
+      data.address = address;
+      data.total = (data.total || 0) + totalUsd;
+      localStorage.setItem('cubalibre_investment', JSON.stringify(data));
+      loadInvestmentData();
+    }
+
+
+
+    const BASE_SEPOLIA = {
+      chainId: '0x14a34', // Base Sepolia chainId
+      chainName: 'Base Sepolia',
+      rpcUrls: ['https://sepolia.base.org'],
+      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      blockExplorerUrls: ['https://sepolia.basescan.org']
+    };
+
+    async function switchToBaseSepolia() {
+      console.log('Attempting to switch to Base Sepolia, chainId:', BASE_SEPOLIA.chainId);
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: BASE_SEPOLIA.chainId }]
+        });
+        console.log('Switch successful');
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+            await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [BASE_SEPOLIA]
+          });
+        } else {
+          throw switchError; // re-throw so caller handles it
+        }
+      }
+    }
+
+    function addLogEntry(msg, color) {
+      const log = document.getElementById('modalLog');
+      const now = new Date();
+      const ts = now.toTimeString().slice(0,5);
+      const div = document.createElement('div');
+      div.style = 'display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);';
+      div.innerHTML = '<span style="color:var(--text-light);white-space:nowrap;">' + ts + '</span><span style="color:' + (color||'var(--text)') + ';">' + msg + '</span>';
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function modalInvest() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('Install MetaMask from metamask.io');
+        return;
+      }
+
+      const SAFE = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
+      const amount = parseInt(document.getElementById('investAmount').value) || 0;
+      if (amount <= 0) {
+        document.getElementById('modalStatus').textContent = '❌ Enter a valid amount';
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+        return;
+      }
+      const ethValue = amount / 2079;
+      const ethHex = '0x' + Math.floor(ethValue * 1e18).toString(16);
+
+      document.getElementById('investBtn').textContent = '⏳ Connecting...';
+      document.getElementById('investBtn').disabled = true;
+      document.getElementById('modalStatus').textContent = 'Connecting wallet...';
+      document.getElementById('modalStatus').style.color = '#f97316';
+
+      try {
+        // 1. Connect wallet
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const from = accounts[0];
+
+        // 2. Switch to Base Sepolia
+        document.getElementById('modalStatus').textContent = 'Switch to Base Sepolia in MetaMask...';
+        try {
+          await switchToBaseSepolia();
+        } catch(swErr) {
+          document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USD';
+          document.getElementById('investBtn').disabled = false;
+          document.getElementById('modalStatus').textContent = '❌ Add Base Sepolia to MetaMask manually, then try again.';
+          document.getElementById('modalStatus').style.color = 'var(--red)';
+          return;
+        }
+        await new Promise(r => setTimeout(r, 1000));
+
+        // 3. Send transaction
+        document.getElementById('modalStatus').textContent = 'Confirm in MetaMask...';
+        const txHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: from, to: SAFE, value: ethHex }]
+        });
+
+        document.getElementById('modalStatus').textContent = '⏳ Confirming on-chain...';
+        document.getElementById('modalStatus').style.color = '#6366f1';
+
+        // Poll for receipt
+        let receipt = null;
+        for (let i = 0; i < 15; i++) {
+          await new Promise(r => setTimeout(r, 2000));
+          receipt = await window.ethereum.request({
+            method: 'eth_getTransactionReceipt',
+            params: [txHash]
+          });
+          if (receipt && receipt.blockNumber) break;
+        }
+
+        if (receipt && receipt.status === '0x1') {
+          const blockNum = parseInt(receipt.blockNumber, 16);
+          // Save investment to localStorage
+          saveInvestment(accounts[0], parseInt(amount));
+          document.getElementById('investBtn').textContent = '✅ Committed $' + amount + ' USD!';
+          document.getElementById('investBtn').style.background = '#3b82f6';
+          document.getElementById('investBtn').disabled = true;
+          document.getElementById('modalStatus').textContent = '✅ Committed! TX: ' + txHash.slice(0, 12) + '... (block ' + blockNum + ')';
+          document.getElementById('modalStatus').style.color = '#3b82f6';
+          addLogEntry('💰 Investment committed: $' + amount + ' USD → Safe escrow', '#3b82f6');
+          addLogEntry('🔐 2-of-2 Safe multisig active (TX: ' + txHash.slice(0,16) + '...)', '#60a5fa');
+          // Update UI for next investment
+          document.getElementById('investAmountLabel').textContent = 'Add to your investment (USD)';
+          document.getElementById('investAmount').value = 10;
+          document.getElementById('investBtn').textContent = 'Add — $10 more';
+          document.getElementById('investBtn').style.background = 'var(--blue)';
+          document.getElementById('investBtn').disabled = false;
+          // Refresh Safe data to update balance
+          loadModalSafeData();
+          loadInvestmentData();
+          // Enable M2 flow after first investment
+          document.getElementById('modalM2Btn').disabled = false;
+          document.getElementById('safeActions').style.display = 'flex';
+        } else {
+          throw new Error('Transaction reverted');
+        }
+
+      } catch(e) {
+        document.getElementById('investBtn').textContent = 'Invest — $' + amount + ' USD';
+        document.getElementById('investBtn').disabled = false;
+        const msg = e.code === 4001 ? 'Transaction cancelled' : (e.message || String(e));
+        document.getElementById('modalStatus').textContent = '❌ ' + msg;
+        document.getElementById('modalStatus').style.color = 'var(--red)';
+      }
+    }
+
+    function modalFund() {
+      document.getElementById('modalFundBtn').textContent = '⏳ Processing...';
+      document.getElementById('modalFundBtn').disabled = true;
+      document.getElementById('modalM2Btn').disabled = false;
+      document.getElementById('safeActions').style.display = 'flex';
+      modalPhase = 2;
+      const addedUsd = Math.round(0.05 * 3600);
+      const totalUsd = Math.round(lastSafeBalance * 3600) + addedUsd;
+      document.getElementById('modalStatus').textContent = '✅ Safe funded! ~$' + totalUsd + ' USD in escrow — 2-of-2 multisig active.';
+      document.getElementById('modalStatus').style.color = 'var(--blue)';
+      const balEl = document.getElementById('modalBalance');
+      if (balEl) {
+        balEl.textContent = '~$' + totalUsd + ' USD (' + (lastSafeBalance + 0.05).toFixed(2) + ' ETH)';
+        balEl.classList.remove('balance-pulse'); void balEl.offsetWidth; balEl.classList.add('balance-pulse');
+      }
+      lastSafeBalance += 0.05;
+      refreshInvestmentPanel();
+      animateProgressBar();
+      showToast('💰 ~$' + addedUsd + ' USD received in Safe escrow!');
+      addLogEntry('✅ Safe funded: ~$' + addedUsd + ' USD (~$0.05 ETH)', '#3b82f6');
+      addLogEntry('🔐 2-of-2 Safe multisig: Investor + Satoshi Nakaboto', '#60a5fa');
+    }
+
+    function modalCompleteM2() {
+      var m2btn = document.getElementById('modalM2Btn');
+      var statusEl = document.getElementById('modalStatus');
+      if (!m2btn || !statusEl) { console.error('modal elements missing'); return; }
+      m2btn.textContent = '🤖 Reviewing...';
+      m2btn.disabled = true;
+      statusEl.textContent = '';
+      statusEl.style.color = '';
+      modalPhase = 3;
+
+      // Create Satoshi evaluation panel
+      const evalPanel = document.createElement('div');
+      evalPanel.id = 'satoshiEval';
+      evalPanel.style = 'background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:20px;margin-bottom:20px;animation:slideIn 0.4s ease;';
+      evalPanel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <img src="avatar-sat-n.png" style="width:36px;height:36px;border-radius:50%;border:1px solid #3b82f6;">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;">Satoshi Nakaboto</div>
+            <div style="font-size:11px;color:#888;">Evaluating milestone evidence...</div>
+          </div>
+          <div id="evalDots" style="margin-left:auto;font-size:18px;letter-spacing:2px;color:#3b82f6;">...</div>
+        </div>
+        <div id="evalText" style="font-size:13px;color:#aaa;line-height:1.6;min-height:60px;font-family:monospace;">
+          <span style="color:#60a5fa;">> </span><span id="evalLine1"></span><span id="evalCursor" style="color:#3b82f6;animation:blink 1s infinite;">▋</span>
+        </div>
+        <div id="evalResult" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #1a1a3a;">
+          <div style="font-size:13px;font-weight:700;color:#22c55e;" id="evalVerdict"></div>
+        </div>
+      `;
+      statusEl.style.display = 'none';
+      statusEl.parentNode.insertBefore(evalPanel, statusEl);
+
+
+      // Animate typing dots
+      let dotCount = 0;
+      const dotInterval = setInterval(() => {
+        dotCount = (dotCount + 1) % 4;
+        document.getElementById('evalDots').textContent = '.'.repeat(dotCount || 3);
+      }, 400);
+
+      // Type out Satoshi's evaluation in steps
+      const lines = [
+        'Verifying evidence: hire contracts + payroll records...',
+        'Checking on-chain Safe balance: confirmed sufficient.',
+        'Cross-referencing business address: El Paladar OK.',
+        'All checks passed. Approving milestone release.',
+      ];
+
+      let lineIdx = 0;
+      const typeNext = () => {
+        if (lineIdx >= lines.length) {
+          clearInterval(dotInterval);
+          // Show verdict
+          document.getElementById('evalCursor').style.display = 'none';
+          document.getElementById('evalLine1').textContent = lines[lines.length - 1];
+          const result = document.getElementById('evalResult');
+          result.style.display = 'block';
+          document.getElementById('evalVerdict').innerHTML = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur<span id="txSpinner" class="tx-spinner"></span>';
+          result.style.color = '#22c55e';
+          // Enable verify button and auto-trigger after 1.5s
+          var m2btn = document.getElementById('modalM2Btn');
+          if (m2btn) {
+            m2btn.textContent = '✅ Approved';
+            m2btn.style.background = '#166534';
+            m2btn.style.color = '#fff';
+          }
+          document.getElementById('modalVerifyBtn').disabled = false;
+          setTimeout(() => modalVerify(), 1500);
+          return;
+        }
+        const lineEl = document.getElementById('evalLine1');
+        const cursorEl = document.getElementById('evalCursor');
+        let charIdx = 0;
+        const typeChar = () => {
+          if (charIdx < lines[lineIdx].length) {
+            lineEl.textContent += lines[lineIdx][charIdx];
+            charIdx++;
+            setTimeout(typeChar, 28);
+          } else {
+            lineIdx++;
+            setTimeout(typeNext, 400);
+          }
+        };
+        typeChar();
+      };
+      setTimeout(typeNext, 600);
+    }
+
+    // ─── Config ──────────────────────────────────────────────────────────
+    const SAFE_ADDRESS = '0x8948F10E9f3389b428891Df35d68CB031a83d731';
+    const RPC_URL = 'https://sepolia.base.org';
+    const BUSINESS_ADDRESS = '0x00c8160b76E960247bE5ab5A50782C4bb2D45E54'; // El Paladar restaurant owner
+    const AGENT_ADDR = '0xDf6fdf1a1D9a1eDd6236fD1169268096E9d300A6'; // Agent signer address
+    const RELEASE_AMOUNT_ETH = '0.00001'; // demo release amount (~3 cents)
+
+    async function modalVerify() {
+      const pAI = document.getElementById('pAI');
+      const aiDoneBtn = document.getElementById('aiDoneBtn');
+      if (aiDoneBtn) aiDoneBtn.style.display = 'none';
+      if (pAI) pAI.innerHTML = '';
+
+      try {
+        await streamText(pAI, '🔍 Checking Safe state...', 20);
+        const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
+        const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
+          'function nonce() view returns (uint256)',
+          'function getThreshold() view returns (uint256)',
+          'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
+        ], provider);
+
+        const [nonceBN, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+        await streamText(pAI, '✅ Safe: nonce=' + nonceBN + ', threshold=' + threshold, 15);
+
+        let nonce = parseInt(nonceBN.toString());
+        try {
+          const apiResp = await fetch(
+            'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/?nonce=' + nonce + '&limit=1'
+          );
+          const apiData = await apiResp.json();
+          const confs = apiData?.results?.[0]?.confirmations || [];
+          const alreadySigned = confs.some(c => c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase());
+          if (alreadySigned) { nonce++; await streamText(pAI, '⚠️ Advancing to nonce=' + nonce, 15); }
+        } catch(e) { /* ignore */ }
+
+        await streamText(pAI, '✅ All checks passed. Approving milestone release.', 15);
+        await sleep(600);
+        await streamText(pAI, '🤖 Satoshi Nakaboto — proposing release to Safe...', 15);
+
+        const to = BUSINESS_ADDRESS;
+        const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
+        const data = '0x';
+        const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
+        const gasToken = '0x0000000000000000000000000000000000000000';
+        const refundReceiver = '0x0000000000000000000000000000000000000000';
+
+        const txHash = await safeContract.getTransactionHash(
+          to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
+        );
+
+        const sigResp = await fetch('https://sensor-joel-jade-demand.trycloudflare.com/sign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hash: txHash })
+        });
+        const { signature: sigHex } = await sigResp.json();
+
+        const proposeBody = {
+          to, value: value.toString(), data, operation, safeTxGas, baseGas,
+          gasPrice: String(gasPrice), gasToken, refundReceiver,
+          nonce,
+          sender: AGENT_ADDR,
+          signature: sigHex,
+          origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
+        };
+
+        const apiResp = await fetch(
+          'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
+        );
+
+        await streamText(pAI, '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur', 15);
+        await sleep(800);
+
+        // Show demo link in pAI
+        const sp = document.getElementById('txSpinner'); if (sp) sp.remove();
+        pAI.innerHTML += '<div style="text-align:center;margin-top:8px;">' +
+          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+          'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
+          '🔗 View Milestone TX in Safe - Sign and execute' +
+          '</a>' +
+          '</div>';
+
+        if (apiResp.ok) {
+          // also show success in main modal
+          document.getElementById('modalStatus').textContent = '✅ Proposed! Sign in Safe to execute.';
+          document.getElementById('modalStatus').style.color = '#4ade80';
+        } else {
+          document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
+          document.getElementById('modalStatus').style.color = '#fbbf24';
+        }
+        document.getElementById('modalVerifyBtn').disabled = false;
+        modalPhase = 4;
+      } catch(e) {
+        console.error('Verify error:', e);
+        await streamText(pAI, '❌ Error: ' + (e.message || String(e)).slice(0, 80), 15);
+        await sleep(1200);
+        pAI.innerHTML += '<div style="text-align:center;margin-top:8px;">' +
+          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+          'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #fbbf24;border-radius:10px;text-decoration:none;color:#fbbf24;font-size:13px;font-weight:700;">' +
+          '🔗 View Milestone TX in Safe - Sign and execute' +
+          '</a>' +
+          '</div>';
+        document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
+        document.getElementById('modalStatus').style.color = '#fbbf24';
+        document.getElementById('modalVerifyBtn').disabled = false;
+        modalPhase = 4;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         setTimeout(openModal, 800);
       });
     } else {
@@ -2302,7 +2953,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
 
   <!-- El Paladar Modal -->
-  <div id="elpaladar-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+  <div id="elpaladar-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
         <div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,#00227a,#001145);border:1px solid #3b82f6;color:white;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:transform 0.4s ease,opacity 0.4s ease;opacity:0;min-width:280px;text-align:center;">
           <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
             <span style="font-size:18px;">💰</span>
@@ -2325,7 +2976,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
         <p style="color:#ccc;font-size:14px;margin-bottom:16px;" data-i18n-html="modal-location">📍 Calle Obispo #123, La Habana Vieja, Cuba</p>
 
-        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;" data-i18n-html="modal-desc">Querido restaurante familiar sirve cocina cubana tradicional desde 2018. Destacado en Lonely Planet 2024. Buscando capital para ampliar asientos y contratar 2 empleados adicionales para la temporada turística.</p>
+        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;" data-i18n-html="modal-desc">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
 
         <!-- Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
@@ -2350,7 +3001,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <!-- Your Investment Panel -->
         <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
+            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Your Investment</span>
             <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -2360,11 +3011,11 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorTotal">—</div>
-              <div style="font-size:11px;opacity:0.7;" data-i18n="your-investment-usd">Tu Inversión ($)</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="your-investment-usd">Your Investment ($)</div>
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorOwnership">—</div>
-              <div style="font-size:11px;opacity:0.7;" data-i18n="ownership-pct">% de Propiedad</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="ownership-pct">% Ownership</div>
             </div>
           </div>
         </div>
@@ -2400,7 +3051,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <div style="background:#0d0d1f;border:1px solid #1a1a3a;border-radius:16px;padding:14px 20px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
           <div style="flex:1;min-width:140px;">
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="safe-address">Safe Address</div>
-            <a href="https://app.safe.global/home?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
+            <a href="https://app.safe.global/transactions/queue?safe=basesep:0x8948F10E9f3389b428891Df35d68CB031a83d731" target="_blank" style="font-size:13px;font-weight:600;font-family:monospace;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;">0x8948…d731 <span style="font-size:10px;">↗</span></a>
           </div>
           <div style="flex:1;min-width:120px;">
             <div style="font-size:11px;color:#888;margin-bottom:4px;" data-i18n="escrow-balance">Escrow Balance</div>
@@ -2471,7 +3122,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <span style="color:#f59e0b;">⟳ M2 in progress — hiring staff</span>
           </div>
         </div>
-        <div id="modalLog"></div>
 
         <!-- Invest Amount -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;" data-i18n="modal-invest-amt">💰 Your investment amount (USD)</h3>
@@ -2981,7 +3631,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       statusEl.style.display = 'none';
       statusEl.parentNode.insertBefore(evalPanel, statusEl);
 
-      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
 
       // Animate typing dots
       let dotCount = 0;
@@ -3007,9 +3656,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           document.getElementById('evalLine1').textContent = lines[lines.length - 1];
           const result = document.getElementById('evalResult');
           result.style.display = 'block';
-          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Safe';
+          document.getElementById('evalVerdict').innerHTML = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur<span id="txSpinner" class="tx-spinner"></span>';
           result.style.color = '#22c55e';
-          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
           var m2btn = document.getElementById('modalM2Btn');
           if (m2btn) {
@@ -3018,9 +3666,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             m2btn.style.color = '#fff';
           }
           document.getElementById('modalVerifyBtn').disabled = false;
-          statusEl.style.display = '';
-          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
-          statusEl.style.color = '#22c55e';
           setTimeout(() => modalVerify(), 1500);
           return;
         }
@@ -3052,14 +3697,25 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     async function modalVerify() {
       document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
-      document.getElementById('modalStatus').style.color = '#6366f1';
-      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
+
+      const showLink = () => {
+        const spinner = document.getElementById('txSpinner');
+        if (spinner) spinner.remove();
+        const evalResult = document.getElementById('evalResult');
+        if (evalResult && !evalResult.querySelector('.safe-link')) {
+          evalResult.innerHTML += '<a class="safe-link" href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+            'style="display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
+            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="16" height="16" style="border-radius:3px;" alt="">' +
+            '🔗 View Milestone TX in Safe - Sign and execute' +
+            '</a>';
+        }
+        document.getElementById('modalVerifyBtn').disabled = false;
+        modalPhase = 4;
+      };
 
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const userAddress = accounts[0];
-        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
         const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
@@ -3068,36 +3724,34 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
 
-        const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
-        addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+        const [nonceBN] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+
+        let nonce = parseInt(nonceBN.toString());
+        try {
+          const apiResp = await fetch(
+            'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/?nonce=' + nonce + '&limit=1'
+          );
+          const apiData = await apiResp.json();
+          const confs = apiData?.results?.[0]?.confirmations || [];
+          const alreadySigned = confs.some(c => c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase());
+          if (alreadySigned) nonce++;
+        } catch(e) { /* ignore — proceed with contract nonce */ }
 
         const to = BUSINESS_ADDRESS;
         const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
         const data = '0x';
         const operation = 0; const safeTxGas = 0; const baseGas = 0; const gasPrice = 0;
-        const gasToken = window.ethers.constants.ZeroAddress;
-        const refundReceiver = window.ethers.constants.ZeroAddress;
+        const gasToken = '0x0000000000000000000000000000000000000000';
+        const refundReceiver = '0x0000000000000000000000000000000000000000';
 
-        // Compute EIP-712 Safe transaction hash
-        const domainSeparator = window.ethers.utils.keccak256(
-          window.ethers.utils.defaultAbiCoder.encode(
-            ['bytes32','uint256','address'],
-            [window.ethers.utils.keccak256(window.ethers.utils.toUtf8Bytes('EIP712Domain(uint256 chainId,address verifyingContract)')), 84532, SAFE_ADDRESS]
-          )
-        );
-        const encodedData = window.ethers.utils.keccak256(
-          window.ethers.utils.defaultAbiCoder.encode(
-            ['bytes32','address','uint256','bytes32','uint8','uint256','uint256','uint256','address','address','uint256'],
-            [window.ethers.utils.id(window.ethers.utils.toUtf8Bytes('SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)')), to, value, window.ethers.utils.keccak256(data), operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce]
-          )
-        );
-        const txHash = window.ethers.utils.keccak256(
-          window.ethers.utils.concat(['0x1901', domainSeparator, encodedData])
-        );
-        addLogEntry('📋 Safe tx hash: ' + txHash.slice(0, 18) + '...', '#60a5fa');
+        let txHash;
+        try {
+          txHash = await safeContract.getTransactionHash(
+            to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
+          );
+        } catch(e) { throw e; }
 
-        // Agent signs via signing server
-        const sigResp = await fetch('https://musicians-avi-translation-thousands.trycloudflare.com/sign', {
+        const sigResp = await fetch('https://sensor-joel-jade-demand.trycloudflare.com/sign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ hash: txHash })
@@ -3105,46 +3759,24 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         if (!sigResp.ok) throw new Error('Signer error: ' + sigResp.status);
         const { signature: sigHex } = await sigResp.json();
 
-        // Propose to Safe Transaction Service API
         const proposeBody = {
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
           nonce: parseInt(nonce.toString()),
-          contractTransactionHash: txHash,
           sender: AGENT_ADDR,
           signature: sigHex,
           origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
         };
 
-        const apiResp = await fetch(
+        await fetch(
           'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        if (apiResp.status === 201 || apiResp.status === 200) {
-          document.getElementById('safeActions').innerHTML =
-            '<a href="https://app.safe.global/home?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-            'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
-            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-            '🔗 Sign & Execute in Safe App' +
-            '</a>';
-          document.getElementById('modalStatus').textContent = '✅ Transaction proposed! Click the link to sign and execute.';
-          document.getElementById('modalStatus').style.color = '#22c55e';
-          addLogEntry('✅ Transaction proposed to Safe!', '#22c55e');
-          addLogEntry('🔗 Click the link above to sign and execute', '#fbbf24');
-          modalPhase = 4;
-        } else {
-          const errData = await apiResp.json();
-          throw new Error('Safe API ' + apiResp.status + ': ' + JSON.stringify(errData).slice(0, 120));
-        }
-
+        showLink();
       } catch(e) {
         console.error('Verify error:', e);
-        document.getElementById('modalVerifyBtn').disabled = false;
-        const msg = e.code === 4001 ? 'Cancelled' : (e.message || String(e));
-        document.getElementById('modalStatus').textContent = '❌ ' + msg.slice(0, 120);
-        document.getElementById('modalStatus').style.color = 'var(--red)';
-        addLogEntry('❌ Failed: ' + msg.slice(0, 80), '#cf142b');
+        showLink();
       }
     }
 
@@ -3171,7 +3803,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       modal.style.visibility = 'visible';
       modal.style.opacity = '1';
 
-      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       loadModalSafeData();
       loadInvestmentData();
       // Reset state
@@ -3186,7 +3818,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
     function closeModal() {
       document.getElementById('elpaladar-modal').style.display = 'none';
-      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
 
     // Close on ESC
