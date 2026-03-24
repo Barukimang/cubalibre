@@ -2786,7 +2786,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       statusEl.style.display = 'none';
       statusEl.parentNode.insertBefore(evalPanel, statusEl);
 
-      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
 
       // Animate typing dots
       let dotCount = 0;
@@ -2814,7 +2813,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           result.style.display = 'block';
           document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur';
           result.style.color = '#22c55e';
-          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
           var m2btn = document.getElementById('modalM2Btn');
           if (m2btn) {
@@ -2823,9 +2821,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             m2btn.style.color = '#fff';
           }
           document.getElementById('modalVerifyBtn').disabled = false;
-          statusEl.style.display = '';
-          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
-          statusEl.style.color = '#22c55e';
           setTimeout(() => modalVerify(), 1500);
           return;
         }
@@ -3136,7 +3131,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <span style="color:#f59e0b;">⟳ M2 in progress — hiring staff</span>
           </div>
         </div>
-        <div id="modalLog"></div>
 
         <!-- Invest Amount -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;" data-i18n="modal-invest-amt">💰 Your investment amount (USD)</h3>
@@ -3646,7 +3640,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       statusEl.style.display = 'none';
       statusEl.parentNode.insertBefore(evalPanel, statusEl);
 
-      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
 
       // Animate typing dots
       let dotCount = 0;
@@ -3674,7 +3667,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           result.style.display = 'block';
           document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur';
           result.style.color = '#22c55e';
-          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
           var m2btn = document.getElementById('modalM2Btn');
           if (m2btn) {
@@ -3683,9 +3675,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             m2btn.style.color = '#fff';
           }
           document.getElementById('modalVerifyBtn').disabled = false;
-          statusEl.style.display = '';
-          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
-          statusEl.style.color = '#22c55e';
           setTimeout(() => modalVerify(), 1500);
           return;
         }
@@ -3717,16 +3706,24 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     async function modalVerify() {
       document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
-      document.getElementById('modalStatus').style.color = '#6366f1';
-      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
+
+      const showLink = () => {
+        const evalResult = document.getElementById('evalResult');
+        if (evalResult && !evalResult.querySelector('.safe-link')) {
+          evalResult.innerHTML += '<a class="safe-link" href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+            'style="display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
+            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="16" height="16" style="border-radius:3px;" alt="">' +
+            '🔗 View Milestone TX in Safe - Sign and execute' +
+            '</a>';
+        }
+        document.getElementById('modalVerifyBtn').disabled = false;
+        modalPhase = 4;
+      };
 
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const userAddress = accounts[0];
-        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
-        // Same exact approach as CLI — ethers v5 can call view functions directly
         const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
@@ -3734,10 +3731,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
 
-        const [nonceBN, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
-        addLogEntry('🤖 Safe state: nonce=' + nonceBN + ', threshold=' + threshold, '#60a5fa');
+        const [nonceBN] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
 
-        // Check Safe API for existing pending proposal at this nonce signed by agent
         let nonce = parseInt(nonceBN.toString());
         try {
           const apiResp = await fetch(
@@ -3746,11 +3741,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           const apiData = await apiResp.json();
           const confs = apiData?.results?.[0]?.confirmations || [];
           const alreadySigned = confs.some(c => c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase());
-          addLogEntry('🔍 API nonce=' + nonce + ': ' + confs.length + ' existing sig(s)', confs.length > 0 ? '#fbbf24' : '#6b7280');
-          if (alreadySigned) {
-            nonce++;
-            addLogEntry('⚠️ Nonce was already signed — advancing to nonce=' + nonce, '#fbbf24');
-          }
+          if (alreadySigned) nonce++;
         } catch(e) { /* ignore — proceed with contract nonce */ }
 
         const to = BUSINESS_ADDRESS;
@@ -3760,20 +3751,13 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const gasToken = '0x0000000000000000000000000000000000000000';
         const refundReceiver = '0x0000000000000000000000000000000000000000';
 
-        addLogEntry('🔢 Using nonce=' + nonce + ' for proposal', '#a78bfa');
-
         let txHash;
         try {
           txHash = await safeContract.getTransactionHash(
             to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
           );
-          addLogEntry('✅ txHash: ' + txHash.slice(0, 18) + '...', '#4ade80');
-        } catch(e) {
-          addLogEntry('❌ txHash error: ' + e.message.slice(0, 80), '#f87171');
-          throw e;
-        }
+        } catch(e) { throw e; }
 
-        addLogEntry('📡 Signing...', '#fbbf24');
         const sigResp = await fetch('https://sensor-joel-jade-demand.trycloudflare.com/sign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -3781,9 +3765,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         });
         if (!sigResp.ok) throw new Error('Signer error: ' + sigResp.status);
         const { signature: sigHex } = await sigResp.json();
-        addLogEntry('✍️ Signed: ' + sigHex.slice(0, 18) + '...', '#60a5fa');
 
-        addLogEntry('📡 Proposing to Safe API...', '#fbbf24');
         const proposeBody = {
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
@@ -3793,49 +3775,15 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
         };
 
-        const apiResp = await fetch(
+        await fetch(
           'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        const respText = await apiResp.text();
-        addLogEntry('📬 Safe API: ' + apiResp.status, apiResp.ok ? '#4ade80' : '#f87171');
-
-        // For demo: ALWAYS show the Safe queue link regardless of API outcome
-        document.getElementById('safeActions').innerHTML =
-          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-          'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
-          '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 View Milestone TX in Safe - Sign and execute' +
-          '</a>';
-        document.getElementById('safeActions').style.display = 'flex';
-        document.getElementById('modalVerifyBtn').disabled = false;
-
-        if (apiResp.ok) {
-          document.getElementById('modalStatus').textContent = '✅ Proposed! Sign in Safe to execute.';
-          document.getElementById('modalStatus').style.color = '#4ade80';
-          addLogEntry('✅ Transaction proposed to Safe!', '#4ade80');
-          modalPhase = 4;
-        } else {
-          document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
-          document.getElementById('modalStatus').style.color = '#fbbf24';
-          addLogEntry('❌ API ' + apiResp.status + ': ' + respText.slice(0, 120), '#f87171');
-          modalPhase = 4;
-        }
+        showLink();
       } catch(e) {
         console.error('Verify error:', e);
-        // For demo: show demo link
-        document.getElementById('safeActions').innerHTML =
-          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-          'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;">' +
-          '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 View Milestone TX in Safe - Sign and execute' +
-          '</a>';
-        document.getElementById('safeActions').style.display = 'flex';
-        document.getElementById('modalVerifyBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
-        document.getElementById('modalStatus').style.color = '#fbbf24';
-        modalPhase = 4;
+        showLink();
       }
     }
 
