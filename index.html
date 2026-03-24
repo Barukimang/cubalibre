@@ -3069,8 +3069,23 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
 
-        const [nonce, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
-        addLogEntry('🤖 Safe state: nonce=' + nonce + ', threshold=' + threshold, '#60a5fa');
+        const [nonceBN, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
+        addLogEntry('🤖 Safe state: nonce=' + nonceBN + ', threshold=' + threshold, '#60a5fa');
+
+        // Check Safe API for existing pending proposal at this nonce signed by agent
+        let nonce = parseInt(nonceBN.toString());
+        try {
+          const apiData = await fetch(
+            'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/?nonce=' + nonce + '&limit=1'
+          ).then(r => r.json());
+          const alreadySigned = apiData?.results?.[0]?.confirmations?.some(c =>
+            c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase()
+          );
+          if (alreadySigned) {
+            nonce++;
+            addLogEntry('⚠️ Nonce was already signed — advancing to nonce=' + nonce, '#fbbf24');
+          }
+        } catch(e) { /* ignore — proceed with contract nonce */ }
 
         const to = BUSINESS_ADDRESS;
         const value = window.ethers.utils.parseEther(RELEASE_AMOUNT_ETH);
