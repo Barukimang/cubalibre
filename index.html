@@ -33,13 +33,12 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow-x: hidden;
       line-height: 1.6;
     }
 
@@ -956,13 +955,12 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow-x: hidden;
       line-height: 1.6;
     }
 
@@ -1908,6 +1906,8 @@ body.embed-mode .demo-embed, body.embed-mode section.demo-section, body.embed-mo
 body.embed-mode .partners-section, body.embed-mode footer,
 body.embed-mode .opp-section { display: none !important; }
 body.embed-mode #elpaladar-modal { display: flex !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .tx-spinner { display:inline-block;width:14px;height:14px;border:2px solid rgba(34,197,94,0.3);border-top-color:#22c55e;border-radius:50%;animation:spin 0.8s linear infinite;margin-left:8px;vertical-align:middle; }
 </style>
 
 </head>
@@ -2011,7 +2011,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $500
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <div class="bar"><div class="bar-fill bar-fill-animated" id="progressBar"></div></div>
@@ -2033,7 +2033,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $1,200
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <span data-i18n="under-review">Under review</span>
@@ -2054,7 +2054,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <div class="opp-meta">
               <div class="opp-amount">
                 $800
-                <small>meta de inversión</small>
+                <small>investment goal</small>
               </div>
               <div class="opp-raised">
                 <span data-i18n="under-review">Under review</span>
@@ -2205,18 +2205,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
   </section>
 
   <!-- Footer -->
-    >
-    <div class="flag-stripes">
-      <div class="stripe-blue"></div>
-      <div class="stripe-white"></div>
-      <div class="stripe-red"></div>
-      <div class="stripe-white"></div>
-      <div class="stripe-blue"></div>
-    </div>
-    <div class="footer-logo">CubaLibre</div>
-    <p data-i18n="footer-text">Diaspora investment infrastructure — powered by AI agents and Safe multisig.<br>
-    Built for The Synthesis Hackathon, March 2026.</p>
-    <p style="margin-top:12px;opacity:0.4">Safe: 0x8948F10E9f3389b428891Df35d68CB031a83d731 • Base Sepolia</p>
   </footer>
 
   <script>
@@ -2788,7 +2776,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       statusEl.style.display = 'none';
       statusEl.parentNode.insertBefore(evalPanel, statusEl);
 
-      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
 
       // Animate typing dots
       let dotCount = 0;
@@ -2814,9 +2801,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           document.getElementById('evalLine1').textContent = lines[lines.length - 1];
           const result = document.getElementById('evalResult');
           result.style.display = 'block';
-          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise';
+          document.getElementById('evalVerdict').innerHTML = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur<span id="txSpinner" class="tx-spinner"></span>';
           result.style.color = '#22c55e';
-          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
           var m2btn = document.getElementById('modalM2Btn');
           if (m2btn) {
@@ -2825,9 +2811,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             m2btn.style.color = '#fff';
           }
           document.getElementById('modalVerifyBtn').disabled = false;
-          statusEl.style.display = '';
-          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
-          statusEl.style.color = '#22c55e';
           setTimeout(() => modalVerify(), 1500);
           return;
         }
@@ -2921,14 +2904,15 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        await streamText(pAI, '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise', 15);
+        await streamText(pAI, '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur', 15);
         await sleep(800);
 
         // Show demo link in pAI
-        pAI.innerHTML = '<div style="text-align:center;margin-top:8px;">' +
+        const sp = document.getElementById('txSpinner'); if (sp) sp.remove();
+        pAI.innerHTML += '<div style="text-align:center;margin-top:8px;">' +
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
-          '🔗 View Demo Tx in Safe — Sign & Execute' +
+          '🔗 View Milestone TX in Safe - Sign and execute' +
           '</a>' +
           '</div>';
 
@@ -2946,10 +2930,10 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         console.error('Verify error:', e);
         await streamText(pAI, '❌ Error: ' + (e.message || String(e)).slice(0, 80), 15);
         await sleep(1200);
-        pAI.innerHTML = '<div style="text-align:center;margin-top:8px;">' +
+        pAI.innerHTML += '<div style="text-align:center;margin-top:8px;">' +
           '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
           'style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#1a2a4a;border:1px solid #fbbf24;border-radius:10px;text-decoration:none;color:#fbbf24;font-size:13px;font-weight:700;">' +
-          '🔗 View Demo Tx in Safe — Sign & Execute' +
+          '🔗 View Milestone TX in Safe - Sign and execute' +
           '</a>' +
           '</div>';
         document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
@@ -2969,7 +2953,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
 
   <!-- El Paladar Modal -->
-  <div id="elpaladar-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+  <div id="elpaladar-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
         <div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,#00227a,#001145);border:1px solid #3b82f6;color:white;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:transform 0.4s ease,opacity 0.4s ease;opacity:0;min-width:280px;text-align:center;">
           <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
             <span style="font-size:18px;">💰</span>
@@ -2992,7 +2976,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <h2 style="font-size:28px;font-weight:900;margin-bottom:4px;">El Paladar de María</h2>
         <p style="color:#ccc;font-size:14px;margin-bottom:16px;" data-i18n-html="modal-location">📍 Calle Obispo #123, La Habana Vieja, Cuba</p>
 
-        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;" data-i18n-html="modal-desc">Querido restaurante familiar sirve cocina cubana tradicional desde 2018. Destacado en Lonely Planet 2024. Buscando capital para ampliar asientos y contratar 2 empleados adicionales para la temporada turística.</p>
+        <p style="font-size:15px;color:#ccc;line-height:1.7;margin-bottom:24px;" data-i18n-html="modal-desc">Beloved family restaurant serving traditional Cuban cuisine since 2018. Featured in Lonely Planet 2024. Seeking capital to expand seating and hire 2 additional staff for the growing tourist season.</p>
 
         <!-- Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
@@ -3017,7 +3001,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         <!-- Your Investment Panel -->
         <div id="yourInvestmentPanel" style="display:none;background:linear-gradient(135deg,#00247D,#000033);border-radius:16px;padding:20px;margin-bottom:24px;color:white;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Tu Inversión</span>
+            <span id="investAmountLabel" style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;" data-i18n="your-investment-panel">💼 Your Investment</span>
             <span id="investorAddress" style="font-size:12px;color:#999;font-family:monospace;"></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -3027,11 +3011,11 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorTotal">—</div>
-              <div style="font-size:11px;opacity:0.7;" data-i18n="your-investment-usd">Tu Inversión ($)</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="your-investment-usd">Your Investment ($)</div>
             </div>
             <div>
               <div style="font-size:22px;font-weight:800;" id="investorOwnership">—</div>
-              <div style="font-size:11px;opacity:0.7;" data-i18n="ownership-pct">% de Propiedad</div>
+              <div style="font-size:11px;opacity:0.7;" data-i18n="ownership-pct">% Ownership</div>
             </div>
           </div>
         </div>
@@ -3138,7 +3122,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             <span style="color:#f59e0b;">⟳ M2 in progress — hiring staff</span>
           </div>
         </div>
-        <div id="modalLog"></div>
 
         <!-- Invest Amount -->
         <h3 style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;font-family:'DM Sans',sans-serif;" data-i18n="modal-invest-amt">💰 Your investment amount (USD)</h3>
@@ -3648,7 +3631,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       statusEl.style.display = 'none';
       statusEl.parentNode.insertBefore(evalPanel, statusEl);
 
-      addLogEntry('📋 M2 evidence submitted: 2 hire contracts + payroll', '#f97316');
 
       // Animate typing dots
       let dotCount = 0;
@@ -3674,9 +3656,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           document.getElementById('evalLine1').textContent = lines[lines.length - 1];
           const result = document.getElementById('evalResult');
           result.style.display = 'block';
-          document.getElementById('evalVerdict').textContent = '✅ MILESTONE 2 APPROVED — Proposing release to Enterprise';
+          document.getElementById('evalVerdict').innerHTML = '✅ MILESTONE 2 APPROVED — Proposing release to Entrepreneur<span id="txSpinner" class="tx-spinner"></span>';
           result.style.color = '#22c55e';
-          addLogEntry('🤖 Satoshi Nakaboto: M2 APPROVED — proposing to Safe', '#22c55e');
           // Enable verify button and auto-trigger after 1.5s
           var m2btn = document.getElementById('modalM2Btn');
           if (m2btn) {
@@ -3685,9 +3666,6 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
             m2btn.style.color = '#fff';
           }
           document.getElementById('modalVerifyBtn').disabled = false;
-          statusEl.style.display = '';
-          statusEl.textContent = '✅ M2 approved — Proposing release to Safe...';
-          statusEl.style.color = '#22c55e';
           setTimeout(() => modalVerify(), 1500);
           return;
         }
@@ -3719,16 +3697,26 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
     async function modalVerify() {
       document.getElementById('modalVerifyBtn').textContent = '⏳ Proposing...';
       document.getElementById('modalVerifyBtn').disabled = true;
-      document.getElementById('modalStatus').textContent = '🤖 Satoshi Nakaboto proposing release to Safe...';
-      document.getElementById('modalStatus').style.color = '#6366f1';
-      addLogEntry('🤖 Agent proposing milestone release to Safe...', '#60a5fa');
+
+      const showLink = () => {
+        const spinner = document.getElementById('txSpinner');
+        if (spinner) spinner.remove();
+        const evalResult = document.getElementById('evalResult');
+        if (evalResult && !evalResult.querySelector('.safe-link')) {
+          evalResult.innerHTML += '<a class="safe-link" href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
+            'style="display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:10px 18px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:10px;text-decoration:none;color:#3b82f6;font-size:13px;font-weight:700;">' +
+            '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="16" height="16" style="border-radius:3px;" alt="">' +
+            '🔗 View Milestone TX in Safe - Sign and execute' +
+            '</a>';
+        }
+        document.getElementById('modalVerifyBtn').disabled = false;
+        modalPhase = 4;
+      };
 
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const userAddress = accounts[0];
-        addLogEntry('📋 Connected: ' + userAddress.slice(0, 8) + '...', '#60a5fa');
 
-        // Same exact approach as CLI — ethers v5 can call view functions directly
         const provider = new window.ethers.providers.JsonRpcProvider(RPC_URL);
         const safeContract = new window.ethers.Contract(SAFE_ADDRESS, [
           'function nonce() view returns (uint256)',
@@ -3736,10 +3724,8 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           'function getTransactionHash(address,uint256,bytes,uint8,uint256,uint256,uint256,address,address,uint256) view returns (bytes32)'
         ], provider);
 
-        const [nonceBN, threshold] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
-        addLogEntry('🤖 Safe state: nonce=' + nonceBN + ', threshold=' + threshold, '#60a5fa');
+        const [nonceBN] = await Promise.all([safeContract.nonce(), safeContract.getThreshold()]);
 
-        // Check Safe API for existing pending proposal at this nonce signed by agent
         let nonce = parseInt(nonceBN.toString());
         try {
           const apiResp = await fetch(
@@ -3748,11 +3734,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           const apiData = await apiResp.json();
           const confs = apiData?.results?.[0]?.confirmations || [];
           const alreadySigned = confs.some(c => c.owner && c.owner.toLowerCase() === AGENT_ADDR.toLowerCase());
-          addLogEntry('🔍 API nonce=' + nonce + ': ' + confs.length + ' existing sig(s)', confs.length > 0 ? '#fbbf24' : '#6b7280');
-          if (alreadySigned) {
-            nonce++;
-            addLogEntry('⚠️ Nonce was already signed — advancing to nonce=' + nonce, '#fbbf24');
-          }
+          if (alreadySigned) nonce++;
         } catch(e) { /* ignore — proceed with contract nonce */ }
 
         const to = BUSINESS_ADDRESS;
@@ -3762,20 +3744,13 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         const gasToken = '0x0000000000000000000000000000000000000000';
         const refundReceiver = '0x0000000000000000000000000000000000000000';
 
-        addLogEntry('🔢 Using nonce=' + nonce + ' for proposal', '#a78bfa');
-
         let txHash;
         try {
           txHash = await safeContract.getTransactionHash(
             to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce
           );
-          addLogEntry('✅ txHash: ' + txHash.slice(0, 18) + '...', '#4ade80');
-        } catch(e) {
-          addLogEntry('❌ txHash error: ' + e.message.slice(0, 80), '#f87171');
-          throw e;
-        }
+        } catch(e) { throw e; }
 
-        addLogEntry('📡 Signing...', '#fbbf24');
         const sigResp = await fetch('https://sensor-joel-jade-demand.trycloudflare.com/sign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -3783,9 +3758,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
         });
         if (!sigResp.ok) throw new Error('Signer error: ' + sigResp.status);
         const { signature: sigHex } = await sigResp.json();
-        addLogEntry('✍️ Signed: ' + sigHex.slice(0, 18) + '...', '#60a5fa');
 
-        addLogEntry('📡 Proposing to Safe API...', '#fbbf24');
         const proposeBody = {
           to, value: value.toString(), data, operation, safeTxGas, baseGas,
           gasPrice: String(gasPrice), gasToken, refundReceiver,
@@ -3795,49 +3768,15 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
           origin: JSON.stringify({ note: 'M2: Seating & 2 staff hired — CubaLibre milestone' })
         };
 
-        const apiResp = await fetch(
+        await fetch(
           'https://api.safe.global/tx-service/basesep/api/v1/safes/' + SAFE_ADDRESS + '/multisig-transactions/',
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proposeBody) }
         );
 
-        const respText = await apiResp.text();
-        addLogEntry('📬 Safe API: ' + apiResp.status, apiResp.ok ? '#4ade80' : '#f87171');
-
-        // For demo: ALWAYS show the Safe queue link regardless of API outcome
-        document.getElementById('safeActions').innerHTML =
-          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-          'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;transition:all 0.2s;">' +
-          '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 View Demo Tx in Safe — Sign & Execute' +
-          '</a>';
-        document.getElementById('safeActions').style.display = 'flex';
-        document.getElementById('modalVerifyBtn').disabled = false;
-
-        if (apiResp.ok) {
-          document.getElementById('modalStatus').textContent = '✅ Proposed! Sign in Safe to execute.';
-          document.getElementById('modalStatus').style.color = '#4ade80';
-          addLogEntry('✅ Transaction proposed to Safe!', '#4ade80');
-          modalPhase = 4;
-        } else {
-          document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
-          document.getElementById('modalStatus').style.color = '#fbbf24';
-          addLogEntry('❌ API ' + apiResp.status + ': ' + respText.slice(0, 120), '#f87171');
-          modalPhase = 4;
-        }
+        showLink();
       } catch(e) {
         console.error('Verify error:', e);
-        // For demo: show demo link
-        document.getElementById('safeActions').innerHTML =
-          '<a href="https://app.safe.global/transactions/queue?safe=basesep:' + SAFE_ADDRESS + '" target="_blank" ' +
-          'style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:#1a2a4a;border:1px solid #3b82f6;border-radius:12px;text-decoration:none;color:#3b82f6;font-size:14px;font-weight:700;">' +
-          '<img src="https://www.google.com/s2/favicons?domain=app.safe.global&sz=64" width="20" height="20" style="border-radius:4px;" alt="">' +
-          '🔗 View Demo Tx in Safe — Sign & Execute' +
-          '</a>';
-        document.getElementById('safeActions').style.display = 'flex';
-        document.getElementById('modalVerifyBtn').disabled = false;
-        document.getElementById('modalStatus').textContent = '🔗 Demo: view pending tx in Safe';
-        document.getElementById('modalStatus').style.color = '#fbbf24';
-        modalPhase = 4;
+        showLink();
       }
     }
 
@@ -3864,7 +3803,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
       modal.style.visibility = 'visible';
       modal.style.opacity = '1';
 
-      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       loadModalSafeData();
       loadInvestmentData();
       // Reset state
@@ -3879,7 +3818,7 @@ body.embed-mode #elpaladar-modal { display: flex !important; }
 
     function closeModal() {
       document.getElementById('elpaladar-modal').style.display = 'none';
-      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
 
     // Close on ESC
